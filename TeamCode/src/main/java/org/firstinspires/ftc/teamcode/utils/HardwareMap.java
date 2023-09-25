@@ -40,8 +40,10 @@ public class HardwareMap {
     private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
     // Define Motor and Servo objects  (Make them private so they can't be accessed externally)
-    private DcMotor leftDrive   = null;
-    private DcMotor rightDrive  = null;
+    private DcMotor frontLeft   = null;
+    private DcMotor frontRight  = null;
+    private DcMotor backLeft   = null;
+    private DcMotor backRight  = null;
     private DcMotor armMotor = null;
     private Servo   leftHand = null;
     private Servo   rightHand = null;
@@ -53,7 +55,7 @@ public class HardwareMap {
     public static final double ARM_DOWN_POWER  = -0.45 ;
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
-    public RobotHardware (LinearOpMode opmode) {
+    public HardwareMap (LinearOpMode opmode) {
         myOpMode = opmode;
     }
 
@@ -65,8 +67,10 @@ public class HardwareMap {
      */
     public void init()    {
         // Define and Initialize Motors (note: need to use reference to actual OpMode).
-        leftDrive  = myOpMode.hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = myOpMode.hardwareMap.get(DcMotor.class, "right_drive");
+        frontLeft  = myOpMode.hardwareMap.get(DcMotor.class, "front_left");
+        frontRight = myOpMode.hardwareMap.get(DcMotor.class, "front_right");
+        backLeft  = myOpMode.hardwareMap.get(DcMotor.class, "back_left");
+        backRight = myOpMode.hardwareMap.get(DcMotor.class, "back_right");
         armMotor   = myOpMode.hardwareMap.get(DcMotor.class, "arm");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -85,7 +89,7 @@ public class HardwareMap {
         leftHand.setPosition(MID_SERVO);
         rightHand.setPosition(MID_SERVO);
 
-        myOpMode.telemetry.addData(">", "Hardware Initialized");
+        myOpMode.telemetry.addData("[HWM]", "Hardware Initialized.");
         myOpMode.telemetry.update();
     }
 
@@ -111,19 +115,23 @@ public class HardwareMap {
         }
 
         // Use existing function to drive both wheels.
-        setDrivePower(left, right);
+        setDrivePower(left, right, left, right);
     }
 
     /**
      * Pass the requested wheel motor powers to the appropriate hardware drive motors.
      *
-     * @param leftWheel     Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
-     * @param rightWheel    Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
+     * @param fl     Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
+     * @param fr    Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
+     * @param bl     Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
+     * @param rr    Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
      */
-    public void setDrivePower(double leftWheel, double rightWheel) {
+    public void setDrivePower(double fl, double fr, double bl, double br) {
         // Output the values to the motor drives.
-        leftDrive.setPower(leftWheel);
-        rightDrive.setPower(rightWheel);
+        frontLeft.setPower(fl);
+        frontRight.setPower(fr);
+        backLeft.setPower(bl);
+        backRight.setPower(br);
     }
 
     /**
