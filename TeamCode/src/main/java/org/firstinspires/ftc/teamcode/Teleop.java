@@ -27,31 +27,51 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.utils.RobotHardware;
+import org.firstinspires.ftc.teamcode.RobotHardware;
 
+
+/**
+ * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
+ * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
+ * of the FTC Driver Station. When a selection is made from the menu, the corresponding OpMode
+ * class is instantiated on the Robot Controller and executed.
+ *
+ * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
+ * It includes all the skeletal structure that all linear OpModes contain.
+ *
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ */
 
 @TeleOp(name="CenterStage: Teleop", group="Linear Opmode")
 //@Disabled
-public class MainTeleop extends LinearOpMode {
-    RobotHardware robot = new RobotHardware(this);
+public class Teleop extends LinearOpMode {
+    RobotHardware robot = new RobotHardware();
 
     // Declare OpMode mem bers.
-    private ElapsedTime runtime = new ElapsedTime();
+    //private ElapsedTime runtime = new ElapsedTime();
+    //private DcMotor leftDrive = null;
+    //private DcMotor rightDrive = null;
+
+
 
     //@Override
     public void runOpMode() {
-        robot.init();
+        robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
 
@@ -77,7 +97,7 @@ public class MainTeleop extends LinearOpMode {
             double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
             double numBl = 0.35*Range.clip((+Speed + Turn - Strafe), -1, +1);
             double numBr = 0.45*Range.clip((+Speed - Turn + Strafe), -1, +1);
-            double numUp = 0.25*Range.clip((-Slide), -1, +1);
+            double numUp = 0.10*Range.clip((-Slide), -1, +1);
             double numGrab = Range.clip((+Grab), -1, +1);
 
 
@@ -104,21 +124,22 @@ public class MainTeleop extends LinearOpMode {
             double frontRightPower = robot.frontRight.getPower();
             double backLeftPower = robot.backLeft.getPower();
             double backRightPower = robot.backRight.getPower();
-            // double armPower = robot.arm.getPower();
-            // telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
+            //double planePower = robot.plane.getPower();
+           // double armPower = robot.arm.getPower();
+           // telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
             //telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
             telemetry.update();
 
 
 
-            // robot.arm.setPower(numUp - MAX_SPEED + MAX_SPEED);
+           // robot.arm.setPower(numUp - MAX_SPEED + MAX_SPEED);
             //robot.armB.setPower(numUp - MAX_SPEED + MAX_SPEED);
             robot.frontLeft.setPower(numFl - MAX_SPEED + MAX_SPEED);
             robot.frontRight.setPower(numFr - MAX_SPEED + MAX_SPEED);
             robot.backLeft.setPower(numBl - MAX_SPEED + MAX_SPEED);
             robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
             robot.slideLeft.setPower(numUp - SLIDE_SPEED  + SLIDE_SPEED);
-            //robot.slideRight.setPower(numUp - SLIDE_SPEED  + SLIDE_SPEED);
+            robot.slideRight.setPower(numUp - SLIDE_SPEED  + SLIDE_SPEED);
 
             /*//OPEN
             if (gamepad2.dpad_left){
@@ -133,8 +154,50 @@ public class MainTeleop extends LinearOpMode {
             }*/
 
 
+            //plane shooty
+            boolean shoot = true;
+            if(shoot == true)
+            {
+                while (gamepad2.left_bumper)
+                {
+                robot.plane.setPower(1);
+                shoot = false;
+                }
+                if (shoot == false)
+                {
+                    robot.plane.setPower(0);
+                }
+            }
 
+            //intake grabby
+            boolean grab = true;
+            if(grab == true)
+            {
+                while (gamepad2.dpad_down)
+                {
+                    robot.intake.setPower(1);
+                    grab = false;
+                }
+                 if (grab == false)
+                {
+                    robot.intake.setPower(0);
+                }
+            }
+            //outake spitty
+            if(grab == true)
+            {
+                while (gamepad2.dpad_up)
+                {
+                    robot.intake.setPower(-1);
+                    grab = false;
+                }
+                if (grab == false)
+                {
+                    robot.intake.setPower(0);
+                }
+            }
 
+            //vroom drivey
             boolean vroom = true;
             if(vroom == true)
             {
