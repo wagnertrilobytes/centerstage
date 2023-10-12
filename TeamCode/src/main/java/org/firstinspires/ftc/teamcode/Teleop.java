@@ -108,6 +108,7 @@ public class Teleop extends LinearOpMode {
                 if (robot.arm.)
                 robot.arm.setPower(.5);*/
             //Fabian Bafoonery
+            telemetry.addData("Fabian Bafoonery", "Fabian Bafoonery");
 
             //rotation values for height
             // small:negative -1875

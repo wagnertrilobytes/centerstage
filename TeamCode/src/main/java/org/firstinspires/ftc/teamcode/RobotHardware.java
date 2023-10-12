@@ -68,7 +68,7 @@ public class RobotHardware {
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        slideLeft.setDirection(DcMotor.Direction.REVERSE);
+        slideLeft.setDirection(DcMotor.Direction.FORWARD);
         slideRight.setDirection(DcMotor.Direction.FORWARD );
 
         plane.setDirection(DcMotor.Direction.REVERSE);
