@@ -37,15 +37,19 @@ public class RobotHardware {
         // Save reference to Hardware map
         hwMap = ahwMap;
         // Define and Initialize Motors
+        // Wheels
         frontLeft = hwMap.get(DcMotor.class, "frontLeft");
         frontRight = hwMap.get(DcMotor.class, "frontRight");
         backLeft = hwMap.get(DcMotor.class, "backLeft");
         backRight = hwMap.get(DcMotor.class, "backRight");
+        // The slides
         slideLeft = hwMap.get(DcMotor.class, "slideLeft");
         slideRight = hwMap.get(DcMotor.class, "slideRight");
+
         plane = hwMap.get(DcMotor.class, "plane");
         intake = hwMap.get(DcMotor.class, "intake");
-        drop = hwMap.get(CRServo. class , "claw");
+
+        drop = hwMap.get(CRServo. class, "claw");
 
 /*
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
