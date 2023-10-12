@@ -22,7 +22,7 @@ public class RobotHardware {
     //   public DcMotor armB = null;
     public DcMotor plane = null;
     public DcMotor intake = null;
-
+    public CRServo drop = null;
     /* local OpMode members. */
     HardwareMap hwMap = null;
    // BNO055IMU imu;
@@ -45,6 +45,7 @@ public class RobotHardware {
         slideRight = hwMap.get(DcMotor.class, "slideRight");
         plane = hwMap.get(DcMotor.class, "plane");
         intake = hwMap.get(DcMotor.class, "intake");
+        drop = hwMap.get(CRServo. class , "claw");
 
 /*
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -78,6 +79,7 @@ public class RobotHardware {
         slideRight.setPower(0);
         plane.setPower(0);
         intake.setPower(0);
+        drop.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.

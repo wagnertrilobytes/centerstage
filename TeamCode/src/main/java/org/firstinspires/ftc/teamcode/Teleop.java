@@ -169,6 +169,21 @@ public class Teleop extends LinearOpMode {
                 }
             }
 
+            //chicken flingy
+            boolean fling = true;
+            if(fling == true)
+            {
+                while (gamepad2.y)
+                {
+                    robot.drop.setPower(1);
+                    fling = false;
+                }
+                if (fling == false)
+                {
+                    robot.drop.setPower(0);
+                }
+            }
+
             //intake grabby
             boolean grab = true;
             if(grab == true)
