@@ -25,14 +25,6 @@ public class RobotHardware {
     public CRServo drop = null;
     /* local OpMode members. */
 
-    /* booleans */
-    public boolean canShoot = false;
-    public boolean canFling = false;
-    public boolean canGrabIn = false;
-    public boolean canGrabOut = false;
-
-    public boolean canVroom = false;
-    public boolean canVroomTwo = false;
     HardwareMap hwMap = null;
    // BNO055IMU imu;
 
@@ -121,6 +113,21 @@ public class RobotHardware {
         //    armB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
+    }
+
+    public void driveRobot(double Drive, double Turn, double strafe) {
+        // I did not take this from previous code..
+
+        // Combine drive and turn for blended motion.
+        double le = Drive + Turn + strafe;
+        double ri = Drive - Turn - strafe;
+        double lb = Drive + Turn - strafe;
+        double rb = Drive - Turn + strafe;
+
+        // Scale the values so neither exceed +/- 1.0
+
+        // Use existing function to drive both wheels.
+        this.setAllPowerSpec(le, ri ,lb ,rb);
     }
 
     public void setAllPower(double power) {

@@ -89,6 +89,10 @@ public class Teleop extends LinearOpMode {
             double MAX_SPEED = 1.0;
             double SLIDE_SPEED = 0.15;
 
+            double drive = 0;
+            double turn = 0;
+            double strafe = 0;
+
             double numFl = 0.45*Range.clip((+Speed - Turn - Strafe), -1, +1);
             double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
             double numBl = 0.35*Range.clip((+Speed + Turn - Strafe), -1, +1);
@@ -143,45 +147,39 @@ public class Teleop extends LinearOpMode {
 
 
             // plane shooty
-            while (gamepad2.left_bumper) {
-                robot.canShoot = !robot.canShoot;
-                if (!robot.canShoot) robot.plane.setPower(0);
-                if (robot.canShoot) robot.plane.setPower(1);
+            if (gamepad2.left_bumper) {
+                robot.plane.setPower(1);
+            } else {
+                robot.plane.setPower(0.01);
             }
 
             // chicken flingy
-            while (gamepad2.y) {
-                robot.canFling = !robot.canFling;
-                if (!robot.canFling) robot.drop.setPower(0);
-                if (robot.canFling) robot.drop.setPower(1);
+            if (gamepad2.y) {
+                robot.drop.setPower(1);
+            } else {
+                robot.drop.setPower(0.01);
             }
 
             //intake grabby
-            while (gamepad2.dpad_down) {
-                robot.canGrabIn = !robot.canGrabIn;
-                if (!robot.canGrabIn) robot.intake.setPower(0);
-                if (robot.canGrabIn) robot.intake.setPower(1);
+            if (gamepad2.dpad_down) {
+                robot.intake.setPower(1);
+            } else {
+                robot.intake.setPower(0);
             }
 
             //outake spitty
-            while (gamepad2.dpad_up) {
-                robot.canGrabOut = !robot.canGrabOut;
-                if (!robot.canGrabOut) robot.intake.setPower(0);
-                if (robot.canGrabOut) robot.intake.setPower(-1);
+            if (gamepad2.dpad_up) {
+                robot.intake.setPower(-1);
+            } else {
+                robot.intake.setPower(0);
             }
 
             //vroom drivey
-            while (gamepad1.dpad_down) {
-                robot.canVroom = !robot.canVroom;
-                if (!robot.canVroom) robot.setAllPower(0);
-                if (robot.canVroom) robot.setAllPower(1);
-            }
+            drive = -gamepad1.left_stick_y;
+            turn = gamepad1.right_stick_x;
+            strafe = gamepad1.left_stick_x;
 
-            while (gamepad1.dpad_up) {
-                robot.canVroomTwo = !robot.canVroomTwo;
-                if (!robot.canVroomTwo) robot.setAllPower(0);
-                if (robot.canVroomTwo) robot.setAllPower(-1);
-            }
+            robot.driveRobot(drive, turn, strafe);
 
             telemetry.update();
         }
