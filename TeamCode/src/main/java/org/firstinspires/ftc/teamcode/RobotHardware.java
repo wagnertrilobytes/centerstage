@@ -15,19 +15,18 @@ public class RobotHardware {
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
-    //public CRServo claw = null;
-    //public Servo clawR = null;
+
+    // public CRServo claw = null;
+    // public Servo clawR = null;
     public DcMotor slideLeft = null;
     public DcMotor slideRight = null;
-    //   public DcMotor armB = null;
+    // public DcMotor armB = null;
     public DcMotor plane = null;
     public DcMotor intake = null;
     public CRServo drop = null;
-    /* local OpMode members. */
-
     HardwareMap hwMap = null;
-   // BNO055IMU imu;
 
+   // BNO055IMU imu;
     private ElapsedTime period = new ElapsedTime();
     /* Constructor */
     public void test(){
@@ -64,6 +63,7 @@ public class RobotHardware {
         imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 */
+
         frontLeft.setDirection (DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -73,7 +73,7 @@ public class RobotHardware {
         slideRight.setDirection(DcMotor.Direction.FORWARD );
 
         plane.setDirection(DcMotor.Direction.REVERSE);
-        //armB.setDirection(DcMotor.Direction.REVERSE);
+        // armB.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         frontLeft.setPower(0);
@@ -94,12 +94,11 @@ public class RobotHardware {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        plane.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        plane.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // If this has an encoder we should probably use it
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //  armB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // claw = hwMap.get(CRServo.class, "claw");
-        //clawR = hwMap.get(Servo.class, "clawR");
-
+        // armB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // claw = hwMap.get(CRServo.class, "claw");
+        // clawR = hwMap.get(Servo.class, "clawR");
 
         //Brake Function
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -110,9 +109,7 @@ public class RobotHardware {
         slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         plane.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //    armB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
+        // armB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void driveRobot(double Drive, double Turn, double strafe) {

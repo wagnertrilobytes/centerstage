@@ -150,14 +150,14 @@ public class Teleop extends LinearOpMode {
             if (gamepad2.left_bumper) {
                 robot.plane.setPower(1);
             } else {
-                robot.plane.setPower(0.01);
+                robot.plane.setPower(0);
             }
 
             // chicken flingy
             if (gamepad2.y) {
                 robot.drop.setPower(1);
             } else {
-                robot.drop.setPower(0.01);
+                robot.drop.setPower(0);
             }
 
             //intake grabby
