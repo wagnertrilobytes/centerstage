@@ -29,29 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.RobotHardware;
-
-
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When a selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
 @TeleOp(name="CenterStage: Teleop", group="Linear Opmode")
 //@Disabled
@@ -59,11 +39,9 @@ public class Teleop extends LinearOpMode {
     RobotHardware robot = new RobotHardware();
 
     // Declare OpMode mem bers.
-    //private ElapsedTime runtime = new ElapsedTime();
-    //private DcMotor leftDrive = null;
-    //private DcMotor rightDrive = null;
-
-
+    // private ElapsedTime runtime = new ElapsedTime();
+    // private DcMotor leftDrive = null;
+    // private DcMotor rightDrive = null;
 
     //@Override
     public void runOpMode() {
@@ -71,7 +49,7 @@ public class Teleop extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-       // robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -89,14 +67,11 @@ public class Teleop extends LinearOpMode {
             double MAX_SPEED = 1.0;
             double SLIDE_SPEED = 0.15;
 
-            double drive = 0;
-            double turn = 0;
-            double strafe = 0;
-
             double numFl = 0.45*Range.clip((+Speed - Turn - Strafe), -1, +1);
             double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
             double numBl = 0.35*Range.clip((+Speed + Turn - Strafe), -1, +1);
             double numBr = 0.45*Range.clip((+Speed - Turn + Strafe), -1, +1);
+
             double numUp = 0.10*Range.clip((-Slide), -1, +1);
             double numGrab = Range.clip((+Grab), -1, +1);
 
@@ -175,11 +150,7 @@ public class Teleop extends LinearOpMode {
             }
 
             //vroom drivey
-            drive = -gamepad1.left_stick_y;
-            turn = gamepad1.right_stick_x;
-            strafe = gamepad1.left_stick_x;
-
-            robot.driveRobot(drive, turn, strafe);
+            robot.driveRobot(Speed, Turn, Strafe);
 
             telemetry.update();
         }

@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 public class RobotHardware {
     /* Public OpMode members. */
@@ -27,11 +24,6 @@ public class RobotHardware {
     HardwareMap hwMap = null;
 
    // BNO055IMU imu;
-    private ElapsedTime period = new ElapsedTime();
-    /* Constructor */
-    public void test(){
-    }
-
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
@@ -112,26 +104,19 @@ public class RobotHardware {
         // armB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void driveRobot(double Drive, double Turn, double strafe) {
+    public void driveRobot(double Speed, double Turn, double Strafe) {
         // I did not take this from previous code..
 
         // Combine drive and turn for blended motion.
-        double le = Drive + Turn + strafe;
-        double ri = Drive - Turn - strafe;
-        double lb = Drive + Turn - strafe;
-        double rb = Drive - Turn + strafe;
+        double numFl = 0.45*Range.clip((+Speed - Turn - Strafe), -1, +1);
+        double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
+        double numBl = 0.35*Range.clip((+Speed + Turn - Strafe), -1, +1);
+        double numBr = 0.45*Range.clip((+Speed - Turn + Strafe), -1, +1);
 
         // Scale the values so neither exceed +/- 1.0
 
         // Use existing function to drive both wheels.
-        this.setAllPowerSpec(le, ri ,lb ,rb);
-    }
-
-    public void setAllPower(double power) {
-        this.frontLeft.setPower(power);
-        this.frontRight.setPower(power);
-        this.backLeft.setPower(power);
-        this.backRight.setPower(power);
+        this.setAllPowerSpec(numFl, numFr, numBl, numBr);
     }
 
     public void setAllPowerSpec(double fl, double fr, double bl, double br) {
