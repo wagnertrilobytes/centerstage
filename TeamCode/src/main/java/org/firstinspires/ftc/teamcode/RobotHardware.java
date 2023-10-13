@@ -24,6 +24,15 @@ public class RobotHardware {
     public DcMotor intake = null;
     public CRServo drop = null;
     /* local OpMode members. */
+
+    /* booleans */
+    public boolean canShoot = false;
+    public boolean canFling = false;
+    public boolean canGrabIn = false;
+    public boolean canGrabOut = false;
+
+    public boolean canVroom = false;
+    public boolean canVroomTwo = false;
     HardwareMap hwMap = null;
    // BNO055IMU imu;
 
@@ -112,6 +121,20 @@ public class RobotHardware {
         //    armB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
+    }
+
+    public void setAllPower(double power) {
+        this.frontLeft.setPower(power);
+        this.frontRight.setPower(power);
+        this.backLeft.setPower(power);
+        this.backRight.setPower(power);
+    }
+
+    public void setAllPowerSpec(double fl, double fr, double bl, double br) {
+        this.frontLeft.setPower(fl);
+        this.frontRight.setPower(fr);
+        this.backLeft.setPower(bl);
+        this.backRight.setPower(br);
     }
 }
 

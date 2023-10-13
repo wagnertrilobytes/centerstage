@@ -73,8 +73,6 @@ public class Teleop extends LinearOpMode {
 
        // robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //runtime.reset();
@@ -91,16 +89,12 @@ public class Teleop extends LinearOpMode {
             double MAX_SPEED = 1.0;
             double SLIDE_SPEED = 0.15;
 
-
-
             double numFl = 0.45*Range.clip((+Speed - Turn - Strafe), -1, +1);
             double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
             double numBl = 0.35*Range.clip((+Speed + Turn - Strafe), -1, +1);
             double numBr = 0.45*Range.clip((+Speed - Turn + Strafe), -1, +1);
             double numUp = 0.10*Range.clip((-Slide), -1, +1);
             double numGrab = Range.clip((+Grab), -1, +1);
-
-
 
            /* if (gamepad2.b && rotation<2824)
                 robot.arm.setTargetPosition(1000);
@@ -111,30 +105,22 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Fabian Bafoonery", "Fabian Bafoonery");
 
             //rotation values for height
-            // small:negative -1875
+            // small:  -1875
             // medium: -3150
-            // tall height: -4200
-
-
-
-
-            // Show the elapsed game time and wheel power.
-            //telemetry.addData("Status", "Run Time: " + runtime.toString());
+            // tall:   -4200
 
             double frontLeftPower = robot.frontLeft.getPower();
             double frontRightPower = robot.frontRight.getPower();
             double backLeftPower = robot.backLeft.getPower();
             double backRightPower = robot.backRight.getPower();
-            //double planePower = robot.plane.getPower();
-           // double armPower = robot.arm.getPower();
-           // telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
-            //telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
+            // double planePower = robot.plane.getPower();
+            // double armPower = robot.arm.getPower();
+            // telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
+            // telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
             telemetry.update();
 
-
-
-           // robot.arm.setPower(numUp - MAX_SPEED + MAX_SPEED);
-            //robot.armB.setPower(numUp - MAX_SPEED + MAX_SPEED);
+            // robot.arm.setPower(numUp - MAX_SPEED + MAX_SPEED);
+            // robot.armB.setPower(numUp - MAX_SPEED + MAX_SPEED);
             robot.frontLeft.setPower(numFl - MAX_SPEED + MAX_SPEED);
             robot.frontRight.setPower(numFr - MAX_SPEED + MAX_SPEED);
             robot.backLeft.setPower(numBl - MAX_SPEED + MAX_SPEED);
@@ -142,117 +128,60 @@ public class Teleop extends LinearOpMode {
             robot.slideLeft.setPower(numUp - SLIDE_SPEED  + SLIDE_SPEED);
             robot.slideRight.setPower(numUp - SLIDE_SPEED  + SLIDE_SPEED);
 
-            /*//OPEN
+            /*
+            // OPEN
             if (gamepad2.dpad_left){
                 robot.clawL.setPosition(0.47);
                 robot.clawR.setPosition(0.80);
             }
 
-            //CLOSE
+            // CLOSE
             if (gamepad2.dpad_right){
                 robot.clawL.setPosition(0.52);
                 robot.clawR.setPosition(0.48);
             }*/
 
 
-            //plane shooty
-            boolean shoot = true;
-            if(shoot == true)
-            {
-                while (gamepad2.left_bumper)
-                {
-                robot.plane.setPower(1);
-                shoot = false;
-                }
-                if (shoot == false)
-                {
-                    robot.plane.setPower(0);
-                }
+            // plane shooty
+            while (gamepad2.left_bumper) {
+                robot.canShoot = !robot.canShoot;
+                if (!robot.canShoot) robot.plane.setPower(0);
+                if (robot.canShoot) robot.plane.setPower(1);
             }
 
-            //chicken flingy
-            boolean fling = true;
-            if(fling == true)
-            {
-                while (gamepad2.y)
-                {
-                    robot.drop.setPower(1);
-                    fling = false;
-                }
-                if (fling == false)
-                {
-                    robot.drop.setPower(0);
-                }
+            // chicken flingy
+            while (gamepad2.y) {
+                robot.canFling = !robot.canFling;
+                if (!robot.canFling) robot.drop.setPower(0);
+                if (robot.canFling) robot.drop.setPower(1);
             }
 
             //intake grabby
-            boolean grab = true;
-            if(grab == true)
-            {
-                while (gamepad2.dpad_down)
-                {
-                    robot.intake.setPower(1);
-                    grab = false;
-                }
-                 if (grab == false)
-                {
-                    robot.intake.setPower(0);
-                }
+            while (gamepad2.dpad_down) {
+                robot.canGrabIn = !robot.canGrabIn;
+                if (!robot.canGrabIn) robot.intake.setPower(0);
+                if (robot.canGrabIn) robot.intake.setPower(1);
             }
+
             //outake spitty
-            if(grab == true)
-            {
-                while (gamepad2.dpad_up)
-                {
-                    robot.intake.setPower(-1);
-                    grab = false;
-                }
-                if (grab == false)
-                {
-                    robot.intake.setPower(0);
-                }
+            while (gamepad2.dpad_up) {
+                robot.canGrabOut = !robot.canGrabOut;
+                if (!robot.canGrabOut) robot.intake.setPower(0);
+                if (robot.canGrabOut) robot.intake.setPower(-1);
             }
 
             //vroom drivey
-            boolean vroom = true;
-            if(vroom == true)
-            {
-                while(gamepad1.dpad_down)
-                {
-                    robot.frontLeft.setPower(1);
-                    robot.frontRight.setPower(1);
-                    robot.backLeft.setPower(1);
-                    robot.backRight.setPower(1);
-                    vroom = false;
-                }
-                if(vroom == false)
-                {
-                    robot.frontLeft.setPower(0);
-                    robot.frontRight.setPower(0);
-                    robot.backLeft.setPower(0);
-                    robot.backRight.setPower(0);
-                }
-            }
-            boolean vroom2 = true;
-            if(vroom2 == true)
-            {
-                while(gamepad1.dpad_up)
-                {
-                    robot.frontLeft.setPower(-1);
-                    robot.frontRight.setPower(-1);
-                    robot.backLeft.setPower(-1);
-                    robot.backRight.setPower(-1);
-                    vroom2 = false;
-                }
-                if(vroom2 == false)
-                {
-                    robot.frontLeft.setPower(0);
-                    robot.frontRight.setPower(0);
-                    robot.backLeft.setPower(0);
-                    robot.backRight.setPower(0);
-                }
+            while (gamepad1.dpad_down) {
+                robot.canVroom = !robot.canVroom;
+                if (!robot.canVroom) robot.setAllPower(0);
+                if (robot.canVroom) robot.setAllPower(1);
             }
 
+            while (gamepad1.dpad_up) {
+                robot.canVroomTwo = !robot.canVroomTwo;
+                if (!robot.canVroomTwo) robot.setAllPower(0);
+                if (robot.canVroomTwo) robot.setAllPower(-1);
+            }
 
             telemetry.update();
         }
