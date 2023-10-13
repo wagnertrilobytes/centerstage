@@ -67,11 +67,6 @@ public class Teleop extends LinearOpMode {
             double MAX_SPEED = 1.0;
             double SLIDE_SPEED = 0.15;
 
-            double numFl = 0.45*Range.clip((+Speed - Turn - Strafe), -1, +1);
-            double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
-            double numBl = 0.35*Range.clip((+Speed + Turn - Strafe), -1, +1);
-            double numBr = 0.45*Range.clip((+Speed - Turn + Strafe), -1, +1);
-
             double numUp = 0.10*Range.clip((-Slide), -1, +1);
             double numGrab = Range.clip((+Grab), -1, +1);
 
@@ -82,28 +77,27 @@ public class Teleop extends LinearOpMode {
                 robot.arm.setPower(.5);*/
             //Fabian Bafoonery
             telemetry.addData("Fabian Bafoonery", "Fabian Bafoonery");
+            telemetry.update();
+
+            //vroom drivey
+            robot.driveRobot(Speed, Turn, Strafe);
 
             //rotation values for height
             // small:  -1875
             // medium: -3150
             // tall:   -4200
 
-            double frontLeftPower = robot.frontLeft.getPower();
-            double frontRightPower = robot.frontRight.getPower();
-            double backLeftPower = robot.backLeft.getPower();
-            double backRightPower = robot.backRight.getPower();
+//            double frontLeftPower = robot.frontLeft.getPower();
+//            double frontRightPower = robot.frontRight.getPower();
+//            double backLeftPower = robot.backLeft.getPower();
+//            double backRightPower = robot.backRight.getPower();
             // double planePower = robot.plane.getPower();
             // double armPower = robot.arm.getPower();
             // telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
             // telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
-            telemetry.update();
 
             // robot.arm.setPower(numUp - MAX_SPEED + MAX_SPEED);
             // robot.armB.setPower(numUp - MAX_SPEED + MAX_SPEED);
-            robot.frontLeft.setPower(numFl - MAX_SPEED + MAX_SPEED);
-            robot.frontRight.setPower(numFr - MAX_SPEED + MAX_SPEED);
-            robot.backLeft.setPower(numBl - MAX_SPEED + MAX_SPEED);
-            robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
             robot.slideLeft.setPower(numUp - SLIDE_SPEED  + SLIDE_SPEED);
             robot.slideRight.setPower(numUp - SLIDE_SPEED  + SLIDE_SPEED);
 
@@ -119,7 +113,6 @@ public class Teleop extends LinearOpMode {
                 robot.clawL.setPosition(0.52);
                 robot.clawR.setPosition(0.48);
             }*/
-
 
             // plane shooty
             if (gamepad2.left_bumper) {
@@ -149,8 +142,18 @@ public class Teleop extends LinearOpMode {
                 robot.intake.setPower(0);
             }
 
-            //vroom drivey
-            robot.driveRobot(Speed, Turn, Strafe);
+            //vroom drivey 2: electric boogaloo
+            if (gamepad1.dpad_down) {
+                robot.setAllPowerSpec(1,1,1,1);
+            } else {
+                robot.setAllPowerSpec(0,0,0,0);
+            }
+
+            if (gamepad1.dpad_up) {
+                robot.setAllPowerSpec(-1,-1,-1,-1);
+            } else {
+                robot.setAllPowerSpec(0,0,0,0);
+            }
 
             telemetry.update();
         }
