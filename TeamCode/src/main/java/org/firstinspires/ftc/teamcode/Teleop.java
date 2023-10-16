@@ -123,7 +123,7 @@ public class Teleop extends LinearOpMode {
 
             // chicken flingy
             if (gamepad2.y) {
-                robot.drop.setPower(1);
+                robot.drop.setPower(-1);
             } else {
                 robot.drop.setPower(0);
             }
