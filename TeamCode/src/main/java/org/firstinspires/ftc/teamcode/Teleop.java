@@ -48,14 +48,9 @@ public class Teleop extends LinearOpMode {
     //@Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        waitForStart(); // Wait for the game to start (driver presses PLAY)
+        while (opModeIsActive()) { // run until the end of the match (driver presses STOP)
             //Fabian Bafoonery
 
             //rotation values for height
