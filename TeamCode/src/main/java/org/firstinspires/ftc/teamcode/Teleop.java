@@ -33,114 +33,57 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="CenterStage: Teleop", group="Linear Opmode")
+@TeleOp(name="CenterStage: Teleop", group="Linear OpMode")
 //@Disabled
 public class Teleop extends LinearOpMode {
     RobotHardware robot = new RobotHardware();
 
     // Declare OpMode mem bers.
-    // private ElapsedTime runtime = new ElapsedTime();
-    // private DcMotor leftDrive = null;
-    // private DcMotor rightDrive = null;
-
+    public double Speed = gamepad1.left_stick_y;
+    public double Turn = gamepad1.left_stick_x;
+    public double Strafe = gamepad1.right_stick_x;
+    public double Slide = gamepad2.right_stick_y;
+    public double numUp = 0.10*Range.clip((-Slide), -1, +1);
+    public double MAX_SPEED = 1.0;
     //@Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
-        // robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        //runtime.reset();
-
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-            //robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            double Speed = gamepad1.left_stick_y;
-            double Turn = gamepad1.left_stick_x;
-            double Strafe = gamepad1.right_stick_x;
-            double Slide = gamepad2.right_stick_y;
-            double Grab = gamepad2.left_stick_x;
-            double MAX_SPEED = 1.0;
-            double SLIDE_SPEED = 0.15;
-
-            double numUp = 0.10*Range.clip((-Slide), -1, +1);
-            double numGrab = Range.clip((+Grab), -1, +1);
-
-           /* if (gamepad2.b && rotation<2824)
-                robot.arm.setTargetPosition(1000);
-                robot.arm.getCurrentPosition();
-                if (robot.arm.)
-                robot.arm.setPower(.5);*/
+        waitForStart(); // Wait for the game to start (driver presses PLAY)
+        while (opModeIsActive()) { // run until the end of the match (driver presses STOP)
             //Fabian Bafoonery
-            telemetry.addData("Fabian Bafoonery", "Fabian Bafoonery");
-            telemetry.update();
-
-            //vroom drivey
-            robot.driveRobot(Speed, Turn, Strafe);
 
             //rotation values for height
             // small:  -1875
             // medium: -3150
             // tall:   -4200
 
-//            double frontLeftPower = robot.frontLeft.getPower();
-//            double frontRightPower = robot.frontRight.getPower();
-//            double backLeftPower = robot.backLeft.getPower();
-//            double backRightPower = robot.backRight.getPower();
+            // double frontLeftPower = robot.frontLeft.getPower();
+            // double frontRightPower = robot.frontRight.getPower();
+            // double backLeftPower = robot.backLeft.getPower();
+            // double backRightPower = robot.backRight.getPower();
             // double planePower = robot.plane.getPower();
             // double armPower = robot.arm.getPower();
-            // telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
             // telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
 
-            // robot.arm.setPower(numUp - MAX_SPEED + MAX_SPEED);
-            // robot.armB.setPower(numUp - MAX_SPEED + MAX_SPEED);
-            robot.slideLeft.setPower(numUp - SLIDE_SPEED  + SLIDE_SPEED);
-            robot.slideRight.setPower(numUp - SLIDE_SPEED  + SLIDE_SPEED);
+            //vroom drivey
+            robot.driveRobot(this.Speed, this.Turn, this.Strafe);
+            robot.slideLeft.setPower(this.numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
+            robot.slideRight.setPower(this.numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
 
-            /*
-            // OPEN
-            if (gamepad2.dpad_left){
-                robot.clawL.setPosition(0.47);
-                robot.clawR.setPosition(0.80);
-            }
-
-            // CLOSE
-            if (gamepad2.dpad_right){
-                robot.clawL.setPosition(0.52);
-                robot.clawR.setPosition(0.48);
-            }*/
+            /* Controls */
 
             // plane shooty
-            if (gamepad2.left_bumper) {
-                robot.plane.setPower(1);
-            } else {
-                robot.plane.setPower(0);
-            }
+            robot.addPowerOnButtonPress(gamepad2.left_bumper, robot.plane, 1, 0);
 
             // chicken flingy
-            if (gamepad2.y) {
-                robot.drop.setPower(-1);
-            } else {
-                robot.drop.setPower(0);
-            }
+            robot.addPowerOnButtonPress(gamepad2.left_bumper, robot.drop, -1, 0);
 
-            //intake grabby
-            if (gamepad2.dpad_down) {
-                robot.intake.setPower(1);
-            } else {
-                robot.intake.setPower(0);
-            }
+            //intake grabby (in)
+            robot.addPowerOnButtonPress(gamepad2.dpad_down, robot.intake, 1, 0);
 
-            //outake spitty
-            if (gamepad2.dpad_up) {
-                robot.intake.setPower(-1);
-            } else {
-                robot.intake.setPower(0);
-            }
+            //intake spitty (out)
+            robot.addPowerOnButtonPress(gamepad2.dpad_up, robot.intake, -1, 0);
 
             //vroom drivey 2: electric boogaloo
             if (gamepad1.dpad_down) {

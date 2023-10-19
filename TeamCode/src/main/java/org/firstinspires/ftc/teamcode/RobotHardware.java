@@ -1,32 +1,41 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class RobotHardware {
     /* Public OpMode members. */
+    public RobotHardware robot = this;
     public DcMotor frontLeft = null;
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
-
     // public CRServo claw = null;
     // public Servo clawR = null;
     public DcMotor slideLeft = null;
     public DcMotor slideRight = null;
-    // public DcMotor armB = null;
     public DcMotor plane = null;
     public DcMotor intake = null;
     public CRServo drop = null;
-    HardwareMap hwMap = null;
+    public ArrayList<DcMotor> motors;
+    public ArrayList<CRServo> servos;
 
-   // BNO055IMU imu;
-    /* Initialize standard Hardware interfaces */
+    /* Math */
+    public double SLIDE_SPEED = 0.15;
+    HardwareMap hwMap = null;
+    // public BNO055IMU imu;
+    /* Initialize standard hardware interfaces */
     public void init(HardwareMap ahwMap) {
-        // Save reference to Hardware map
+        // Save reference to hardware map
+        this.robot = this;
         hwMap = ahwMap;
         // Define and Initialize Motors
         // Wheels
@@ -37,11 +46,13 @@ public class RobotHardware {
         // The slides
         slideLeft = hwMap.get(DcMotor.class, "slideLeft");
         slideRight = hwMap.get(DcMotor.class, "slideRight");
-
+        // The extra stuffs
         plane = hwMap.get(DcMotor.class, "plane");
         intake = hwMap.get(DcMotor.class, "intake");
-
+        // We should probably make call this "drop" in the hardware map
         drop = hwMap.get(CRServo. class, "claw");
+        motors.addAll(Arrays.asList(frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, plane, intake));
+        servos.add(drop);
 
 /*
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -56,52 +67,31 @@ public class RobotHardware {
         imu.initialize(parameters);
 */
 
-        frontLeft.setDirection (DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
         slideLeft.setDirection(DcMotor.Direction.FORWARD);
-        slideRight.setDirection(DcMotor.Direction.FORWARD );
+        slideRight.setDirection(DcMotor.Direction.FORWARD);
 
         plane.setDirection(DcMotor.Direction.REVERSE);
-        // armB.setDirection(DcMotor.Direction.REVERSE);
 
-        // Set all motors to zero power
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        slideLeft.setPower(0);
-        slideRight.setPower(0);
-        plane.setPower(0);
-        intake.setPower(0);
-        drop.setPower(0);
+        // Set all motors to zero power, run with encoders, and ZPB to brake
+        motors.forEach((e) -> {
+            e.setPower(0);
+            e.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            e.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        });
+        telemetry.addData("Fabian Bafoonery", "Hardware initialized.");
+        telemetry.update();
+    }
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        plane.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // If this has an encoder we should probably use it
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // armB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // claw = hwMap.get(CRServo.class, "claw");
-        // clawR = hwMap.get(Servo.class, "clawR");
-
-        //Brake Function
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        plane.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // armB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    public void addPowerOnButtonPress(boolean button, DcMotor motor, double pressPower, double releasePower) {
+        if (button) { motor.setPower(pressPower); } else { motor.setPower(releasePower); };
+    }
+    public void addPowerOnButtonPress(boolean button, CRServo servo, double pressPower, double releasePower) {
+        if (button) { servo.setPower(pressPower); } else { servo.setPower(releasePower); };
     }
 
     public void driveRobot(double Speed, double Turn, double Strafe) {
