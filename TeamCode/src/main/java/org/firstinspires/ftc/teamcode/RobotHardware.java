@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,6 +27,9 @@ public class RobotHardware {
     public CRServo drop = null;
     public ArrayList<DcMotor> motors;
     public ArrayList<CRServo> servos;
+
+    /* Math */
+    public double SLIDE_SPEED = 0.15;
     HardwareMap hwMap = null;
     // public BNO055IMU imu;
     /* Initialize standard hardware interfaces */
@@ -78,6 +83,15 @@ public class RobotHardware {
             e.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             e.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         });
+        telemetry.addData("Fabian Bafoonery", "Hardware initialized.");
+        telemetry.update();
+    }
+
+    public void addPowerOnButtonPress(boolean button, DcMotor motor, double pressPower, double releasePower) {
+        if (button) { motor.setPower(pressPower); } else { motor.setPower(releasePower); };
+    }
+    public void addPowerOnButtonPress(boolean button, CRServo servo, double pressPower, double releasePower) {
+        if (button) { servo.setPower(pressPower); } else { servo.setPower(releasePower); };
     }
 
     public void driveRobot(double Speed, double Turn, double Strafe) {
