@@ -48,12 +48,9 @@ public class Teleop extends LinearOpMode {
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        // robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        //runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
