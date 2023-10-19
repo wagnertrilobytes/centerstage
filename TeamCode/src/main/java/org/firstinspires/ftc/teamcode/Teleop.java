@@ -128,14 +128,14 @@ public class Teleop extends LinearOpMode {
                 robot.drop.setPower(0);
             }
 
-            //intake grabby
+            //intake grabby (in)
             if (gamepad2.dpad_down) {
                 robot.intake.setPower(1);
             } else {
                 robot.intake.setPower(0);
             }
 
-            //outake spitty
+            //intake spitty (out)
             if (gamepad2.dpad_up) {
                 robot.intake.setPower(-1);
             } else {
