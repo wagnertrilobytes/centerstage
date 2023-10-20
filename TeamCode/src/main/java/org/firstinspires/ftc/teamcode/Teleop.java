@@ -42,15 +42,17 @@ public class Teleop extends LinearOpMode {
     public double MAX_SPEED = 1.0;
     //@Override
     public void runOpMode() {
-        double Speed = gamepad1.left_stick_y;
-        double Turn = gamepad1.left_stick_x;
-        double Strafe = gamepad1.right_stick_x;
-        double Slide = gamepad2.right_stick_y;
-        double numUp = 0.10*Range.clip((-Slide), -1, +1);
         robot.init(hardwareMap);
 
         waitForStart(); // Wait for the game to start (driver presses PLAY)
+        telemetry.addData("Fabian Bafoonery", "Hardware initialized.");
+        telemetry.update();
         while (opModeIsActive()) { // run until the end of the match (driver presses STOP)
+            double Speed = gamepad1.left_stick_y;
+            double Turn = gamepad1.left_stick_x;
+            double Strafe = gamepad1.right_stick_x;
+            double Slide = gamepad2.right_stick_y;
+            double numUp = 0.10*Range.clip((-Slide), -1, +1);
             //Fabian Bafoonery
 
             //rotation values for height
@@ -80,10 +82,19 @@ public class Teleop extends LinearOpMode {
             robot.addPowerOnButtonPress(gamepad2.left_bumper, robot.drop, -1, 0);
 
             //intake grabby (in)
-            robot.addPowerOnButtonPress(gamepad2.dpad_up, robot.intake, 1, 0);
+//            robot.addPowerOnButtonPress(gamepad2.dpad_up, robot.intake, 1, 0);
+            if (gamepad2.dpad_up) {
+                robot.intake.setPower(1);
+            }
+            if (gamepad2.dpad_down) {
+                robot.intake.setPower(-1);
+            }
+            if (gamepad2.dpad_right) {
+                robot.intake.setPower(0);
+            }
 
             //intake spitty (out)
-            robot.addPowerOnButtonPress(gamepad2.dpad_down, robot.intake, -1, 0);
+//            robot.addPowerOnButtonPress(gamepad2.dpad_down, robot.intake, -1, 0);
 
             //vroom drivey 2: electric boogaloo
             if (gamepad1.dpad_down) {

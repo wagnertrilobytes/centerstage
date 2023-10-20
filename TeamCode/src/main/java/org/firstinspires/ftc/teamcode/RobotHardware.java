@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -81,9 +79,6 @@ public class RobotHardware {
             e.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             e.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
-
-        telemetry.addData("Fabian Bafoonery", "Hardware initialized.");
-        telemetry.update();
     }
 
     public void addPowerOnButtonPress(boolean button, DcMotor motor, double pressPower, double releasePower) {
