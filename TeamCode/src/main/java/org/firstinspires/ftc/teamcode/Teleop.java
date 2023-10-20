@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="CenterStage: Teleop", group="Linear OpMode")
@@ -83,14 +84,13 @@ public class Teleop extends LinearOpMode {
 
             //intake grabby (in)
 //            robot.addPowerOnButtonPress(gamepad2.dpad_up, robot.intake, 1, 0);
-            if (gamepad2.dpad_up) {
-                robot.intake.setPower(1);
-            }
-            if (gamepad2.dpad_down) {
-                robot.intake.setPower(-1);
-            }
-            if (gamepad2.dpad_right) {
-                robot.intake.setPower(0);
+            if (gamepad2.dpad_up) robot.intake.setPower(1);
+            if (gamepad2.dpad_down) robot.intake.setPower(-1);
+            if (gamepad2.dpad_right) robot.intake.setPower(0);
+            if (gamepad2.left_trigger > 500) {
+                for (DcMotor motor : robot.motors) {
+                   motor.setPower(0);
+                }
             }
 
             //intake spitty (out)
