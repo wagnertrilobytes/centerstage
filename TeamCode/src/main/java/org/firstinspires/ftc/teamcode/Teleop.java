@@ -39,14 +39,14 @@ public class Teleop extends LinearOpMode {
     RobotHardware robot = new RobotHardware();
 
     // Declare OpMode mem bers.
-    public double Speed = gamepad1.left_stick_y;
-    public double Turn = gamepad1.left_stick_x;
-    public double Strafe = gamepad1.right_stick_x;
-    public double Slide = gamepad2.right_stick_y;
     public double numUp = 0.10*Range.clip((-Slide), -1, +1);
     public double MAX_SPEED = 1.0;
     //@Override
     public void runOpMode() {
+        double Speed = gamepad1.left_stick_y;
+        double Turn = gamepad1.left_stick_x;
+        double Strafe = gamepad1.right_stick_x;
+        double Slide = gamepad2.right_stick_y;
         robot.init(hardwareMap);
 
         waitForStart(); // Wait for the game to start (driver presses PLAY)
