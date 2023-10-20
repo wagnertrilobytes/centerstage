@@ -7,10 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 public class RobotHardware {
     /* Public OpMode members. */
     public RobotHardware robot = this;
@@ -25,8 +21,8 @@ public class RobotHardware {
     public DcMotor plane = null;
     public DcMotor intake = null;
     public CRServo drop = null;
-    public ArrayList<DcMotor> motors;
-    public ArrayList<CRServo> servos;
+    public DcMotor[] motors;
+    public CRServo[] servos;
 
     /* Math */
     public double SLIDE_SPEED = 0.15;
@@ -51,8 +47,9 @@ public class RobotHardware {
         intake = hwMap.get(DcMotor.class, "intake");
         // We should probably make call this "drop" in the hardware map
         drop = hwMap.get(CRServo. class, "claw");
-        motors.addAll(Arrays.asList(frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, plane, intake));
-        servos.add(drop);
+        motors = new DcMotor[]{frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, plane, intake};
+        servos = new CRServo[]{ drop };
+//        servos.add(drop);
 
 /*
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -78,11 +75,13 @@ public class RobotHardware {
         plane.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power, run with encoders, and ZPB to brake
-        motors.forEach((e) -> {
+        for (DcMotor e : motors)
+        {
             e.setPower(0);
             e.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             e.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        });
+        }
+
         telemetry.addData("Fabian Bafoonery", "Hardware initialized.");
         telemetry.update();
     }
