@@ -80,10 +80,10 @@ public class Teleop extends LinearOpMode {
             robot.addPowerOnButtonPress(gamepad2.left_bumper, robot.drop, -1, 0);
 
             //intake grabby (in)
-            robot.addPowerOnButtonPress(gamepad2.dpad_down, robot.intake, 1, 0);
+            robot.addPowerOnButtonPress(gamepad2.dpad_up, robot.intake, 1, 0);
 
             //intake spitty (out)
-            robot.addPowerOnButtonPress(gamepad2.dpad_up, robot.intake, -1, 0);
+            robot.addPowerOnButtonPress(gamepad2.dpad_down, robot.intake, -1, 0);
 
             //vroom drivey 2: electric boogaloo
             if (gamepad1.dpad_down) {
