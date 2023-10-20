@@ -67,7 +67,7 @@ public class Teleop extends LinearOpMode {
             // telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
 
             //vroom drivey
-            robot.driveRobot(this.Speed, this.Turn, this.Strafe);
+            robot.driveRobot(Speed, Turn, Strafe);
             robot.slideLeft.setPower(this.numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
             robot.slideRight.setPower(this.numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
 
