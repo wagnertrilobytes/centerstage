@@ -87,10 +87,10 @@ public class RobotHardware {
     }
 
     public void addPowerOnButtonPress(boolean button, DcMotor motor, double pressPower, double releasePower) {
-        if (button) { motor.setPower(pressPower); } else { motor.setPower(releasePower); };
+        if (button) { motor.setPower(pressPower); } else { motor.setPower(releasePower); }
     }
     public void addPowerOnButtonPress(boolean button, CRServo servo, double pressPower, double releasePower) {
-        if (button) { servo.setPower(pressPower); } else { servo.setPower(releasePower); };
+        if (button) { servo.setPower(pressPower); } else { servo.setPower(releasePower); }
     }
 
     public void driveRobot(double Speed, double Turn, double Strafe) {
