@@ -39,7 +39,6 @@ public class Teleop extends LinearOpMode {
     RobotHardware robot = new RobotHardware();
 
     // Declare OpMode mem bers.
-    public double numUp = 0.10*Range.clip((-Slide), -1, +1);
     public double MAX_SPEED = 1.0;
     //@Override
     public void runOpMode() {
@@ -47,6 +46,7 @@ public class Teleop extends LinearOpMode {
         double Turn = gamepad1.left_stick_x;
         double Strafe = gamepad1.right_stick_x;
         double Slide = gamepad2.right_stick_y;
+        double numUp = 0.10*Range.clip((-Slide), -1, +1);
         robot.init(hardwareMap);
 
         waitForStart(); // Wait for the game to start (driver presses PLAY)
@@ -68,8 +68,8 @@ public class Teleop extends LinearOpMode {
 
             //vroom drivey
             robot.driveRobot(Speed, Turn, Strafe);
-            robot.slideLeft.setPower(this.numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
-            robot.slideRight.setPower(this.numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
+            robot.slideLeft.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
+            robot.slideRight.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
 
             /* Controls */
 
