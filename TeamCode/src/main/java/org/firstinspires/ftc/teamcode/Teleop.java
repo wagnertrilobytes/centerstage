@@ -98,7 +98,6 @@ public class Teleop extends LinearOpMode {
                 robot.setAllPowerSpec(0,0,0,0);
             }
 
-            telemetry.update();
         }
     }
 }
