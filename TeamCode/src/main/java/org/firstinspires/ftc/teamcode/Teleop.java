@@ -49,7 +49,7 @@ public class Teleop extends LinearOpMode {
         telemetry.addData("Fabian Bafoonery", "Hardware initialized.");
         telemetry.update();
         while (opModeIsActive()) { // run until the end of the match (driver presses STOP)
-            double Speed = gamepad1.left_stick_y;
+            double Speed = -gamepad1.left_stick_y;
             double Turn = gamepad1.left_stick_x;
             double Strafe = gamepad1.right_stick_x;
             double Slide = gamepad2.right_stick_y;
@@ -97,19 +97,6 @@ public class Teleop extends LinearOpMode {
 //            robot.addPowerOnButtonPress(gamepad2.dpad_down, robot.intake, -1, 0);
 
             //vroom drivey 2: electric boogaloo
-            //
-            if (gamepad1.dpad_down) {
-                robot.setAllPowerSpec(1,1,1,1);
-            } else {
-                robot.setAllPowerSpec(0,0,0,0);
-            }
-
-            if (gamepad1.dpad_up) {
-                robot.setAllPowerSpec(-1,-1,-1,-1);
-            } else {
-                robot.setAllPowerSpec(0,0,0,0);
-            }
-
         }
     }
 }
