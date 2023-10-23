@@ -29,8 +29,6 @@ public class RobotAutonomousFunctions {
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS, boolean opModeIsActive) {
-        int newLeftTarget;
-        int newRightTarget;
 
         // Ensure that the OpMode is still active
         if (opModeIsActive) {
@@ -38,12 +36,10 @@ public class RobotAutonomousFunctions {
             // Determine new target position, and pass to motor controller
             int leftCounted = (int)(leftInches * COUNTS_PER_INCH);
             int rightCounted = (int)(rightInches * COUNTS_PER_INCH);
-            newLeftTarget = robot.frontLeft.getCurrentPosition() + leftCounted;
-            newRightTarget = robot.frontRight.getCurrentPosition() + rightCounted;
-            robot.frontLeft.setTargetPosition(newLeftTarget);
-            robot.backLeft.setTargetPosition(newLeftTarget);
-            robot.frontRight.setTargetPosition(newRightTarget);
-            robot.backRight.setTargetPosition(newRightTarget);
+            robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + leftCounted);
+            robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + leftCounted);
+            robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + rightCounted);
+            robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + rightCounted);
 
             for (DcMotor e : robot.motors)
             {
@@ -70,7 +66,9 @@ public class RobotAutonomousFunctions {
             ) {
 
                 // Display it for the driver.
-                robot.telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
+                robot.telemetry.addData("Running to",  " %7d :%7d",
+                        robot.frontLeft.getCurrentPosition() + leftCounted,
+                        robot.frontRight.getCurrentPosition() + rightCounted);
                 robot.telemetry.addData("Currently at",  " at fl%7d fr%7d bl%7d br%7d",
                         robot.frontLeft.getCurrentPosition(), robot.frontRight.getCurrentPosition(),
                         robot.backLeft.getCurrentPosition(), robot.backRight.getCurrentPosition());
