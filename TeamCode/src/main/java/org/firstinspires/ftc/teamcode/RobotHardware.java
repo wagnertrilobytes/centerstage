@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RobotHardware {
     /* Public OpMode members. */
@@ -22,15 +25,22 @@ public class RobotHardware {
     public DcMotor[] motors;
     public CRServo[] servos;
 
+    public OpMode _opMode;
+    public HardwareMap _hwMap;
+    public Telemetry telemetry;
+
     /* Math */
     public double SLIDE_SPEED = 0.15;
     HardwareMap hwMap = null;
     // public BNO055IMU imu;
     /* Initialize standard hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap, OpMode opMode) {
         // Save reference to hardware map
         this.robot = this;
-        hwMap = ahwMap;
+        this._opMode = opMode;
+        this._hwMap = ahwMap;
+
+        this.telemetry = this._opMode.telemetry;
         // Define and Initialize Motors
         // Wheels
         frontLeft = hwMap.get(DcMotor.class, "frontLeft");
@@ -79,6 +89,9 @@ public class RobotHardware {
             e.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             e.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+
+        this.telemetry.addData("Fabian Bafoonery", "Fabian Bafoonery");
+        this.telemetry.update();
     }
 
     public void addPowerOnButtonPress(boolean button, DcMotor motor, double pressPower, double releasePower) {

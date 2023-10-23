@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="CenterStage: Teleop", group="Linear OpMode")
+@TeleOp(name="CenterStage: TeleOp", group="Linear OpMode")
 //@Disabled
 public class Teleop extends LinearOpMode {
     RobotHardware robot = new RobotHardware();
@@ -43,23 +43,15 @@ public class Teleop extends LinearOpMode {
     public double MAX_SPEED = 1.0;
     //@Override
     public void runOpMode() {
-        robot.init(hardwareMap);
-
+        robot.init(hardwareMap, this);
         waitForStart(); // Wait for the game to start (driver presses PLAY)
-        telemetry.addData("Fabian Bafoonery", "Hardware initialized.");
-        telemetry.update();
         while (opModeIsActive()) { // run until the end of the match (driver presses STOP)
-            double Speed = -gamepad1.left_stick_y;
-            double Turn = gamepad1.left_stick_x;
-            double Strafe = gamepad1.right_stick_x;
+            double Speed = gamepad1.left_stick_y;
+            double Turn = gamepad1.right_stick_x;
+            double Strafe = gamepad1.left_stick_x;
             double Slide = gamepad2.right_stick_y;
             double numUp = 0.10*Range.clip((-Slide), -1, +1);
             //Fabian Bafoonery
-
-            //rotation values for height
-            // small:  -1875
-            // medium: -3150
-            // tall:   -4200
 
             // double frontLeftPower = robot.frontLeft.getPower();
             // double frontRightPower = robot.frontRight.getPower();
