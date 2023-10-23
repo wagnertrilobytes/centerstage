@@ -43,7 +43,7 @@ public class Teleop extends LinearOpMode {
     public double MAX_SPEED = 1.0;
     //@Override
     public void runOpMode() {
-        robot.init(hardwareMap, this);
+        robot.init(hardwareMap, this, false);
         waitForStart(); // Wait for the game to start (driver presses PLAY)
         while (opModeIsActive()) { // run until the end of the match (driver presses STOP)
             double Speed = gamepad1.left_stick_y;

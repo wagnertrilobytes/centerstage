@@ -42,7 +42,7 @@ public class BlueAuto extends LinearOpMode { // fabian bafoonery 2: electric aut
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, this);
+        robot.init(hardwareMap, this, true);
         // Send telemetry message to indicate successful Encoder reset
 
         // Wait for the game to start (driver presses PLAY)

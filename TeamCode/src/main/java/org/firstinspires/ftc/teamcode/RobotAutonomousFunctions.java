@@ -15,7 +15,7 @@ public class RobotAutonomousFunctions {
     RobotHardware robot;
     public RobotAutonomousFunctions(RobotHardware robot) {
         this.robot = robot;
-        robot.telemetry.addData("RAF", "Initialized");
+        this.robot.telemetry.addData("RAF", "Initialized");
     }
 
     /*
@@ -36,19 +36,19 @@ public class RobotAutonomousFunctions {
             // Determine new target position, and pass to motor controller
             int leftCounted = (int)(leftInches * COUNTS_PER_INCH);
             int rightCounted = (int)(rightInches * COUNTS_PER_INCH);
-            robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + leftCounted);
-            robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + leftCounted);
-            robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + rightCounted);
-            robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + rightCounted);
+            this.robot.frontLeft.setTargetPosition(this.robot.frontLeft.getCurrentPosition() + leftCounted);
+            this.robot.backLeft.setTargetPosition(this.robot.backLeft.getCurrentPosition() + leftCounted);
+            this.robot.frontRight.setTargetPosition(this.robot.frontRight.getCurrentPosition() + rightCounted);
+            this.robot.backRight.setTargetPosition(this.robot.backRight.getCurrentPosition() + rightCounted);
 
-            for (DcMotor e : robot.motors)
+            for (DcMotor e : this.robot.motors)
             {
                 e.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
             // reset the timeout time and start motion.
             runtime.reset();
-            for (DcMotor e : robot.motors)
+            for (DcMotor e : this.robot.motors)
             {
                 e.setPower(Math.abs(speed));
             }
@@ -61,30 +61,30 @@ public class RobotAutonomousFunctions {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive &&
                     (runtime.seconds() < timeoutS) &&
-                    (robot.frontLeft.isBusy() && robot.frontRight.isBusy()) &&
-                    (robot.frontRight.isBusy() && robot.frontLeft.isBusy())
+                    (this.robot.frontLeft.isBusy() && this.robot.frontRight.isBusy()) &&
+                    (this.robot.frontRight.isBusy() && this.robot.frontLeft.isBusy())
             ) {
 
                 // Display it for the driver.
-                robot.telemetry.addData("Running to",  " %7d :%7d",
-                        robot.frontLeft.getCurrentPosition() + leftCounted,
-                        robot.frontRight.getCurrentPosition() + rightCounted);
-                robot.telemetry.addData("Currently at",  " at fl%7d fr%7d bl%7d br%7d",
-                        robot.frontLeft.getCurrentPosition(), robot.frontRight.getCurrentPosition(),
-                        robot.backLeft.getCurrentPosition(), robot.backRight.getCurrentPosition());
-                robot.telemetry.update();
+                this.robot.telemetry.addData("Running to",  " %7d :%7d",
+                        this.robot.frontLeft.getCurrentPosition() + leftCounted,
+                        this.robot.frontRight.getCurrentPosition() + rightCounted);
+                this.robot.telemetry.addData("Currently at",  " at fl%7d fr%7d bl%7d br%7d",
+                        this.robot.frontLeft.getCurrentPosition(), this.robot.frontRight.getCurrentPosition(),
+                        this.robot.backLeft.getCurrentPosition(), this.robot.backRight.getCurrentPosition());
+                this.robot.telemetry.update();
             }
 
             // Stop all motion;
-            robot.setAllPowerSpec(0,0,0,0);
+            this.robot.setAllPowerSpec(0,0,0,0);
 
             // Turn off RUN_TO_POSITION
-            for (DcMotor e : robot.motors)
+            for (DcMotor e : this.robot.motors)
             {
                 e.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            robot._opMode.sleep(250);   // optional pause after each move.
+            this.robot._opMode.sleep(250);   // optional pause after each move.
         }
     }
 }

@@ -36,12 +36,13 @@ public class RobotHardware {
     HardwareMap hwMap = null;
     // public BNO055IMU imu;
     /* Initialize standard hardware interfaces */
-    public void init(HardwareMap ahwMap, LinearOpMode opMode) {
+    public void init(HardwareMap ahwMap, LinearOpMode opMode, boolean initAuto) {
         // Save reference to hardware map
         this.robot = this;
         this._opMode = opMode;
         this._hwMap = ahwMap;
-        this.auto = new RobotAutonomousFunctions(this);
+        hwMap = ahwMap;
+        if (initAuto) this.auto = new RobotAutonomousFunctions(this);
 
         this.telemetry = this._opMode.telemetry;
         // Define and Initialize Motors
