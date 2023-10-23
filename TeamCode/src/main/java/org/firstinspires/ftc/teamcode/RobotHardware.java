@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,20 +26,22 @@ public class RobotHardware {
     public DcMotor[] motors;
     public CRServo[] servos;
 
-    public OpMode _opMode;
+    public LinearOpMode _opMode;
     public HardwareMap _hwMap;
     public Telemetry telemetry;
+    public RobotAutonomousFunctions auto;
 
     /* Math */
     public double SLIDE_SPEED = 0.15;
     HardwareMap hwMap = null;
     // public BNO055IMU imu;
     /* Initialize standard hardware interfaces */
-    public void init(HardwareMap ahwMap, OpMode opMode) {
+    public void init(HardwareMap ahwMap, LinearOpMode opMode) {
         // Save reference to hardware map
         this.robot = this;
         this._opMode = opMode;
         this._hwMap = ahwMap;
+        this.auto = new RobotAutonomousFunctions(this);
 
         this.telemetry = this._opMode.telemetry;
         // Define and Initialize Motors
