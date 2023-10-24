@@ -34,7 +34,7 @@ public class RobotHardware {
     public DcMotor plane = null;
     public DcMotor intake = null;
     public CRServo drop = null;
-    public BNO055IMU imu = null;
+//    public BNO055IMU imu = null;
     public DcMotor[] motors;
     public CRServo[] servos;
 
@@ -74,22 +74,22 @@ public class RobotHardware {
         motors = new DcMotor[]{frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, plane, intake};
         servos = new CRServo[]{ drop };
 //        servos.add(drop);
-        imu = hwMap.get(BNO055IMU.class, "imu");
+//        imu = hwMap.get(BNO055IMU.class, "imu");
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+//        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+//        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+//        parameters.loggingEnabled = true;
+//        parameters.loggingTag = "IMU";
+//        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        imu.initialize(parameters);
+//        imu.initialize(parameters);
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
 
         slideLeft.setDirection(DcMotor.Direction.FORWARD);
         slideRight.setDirection(DcMotor.Direction.FORWARD);
@@ -115,17 +115,23 @@ public class RobotHardware {
         if (button) { servo.setPower(pressPower); } else { servo.setPower(releasePower); }
     }
 
-    public void driveRobot(double Speed, double Turn, double Strafe) {
+    public void driveRobot(double Drive, double Turn, double strafe) {
         // Combine drive and turn for blended motion.
-        double numFl = 0.45*Range.clip((+Speed - Turn - Strafe), -1, +1);
-        double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
-        double numBl = 0.45*Range.clip((+Speed + Turn - Strafe), -1, +1);
-        double numBr = 0.45*Range.clip((+Speed - Turn + Strafe), -1, +1);
+//        double numFl = 0.45*Range.clip((+Speed - Turn - Strafe), -1, +1);
+//        double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
+//        double numBl = 0.45*Range.clip((+Speed + Turn - Strafe), -1, +1);
+//        double numBr = 0.45*Range.clip((+Speed - Turn + Strafe), -1, +1);
+
+        double fl = Drive + Turn + strafe;
+        double fr = Drive - Turn - strafe;
+        double bl = Drive + Turn - strafe;
+        double br = Drive - Turn + strafe;
 
         // Scale the values so neither exceed +/- 1.0
 
         // Use existing function to drive both wheels.
-        this.setAllPowerSpec(numFl, numFr, numBl, numBr);
+//        this.setAllPowerSpec(numFl, numFr, numBl, numBr);
+        this.setAllPowerSpec(fl, fr, bl, br);
     }
 
     public void setAllPowerSpec(double fl, double fr, double bl, double br) {

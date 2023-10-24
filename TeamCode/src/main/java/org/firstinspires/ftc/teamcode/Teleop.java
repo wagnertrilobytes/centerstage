@@ -29,26 +29,40 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="CenterStage: TeleOp", group="Linear OpMode")
-//@Disabled
+@Disabled
 public class Teleop extends LinearOpMode {
     RobotHardware robot = new RobotHardware();
 
     // Declare OpMode mem bers.
+    /*
+    0 - frontleft
+    1 - frontRight
+    2 - backLeft
+    3 - backRight
+     */
     public double MAX_SPEED = 1.0;
     //@Override
     public void runOpMode() {
         robot.init(hardwareMap, this, false);
         waitForStart(); // Wait for the game to start (driver presses PLAY)
         while (opModeIsActive()) { // run until the end of the match (driver presses STOP)
-            double Speed = gamepad1.left_stick_y;
-            double Turn = gamepad1.left_stick_x;
-            double Strafe = gamepad1.right_stick_x;
+//            double Speed = gamepad1.left_stick_y;
+//            double Turn = gamepad1.left_stick_x;
+//            double Strafe = gamepad1.right_stick_x;
+//            robot.driveRobot(Speed, Turn, Strafe);
+            double Drive = -gamepad1.left_stick_y;
+            double Turn  =  gamepad1.right_stick_x;
+            double Strafe  =  gamepad1.left_stick_x;
+
+            // Combine drive and turn for blended motion. Use RobotHardware class
+            robot.driveRobot(Drive, Turn , Strafe);
             double Slide = gamepad2.right_stick_y;
             double numUp = 0.10*Range.clip((-Slide), -1, +1);
             //Fabian Bafoonery
@@ -62,7 +76,6 @@ public class Teleop extends LinearOpMode {
             // telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
 
             //vroom drivey
-            robot.driveRobot(Speed, Turn, Strafe);
             robot.slideLeft.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
             robot.slideRight.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
 
