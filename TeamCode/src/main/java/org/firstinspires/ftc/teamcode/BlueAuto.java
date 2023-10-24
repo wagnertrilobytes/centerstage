@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
-@Disabled
+//@Disabled
 public class BlueAuto extends LinearOpMode { // fabian bafoonery 2: electric autonomous
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
@@ -49,9 +49,9 @@ public class BlueAuto extends LinearOpMode { // fabian bafoonery 2: electric aut
         waitForStart();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        robot.auto.encoderDrive(DRIVE_SPEED,  48,  48, 5.0, opModeIsActive());  // S1: Forward 47 Inches with 5 Sec timeout
-        robot.auto.encoderDrive(TURN_SPEED,   12, -12, 4.0, opModeIsActive());  // S2: Turn Right 12 Inches with 4 Sec timeout
-        robot.auto.encoderDrive(DRIVE_SPEED, -24, -24, 4.0, opModeIsActive());  // S3: Reverse 24 Inches with 4 Sec timeout
+        robot.encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        robot.encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        robot.encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

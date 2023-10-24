@@ -1,16 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RobotHardware {
     /* Public OpMode members. */
+    private final ElapsedTime runtime = new ElapsedTime();
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
     public RobotHardware robot = this;
     public DcMotor frontLeft = null;
     public DcMotor frontRight = null;
@@ -23,13 +34,14 @@ public class RobotHardware {
     public DcMotor plane = null;
     public DcMotor intake = null;
     public CRServo drop = null;
+    public BNO055IMU imu = null;
     public DcMotor[] motors;
     public CRServo[] servos;
 
     public LinearOpMode _opMode;
     public HardwareMap _hwMap;
     public Telemetry telemetry;
-    public RobotAutonomousFunctions auto;
+    public boolean auto;
 
     /* Math */
     public double SLIDE_SPEED = 0.15;
@@ -42,7 +54,7 @@ public class RobotHardware {
         this._opMode = opMode;
         this._hwMap = ahwMap;
         hwMap = ahwMap;
-        if (initAuto) this.auto = new RobotAutonomousFunctions(this);
+        if (initAuto) this.auto = true;
 
         this.telemetry = this._opMode.telemetry;
         // Define and Initialize Motors
@@ -62,8 +74,8 @@ public class RobotHardware {
         motors = new DcMotor[]{frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, plane, intake};
         servos = new CRServo[]{ drop };
 //        servos.add(drop);
+        imu = hwMap.get(BNO055IMU.class, "imu");
 
-/*
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -72,9 +84,7 @@ public class RobotHardware {
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-*/
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
@@ -106,12 +116,10 @@ public class RobotHardware {
     }
 
     public void driveRobot(double Speed, double Turn, double Strafe) {
-        // I did not take this from previous code..
-
         // Combine drive and turn for blended motion.
         double numFl = 0.45*Range.clip((+Speed - Turn - Strafe), -1, +1);
         double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
-        double numBl = 0.35*Range.clip((+Speed + Turn - Strafe), -1, +1);
+        double numBl = 0.45*Range.clip((+Speed + Turn - Strafe), -1, +1);
         double numBr = 0.45*Range.clip((+Speed - Turn + Strafe), -1, +1);
 
         // Scale the values so neither exceed +/- 1.0
@@ -125,6 +133,62 @@ public class RobotHardware {
         this.frontRight.setPower(fr);
         this.backLeft.setPower(bl);
         this.backRight.setPower(br);
+    }
+
+    public void encoderDrive(double speed,
+                             double leftInches, double rightInches,
+                             double timeoutS) {
+
+        // Ensure that the OpMode is still active
+        if (_opMode.opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            int leftCounted = (int)(leftInches * COUNTS_PER_INCH);
+            int rightCounted = (int)(rightInches * COUNTS_PER_INCH);
+            this.frontLeft.setTargetPosition(this.frontLeft.getCurrentPosition() + leftCounted);
+            this.backLeft.setTargetPosition(this.backLeft.getCurrentPosition() + leftCounted);
+            this.frontRight.setTargetPosition(this.frontRight.getCurrentPosition() + rightCounted);
+            this.backRight.setTargetPosition(this.backRight.getCurrentPosition() + rightCounted);
+
+            for (DcMotor e : this.motors)
+            {
+                e.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            for (DcMotor e : this.motors)
+            {
+                e.setPower(Math.abs(speed));
+            }
+
+            while (_opMode.opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (this.frontLeft.isBusy() && this.frontRight.isBusy()) &&
+                    (this.frontRight.isBusy() && this.frontLeft.isBusy())
+            ) {
+
+                // Display it for the driver.
+                this.telemetry.addData("Running to",  " %7d :%7d",
+                        this.frontLeft.getCurrentPosition() + leftCounted,
+                        this.frontRight.getCurrentPosition() + rightCounted);
+                this.telemetry.addData("Currently at",  " at fl%7d fr%7d bl%7d br%7d",
+                        this.frontLeft.getCurrentPosition(), this.frontRight.getCurrentPosition(),
+                        this.backLeft.getCurrentPosition(), this.backRight.getCurrentPosition());
+                this.telemetry.update();
+            }
+
+            // Stop all motion;
+            this.setAllPowerSpec(0,0,0,0);
+
+            // Turn off RUN_TO_POSITION
+            for (DcMotor e : this.motors)
+            {
+                e.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+
+            this._opMode.sleep(250);   // optional pause after each move.
+        }
     }
 }
 
