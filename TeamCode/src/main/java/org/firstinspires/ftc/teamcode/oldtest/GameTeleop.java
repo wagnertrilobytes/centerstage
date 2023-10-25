@@ -95,6 +95,7 @@ public class GameTeleop extends LinearOpMode {
             robot.LeftBack.setPower(turn+(forward-strafe));
             robot.RightBack.setPower(-turn+(forward+strafe));
 
+
             //We used this to figure out how high the arm needed to lift and show that on the driver station
             double rotation=robot.ArmMotor.getCurrentPosition();
             telemetry.addData("rotation", "%.2f", rotation);

@@ -36,7 +36,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="CenterStage: TeleOp", group="Linear OpMode")
-@Disabled
 public class Teleop extends LinearOpMode {
     RobotHardware robot = new RobotHardware();
 

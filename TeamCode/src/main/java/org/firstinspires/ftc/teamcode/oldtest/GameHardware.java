@@ -92,9 +92,9 @@ public class GameHardware
 
         //Code below is used for mecanum wheels since motors are facing opposit directions.
         LeftFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        RightFront.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        LeftBack.setDirection(DcMotor.Direction.REVERSE);
-        RightBack.setDirection(DcMotor.Direction.FORWARD);
+        RightFront.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        LeftBack.setDirection(DcMotor.Direction.FORWARD);
+        RightBack.setDirection(DcMotor.Direction.REVERSE);
 
 
         //ZeroPowerBehavior tells a motor what to do when there is no power going to it
