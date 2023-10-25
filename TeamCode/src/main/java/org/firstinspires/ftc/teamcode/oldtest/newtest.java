@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode.oldtest;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="The Test", group="Fabian Bafoonery")
+@TeleOp(name="Motor ABXY Test", group="Old Tests")
 public class newtest extends LinearOpMode {
 
     GameHardware robot = new GameHardware();
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, this);
 
         waitForStart();
         while (opModeIsActive()) {

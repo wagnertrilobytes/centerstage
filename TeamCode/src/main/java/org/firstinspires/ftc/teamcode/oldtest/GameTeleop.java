@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Game TeleOP", group="Pushbot")
+@TeleOp(name="Game TeleOP", group="Old Tests")
 
 public class GameTeleop extends LinearOpMode {
 
@@ -70,7 +70,7 @@ public class GameTeleop extends LinearOpMode {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);//The name in parenthese MUST match the name of your hardware map
+        robot.init(hardwareMap, this);//The name in parenthese MUST match the name of your hardware map
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "l?");    //

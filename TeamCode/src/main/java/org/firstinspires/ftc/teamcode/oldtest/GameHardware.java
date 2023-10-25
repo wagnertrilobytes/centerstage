@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.oldtest;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -75,7 +76,7 @@ public class GameHardware
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap, LinearOpMode opMode) {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
@@ -129,6 +130,9 @@ public class GameHardware
         IntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         ArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ArmMotorToo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        opMode.telemetry.addData("Warning", "This is an old hardware map. If the robot does not work this is why. Change GameHardware to RobotHardware.. unless you know what you're doing");
+        opMode.telemetry.update();
 
     }
 }
