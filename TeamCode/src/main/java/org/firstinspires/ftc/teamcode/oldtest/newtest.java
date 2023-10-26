@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.oldtest;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Motor ABXY Test", group="Old Tests")
+@Disabled
 public class newtest extends LinearOpMode {
 
     GameHardware robot = new GameHardware();

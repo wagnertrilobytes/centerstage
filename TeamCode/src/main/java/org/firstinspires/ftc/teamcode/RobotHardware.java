@@ -31,9 +31,10 @@ public class RobotHardware {
     // public Servo clawR = null;
     public DcMotor slideLeft = null;
     public DcMotor slideRight = null;
-    public DcMotor plane = null;
     public DcMotor intake = null;
     public CRServo drop = null;
+    public CRServo plane = null;
+    public CRServo hook = null;
 //    public BNO055IMU imu = null;
     public DcMotor[] motors;
     public CRServo[] servos;
@@ -67,12 +68,14 @@ public class RobotHardware {
         slideLeft = hwMap.get(DcMotor.class, "slideLeft");
         slideRight = hwMap.get(DcMotor.class, "slideRight");
         // The extra stuffs
-        plane = hwMap.get(DcMotor.class, "plane");
         intake = hwMap.get(DcMotor.class, "intake");
         // We should probably make call this "drop" in the hardware map
-        drop = hwMap.get(CRServo. class, "claw");
-        motors = new DcMotor[]{frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, plane, intake};
-        servos = new CRServo[]{ drop };
+        drop = hwMap.get(CRServo.class, "claw");
+        plane = hwMap.get(CRServo.class, "plane");
+        hook = hwMap.get(CRServo.class, "hook");
+        motors = new DcMotor[]{frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, intake};
+        servos = new CRServo[]{ drop, plane, hook };
+
 //        servos.add(drop);
 //        imu = hwMap.get(BNO055IMU.class, "imu");
 
@@ -93,8 +96,6 @@ public class RobotHardware {
 
         slideLeft.setDirection(DcMotor.Direction.FORWARD);
         slideRight.setDirection(DcMotor.Direction.FORWARD);
-
-        plane.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power, run with encoders, and ZPB to brake
         for (DcMotor e : motors)
@@ -139,6 +140,21 @@ public class RobotHardware {
         this.frontRight.setPower(fr);
         this.backLeft.setPower(bl);
         this.backRight.setPower(br);
+    }
+
+    public void toggleButton(CRServo thing, double pwr, boolean button) {
+        boolean tempToggleBool = true;
+        if(tempToggleBool) {
+            while (button) {
+                thing.setPower(pwr);
+                tempToggleBool = false;
+            }
+            if (tempToggleBool == false) thing.setPower(0);
+        }
+    }
+
+    public void toggleButton(DcMotor thing, double pwr, boolean button) {
+
     }
 
     public void encoderDrive(double speed,

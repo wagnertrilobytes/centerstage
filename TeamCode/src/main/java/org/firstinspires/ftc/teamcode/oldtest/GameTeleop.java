@@ -52,6 +52,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Game TeleOP", group="Old Tests")
+@Disabled
 
 public class GameTeleop extends LinearOpMode {
 

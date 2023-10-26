@@ -78,17 +78,58 @@ public class Teleop extends LinearOpMode {
             robot.slideLeft.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
             robot.slideRight.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
 
+
             /* Controls */
 
             // plane shooty
-            robot.addPowerOnButtonPress(gamepad2.left_bumper, robot.plane, 1, 0);
-
             // chicken flingy
-            robot.addPowerOnButtonPress(gamepad2.left_bumper, robot.drop, -1, 0);
 
             //intake grabby (in)
 //            robot.addPowerOnButtonPress(gamepad2.dpad_up, robot.intake, 1, 0);
             if (gamepad2.dpad_up) robot.intake.setPower(1);
+
+            boolean intakeStuff = true;
+            if(intakeStuff) {
+                // MOVE THIS TO GAMEPAD1
+                while (gamepad2.dpad_up) {
+                    robot.intake.setPower(1);
+                    intakeStuff = false;
+                }
+                while (gamepad2.dpad_down) {
+                    robot.intake.setPower(-1);
+                    intakeStuff = false;
+                }
+                if (intakeStuff == false) robot.intake.setPower(0);
+            }
+
+            robot.addPowerOnButtonPress(gamepad2.circle, robot.hook, -1 ,0);
+//            robot.addPowerOnButtonPress(gamepad2.triangle, robot.drop, 1, -1);
+
+            boolean dropStuff = true;
+            if(dropStuff) {
+                while (gamepad2.triangle) {
+                    robot.drop.setPower(1);
+                    dropStuff = false;
+                }
+                while (gamepad2.x) {
+                    robot.drop.setPower(-1);
+                    dropStuff = false;
+                }
+                if (dropStuff == false) robot.drop.setPower(0);
+            }
+
+            boolean planeThing = true;
+            if(planeThing) {
+                while (gamepad1.triangle) {
+                    robot.plane.setPower(-1);
+                    planeThing = false;
+                }
+                if (planeThing == false) robot.hook.setPower(0);
+            }
+
+            // HOOK CIRCLE
+            // PLANE GAMEPAD1 TRIANGLE
+
             if (gamepad2.dpad_down) robot.intake.setPower(-1);
             if (gamepad2.dpad_right) robot.intake.setPower(0);
             if (gamepad2.left_trigger > 500) {
