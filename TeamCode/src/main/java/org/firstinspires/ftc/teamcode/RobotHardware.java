@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 public class RobotHardware {
     /* Public OpMode members. */
@@ -35,6 +36,7 @@ public class RobotHardware {
     public CRServo drop = null;
     public CRServo plane = null;
     public CRServo hook = null;
+    public WebcamName camera = null;
 //    public BNO055IMU imu = null;
     public DcMotor[] motors;
     public CRServo[] servos;
@@ -73,6 +75,7 @@ public class RobotHardware {
         drop = hwMap.get(CRServo.class, "claw");
         plane = hwMap.get(CRServo.class, "plane");
         hook = hwMap.get(CRServo.class, "hook");
+        camera = hwMap.get(WebcamName.class, "camera");
         motors = new DcMotor[]{frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, intake};
         servos = new CRServo[]{ drop, plane, hook };
 

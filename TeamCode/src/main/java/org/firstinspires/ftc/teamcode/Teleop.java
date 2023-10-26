@@ -74,10 +74,18 @@ public class Teleop extends LinearOpMode {
             // double armPower = robot.arm.getPower();
             // telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
 
+            telemetry.addData("Fabian bafoonery CONTROLS..", "1");
+            telemetry.addData("Gamepad2 Triangle/Y", "Drop Up");
+            telemetry.addData("Gamepad2 Cross/A", "Drop Down");
+            telemetry.addData("Gamepad2 Square/B", "Hook In");
+            telemetry.addData("Gamepad2 Circle/X", "Hook Out");
+
+            telemetry.addData("Gamepad1 Triangle/Y", "Plane [test bafoonery]");
+            telemetry.addData("Gamepad1 Left Trigger", "Stop all motors [in case of emergency]");
             //vroom drivey
             robot.slideLeft.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
             robot.slideRight.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
-
+            telemetry.addData("Slide L,R", robot.slideLeft.getCurrentPosition() + "," + robot.slideRight.getCurrentPosition());
 
             /* Controls */
 
@@ -94,10 +102,12 @@ public class Teleop extends LinearOpMode {
                 while (gamepad2.dpad_up) {
                     robot.intake.setPower(1);
                     intakeStuff = false;
+                    telemetry.addData("Intake", "UP");
                 }
                 while (gamepad2.dpad_down) {
                     robot.intake.setPower(-1);
                     intakeStuff = false;
+                    telemetry.addData("Intake", "Down");
                 }
                 if (intakeStuff == false) robot.intake.setPower(0);
             }
@@ -105,24 +115,19 @@ public class Teleop extends LinearOpMode {
             robot.addPowerOnButtonPress(gamepad2.circle, robot.hook, -1 ,0);
 //            robot.addPowerOnButtonPress(gamepad2.triangle, robot.drop, 1, -1);
 
-            telemetry.addData("Fabian bafoonery CONTROLS..", "1");
-            telemetry.addData("Gamepad2 Triangle/Y", "Drop Up");
-            telemetry.addData("Gamepad2 Cross/A", "Drop Down");
-            telemetry.addData("Gamepad2 Square/B", "Hook In");
-            telemetry.addData("Gamepad2 Circle/X", "Hook Out");
 
-            telemetry.addData("Gamepad1 Triangle/Y", "Plane [test bafoonery]");
-            telemetry.addData("Gamepad1 Left Trigger", "Stop all motors [in case of emergency]");
 
             boolean dropStuff = true;
             if(dropStuff) {
                 while (gamepad2.triangle) {
                     robot.drop.setPower(1);
                     dropStuff = false;
+                    telemetry.addData("Drop", "UP");
                 }
                 while (gamepad2.cross) {
                     robot.drop.setPower(-1);
                     dropStuff = false;
+                    telemetry.addData("Drop", "DOWN");
                 }
                 if (dropStuff == false) robot.drop.setPower(0);
             }
@@ -132,10 +137,12 @@ public class Teleop extends LinearOpMode {
                 while (gamepad2.x) {
                     robot.hook.setPower(1);
                     hookThing = false;
+                    telemetry.addData("Hook", "UP");
                 }
                 while (gamepad2.b) {
                     robot.hook.setPower(-1);
                     hookThing = false;
+                    telemetry.addData("Intake", "DOWN");
                 }
                 if (hookThing == false) robot.hook.setPower(0);
             }
@@ -143,8 +150,9 @@ public class Teleop extends LinearOpMode {
             boolean planeThing = true;
             if(planeThing) {
                 while (gamepad1.triangle) {
-                    robot.plane.setPower(-1);
+                    robot.plane.setPower(1);
                     planeThing = false;
+                    telemetry.addData("Plane", "UP");
                 }
                 if (planeThing == false) robot.hook.setPower(0);
             }
@@ -159,6 +167,7 @@ public class Teleop extends LinearOpMode {
                    motor.setPower(0);
                 }
             }
+            telemetry.update();
 
             //intake spitty (out)
 //            robot.addPowerOnButtonPress(gamepad2.dpad_down, robot.intake, -1, 0);
