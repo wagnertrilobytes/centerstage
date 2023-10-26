@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="CenterStage: TeleOp", group="Linear OpMode")
 public class Teleop extends LinearOpMode {
     RobotHardware robot = new RobotHardware();
+    boolean lock;
 
     // Declare OpMode mem bers.
     /*
@@ -134,27 +135,23 @@ public class Teleop extends LinearOpMode {
 
             boolean hookThing = true;
             if(hookThing) {
-                while (gamepad2.x) {
-                    robot.hook.setPower(1);
-                    hookThing = false;
+                while (gamepad1.x) {
+                    robot.hook.setPower(-1);
                     telemetry.addData("Hook", "UP");
                 }
-                while (gamepad2.b) {
-                    robot.hook.setPower(-1);
-                    hookThing = false;
-                    telemetry.addData("Intake", "DOWN");
+                while (gamepad1.b) {
+                    robot.hook.setPower(1);
                 }
-                if (hookThing == false) robot.hook.setPower(0);
             }
 
             boolean planeThing = true;
             if(planeThing) {
                 while (gamepad1.triangle) {
-                    robot.plane.setPower(1);
+                    robot.plane.setPower(-1);
                     planeThing = false;
                     telemetry.addData("Plane", "UP");
                 }
-                if (planeThing == false) robot.hook.setPower(0);
+                if (planeThing == false) robot.plane.setPower(0);
             }
 
             // HOOK CIRCLE

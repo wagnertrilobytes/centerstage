@@ -37,6 +37,7 @@ public class RobotHardware {
     public CRServo plane = null;
     public CRServo hook = null;
     public WebcamName camera = null;
+    public int tileSizeInches = 24;
 //    public BNO055IMU imu = null;
     public DcMotor[] motors;
     public CRServo[] servos;
@@ -75,7 +76,7 @@ public class RobotHardware {
         drop = hwMap.get(CRServo.class, "claw");
         plane = hwMap.get(CRServo.class, "plane");
         hook = hwMap.get(CRServo.class, "hook");
-        camera = hwMap.get(WebcamName.class, "camera");
+//        camera = hwMap.get(WebcamName.class, "camera");
         motors = new DcMotor[]{frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, intake};
         servos = new CRServo[]{ drop, plane, hook };
 
@@ -110,6 +111,10 @@ public class RobotHardware {
 
         this.telemetry.addData("Fabian Bafoonery", "Fabian Bafoonery");
         this.telemetry.update();
+    }
+
+    public int tiles(int amount) {
+        return amount * this.tileSizeInches;
     }
 
     public void addPowerOnButtonPress(boolean button, DcMotor motor, double pressPower, double releasePower) {
