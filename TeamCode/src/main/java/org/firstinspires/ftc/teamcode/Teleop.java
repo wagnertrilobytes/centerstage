@@ -105,17 +105,39 @@ public class Teleop extends LinearOpMode {
             robot.addPowerOnButtonPress(gamepad2.circle, robot.hook, -1 ,0);
 //            robot.addPowerOnButtonPress(gamepad2.triangle, robot.drop, 1, -1);
 
+            telemetry.addData("Fabian bafoonery CONTROLS..", "1");
+            telemetry.addData("Gamepad2 Triangle/Y", "Drop Up");
+            telemetry.addData("Gamepad2 Cross/A", "Drop Down");
+            telemetry.addData("Gamepad2 Square/B", "Hook In");
+            telemetry.addData("Gamepad2 Circle/X", "Hook Out");
+
+            telemetry.addData("Gamepad1 Triangle/Y", "Plane [test bafoonery]");
+            telemetry.addData("Gamepad1 Left Trigger", "Stop all motors [in case of emergency]");
+
             boolean dropStuff = true;
             if(dropStuff) {
                 while (gamepad2.triangle) {
                     robot.drop.setPower(1);
                     dropStuff = false;
                 }
-                while (gamepad2.x) {
+                while (gamepad2.cross) {
                     robot.drop.setPower(-1);
                     dropStuff = false;
                 }
                 if (dropStuff == false) robot.drop.setPower(0);
+            }
+
+            boolean hookThing = true;
+            if(hookThing) {
+                while (gamepad2.x) {
+                    robot.hook.setPower(1);
+                    hookThing = false;
+                }
+                while (gamepad2.b) {
+                    robot.hook.setPower(-1);
+                    hookThing = false;
+                }
+                if (hookThing == false) robot.hook.setPower(0);
             }
 
             boolean planeThing = true;
