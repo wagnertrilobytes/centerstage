@@ -32,12 +32,18 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
-//@Disabled
+@Disabled
 public class BlueAuto extends LinearOpMode { // fabian bafoonery 2: electric autonomous
+    static final double COUNTS_PER_MOTOR_REV = 384.5;
+    static final double DRIVE_GEAR_REDUCTION = 1.0;
+    static final double WHEEL_DIAMETER_INCHES = 4.0;
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * 1.266) / (WHEEL_DIAMETER_INCHES * Math.PI);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+    static final double FEET_PER_METER = 3.28024;
     RobotHardware robot = new RobotHardware();
 
     @Override
@@ -48,13 +54,23 @@ public class BlueAuto extends LinearOpMode { // fabian bafoonery 2: electric aut
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        robot.encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        robot.encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        robot.encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+//        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+//        robot.encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+//        robot.encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+//        robot.encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);  // pause to display final telemetry message.
+    }
+    public void encoderDriver(double speed, double leftFinches, double rightFinches, double leftBinches, double rightBinches, double timeoutS) {
+        int newLeftFTarget;
+        int newRightFTarget;
+        int newLeftBTarget;
+        int newRightBTarget;
+
+        if (opModeIsActive()) {
+            newLeftFTarget = robot.frontLeft.getCurrentPosition() - (int) (rightFinches * COUNTS_PER_INCH);
+        }
     }
 }

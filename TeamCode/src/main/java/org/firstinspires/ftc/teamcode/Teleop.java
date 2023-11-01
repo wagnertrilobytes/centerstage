@@ -72,48 +72,54 @@ public class Teleop extends LinearOpMode {
             // double backLeftPower = robot.backLeft.getPower();
             // double backRightPower = robot.backRight.getPower();
             // double planePower = robot.plane.getPower();
-            // double armPower = robot.arm.getPower();
+            // double armP0oower = robot.arm.getPower();
             // telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
 
-            telemetry.addData("Fabian bafoonery CONTROLS..", "1");
             telemetry.addData("Gamepad2 Triangle/Y", "Drop Up");
             telemetry.addData("Gamepad2 Cross/A", "Drop Down");
-            telemetry.addData("Gamepad2 Square/B", "Hook In");
-            telemetry.addData("Gamepad2 Circle/X", "Hook Out");
+            telemetry.addData("Gamepad2 DPad UP", "Intake Up");
+            telemetry.addData("Gamepad2 DPad DOWN", "Intake Down");
+            telemetry.addData("Gamepad2 Right Stick", "Slides");
 
-            telemetry.addData("Gamepad1 Triangle/Y", "Plane [test bafoonery]");
-            telemetry.addData("Gamepad1 Left Trigger", "Stop all motors [in case of emergency]");
+            telemetry.addLine();
+            telemetry.addData("Gamepad1 Left & Right Stick", "Drive");
+            telemetry.addData("Gamepad1 Circle/X", "Lock");
+            telemetry.addData("Gamepad1 Square/B", "Unlock");
+            telemetry.addData("Gamepad1 Triangle/Y", "Plane");
+            telemetry.addData("Gamepad1 Left Trigger", "Emergency Stop");
             //vroom drivey
             robot.slideLeft.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
             robot.slideRight.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
+            telemetry.addLine();
             telemetry.addData("Slide L,R", robot.slideLeft.getCurrentPosition() + "," + robot.slideRight.getCurrentPosition());
-
+            telemetry.addData("Intake Power", robot.intake.getCurrentPosition());
+            telemetry.addData("Drop Power", robot.drop.getPower());
+            telemetry.addData("Plane Power", robot.plane.getPosition());
+            telemetry.addData("Lock Power", robot.hook.getPosition());
             /* Controls */
-
+            telemetry.addData("Wheel Positions", robot.frontLeft.getCurrentPosition() + ", " + robot.frontRight.getCurrentPosition() + " : " + robot.backLeft.getCurrentPosition() + ", " + robot.backRight.getCurrentPosition());
+            telemetry.addData("Slide Positions", robot.slideLeft.getCurrentPosition() + " : " + robot.slideRight.getCurrentPosition());
             // plane shooty
             // chicken flingy
 
             //intake grabby (in)
 //            robot.addPowerOnButtonPress(gamepad2.dpad_up, robot.intake, 1, 0);
-            if (gamepad2.dpad_up) robot.intake.setPower(1);
 
             boolean intakeStuff = true;
             if(intakeStuff) {
                 // MOVE THIS TO GAMEPAD1
                 while (gamepad2.dpad_up) {
-                    robot.intake.setPower(1);
+                    robot.intake.setPower(0.25);
                     intakeStuff = false;
-                    telemetry.addData("Intake", "UP");
                 }
                 while (gamepad2.dpad_down) {
-                    robot.intake.setPower(-1);
+                    robot.intake.setPower(-0.25);
                     intakeStuff = false;
-                    telemetry.addData("Intake", "Down");
                 }
                 if (intakeStuff == false) robot.intake.setPower(0);
+
             }
 
-            robot.addPowerOnButtonPress(gamepad2.circle, robot.hook, -1 ,0);
 //            robot.addPowerOnButtonPress(gamepad2.triangle, robot.drop, 1, -1);
 
 
@@ -133,32 +139,37 @@ public class Teleop extends LinearOpMode {
                 if (dropStuff == false) robot.drop.setPower(0);
             }
 
-            boolean hookThing = true;
-            if(hookThing) {
-                while (gamepad1.x) {
-                    robot.hook.setPower(-1);
-                    telemetry.addData("Hook", "UP");
-                }
-                while (gamepad1.b) {
-                    robot.hook.setPower(1);
-                }
-            }
-
-            boolean planeThing = true;
-            if(planeThing) {
-                while (gamepad1.triangle) {
-                    robot.plane.setPower(-1);
-                    planeThing = false;
-                    telemetry.addData("Plane", "UP");
-                }
-                if (planeThing == false) robot.plane.setPower(0);
-            }
+//            boolean hookThing = false;
+//
+//            if(gamepad1.x) {
+//                if (hookThing) {
+//                    robot.hook.setPower(0);
+//                    hookThing = !hookThing;
+//                } else {
+//                    robot.hook.setPower(-1);
+//                    hookThing = !hookThing;
+//                }
+//            }
+//            if(gamepad1.b) {
+//                robot.hook.setPower(1);
+//            }
+//
+//            boolean planeThing = true;
+//            if(planeThing) {
+//                while (gamepad1.triangle) {
+//                    robot.plane.setPower(-1);
+//                    planeThing = false;
+//                    telemetry.addData("Plane", "UP");
+//                }
+//                if (planeThing == false) robot.plane.setPower(0);
+//            }
 
             // HOOK CIRCLE
             // PLANE GAMEPAD1 TRIANGLE
 
-            if (gamepad2.dpad_down) robot.intake.setPower(-1);
-            if (gamepad2.dpad_right) robot.intake.setPower(0);
+//            if (gamepad2.dpad_down) robot.intake.setPower(-1);
+//            if (gamepad2.dpad_up) robot.intake.setPower(1);
+//            if (gamepad2.dpad_right) robot.intake.setPower(0);
             if (gamepad2.left_trigger > 500) {
                 for (DcMotor motor : robot.motors) {
                    motor.setPower(0);

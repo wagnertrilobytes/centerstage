@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -34,13 +35,15 @@ public class RobotHardware {
     public DcMotor slideRight = null;
     public DcMotor intake = null;
     public CRServo drop = null;
-    public CRServo plane = null;
-    public CRServo hook = null;
+    public Servo plane = null;
+    public Servo hook = null;
     public WebcamName camera = null;
     public int tileSizeInches = 24;
 //    public BNO055IMU imu = null;
     public DcMotor[] motors;
-    public CRServo[] servos;
+    public CRServo[] cservos;
+    public Servo[] servos;
+    public DcMotor[] driveMotors;
 
     public LinearOpMode _opMode;
     public HardwareMap _hwMap;
@@ -74,11 +77,13 @@ public class RobotHardware {
         intake = hwMap.get(DcMotor.class, "intake");
         // We should probably make call this "drop" in the hardware map
         drop = hwMap.get(CRServo.class, "claw");
-        plane = hwMap.get(CRServo.class, "plane");
-        hook = hwMap.get(CRServo.class, "hook");
+        plane = hwMap.get(Servo.class, "plane");
+        hook = hwMap.get(Servo.class, "hook");
 //        camera = hwMap.get(WebcamName.class, "camera");
         motors = new DcMotor[]{frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, intake};
-        servos = new CRServo[]{ drop, plane, hook };
+        cservos = new CRServo[]{ drop };
+        servos = new Servo[] { plane, hook };
+        driveMotors = new DcMotor[]{frontLeft,frontRight, backLeft, backRight};
 
 //        servos.add(drop);
 //        imu = hwMap.get(BNO055IMU.class, "imu");
@@ -163,62 +168,6 @@ public class RobotHardware {
 
     public void toggleButton(DcMotor thing, double pwr, boolean button) {
 
-    }
-
-    public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) {
-
-        // Ensure that the OpMode is still active
-        if (_opMode.opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            int leftCounted = (int)(leftInches * COUNTS_PER_INCH);
-            int rightCounted = (int)(rightInches * COUNTS_PER_INCH);
-            this.frontLeft.setTargetPosition(this.frontLeft.getCurrentPosition() + leftCounted);
-            this.backLeft.setTargetPosition(this.backLeft.getCurrentPosition() + leftCounted);
-            this.frontRight.setTargetPosition(this.frontRight.getCurrentPosition() + rightCounted);
-            this.backRight.setTargetPosition(this.backRight.getCurrentPosition() + rightCounted);
-
-            for (DcMotor e : this.motors)
-            {
-                e.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            for (DcMotor e : this.motors)
-            {
-                e.setPower(Math.abs(speed));
-            }
-
-            while (_opMode.opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (this.frontLeft.isBusy() && this.frontRight.isBusy()) &&
-                    (this.frontRight.isBusy() && this.frontLeft.isBusy())
-            ) {
-
-                // Display it for the driver.
-                this.telemetry.addData("Running to",  " %7d :%7d",
-                        this.frontLeft.getCurrentPosition() + leftCounted,
-                        this.frontRight.getCurrentPosition() + rightCounted);
-                this.telemetry.addData("Currently at",  " at fl%7d fr%7d bl%7d br%7d",
-                        this.frontLeft.getCurrentPosition(), this.frontRight.getCurrentPosition(),
-                        this.backLeft.getCurrentPosition(), this.backRight.getCurrentPosition());
-                this.telemetry.update();
-            }
-
-            // Stop all motion;
-            this.setAllPowerSpec(0,0,0,0);
-
-            // Turn off RUN_TO_POSITION
-            for (DcMotor e : this.motors)
-            {
-                e.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-
-            this._opMode.sleep(250);   // optional pause after each move.
-        }
     }
 }
 
