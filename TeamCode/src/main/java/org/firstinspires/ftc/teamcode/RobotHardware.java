@@ -119,15 +119,15 @@ public class RobotHardware {
 
     public void driveRobot(double Drive, double Turn, double strafe) {
         // Combine drive and turn for blended motion.
-//        double numFl = 0.45*Range.clip((+Speed - Turn - Strafe), -1, +1);
-//        double numFr = 0.45*Range.clip((+Speed + Turn + Strafe), -1, +1);
-//        double numBl = 0.45*Range.clip((+Speed + Turn - Strafe), -1, +1);
-//        double numBr = 0.45*Range.clip((+Speed - Turn + Strafe), -1, +1);
+        double fl = 0.45*Range.clip((+Drive - Turn -strafe), -1, +1);
+        double fr = 0.45*Range.clip((+Drive + Turn +strafe), -1, +1);
+        double bl = 0.45*Range.clip((+Drive + Turn - strafe), -1, +1);
+        double br = 0.45*Range.clip((+Drive - Turn + strafe), -1, +1);
 
-        double fl = Drive + Turn + strafe;
-        double fr = Drive - Turn - strafe;
-        double bl = Drive + Turn - strafe;
-        double br = Drive - Turn + strafe;
+//        double fl = Drive + Turn + strafe;
+//        double fr = Drive - Turn - strafe;
+//        double bl = Drive + Turn - strafe;
+//        double br = Drive - Turn + strafe;
 
         // Scale the values so neither exceed +/- 1.0
 
