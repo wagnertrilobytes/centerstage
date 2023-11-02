@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 public class RobotHardware {
     /* Public OpMode members. */
@@ -33,17 +32,13 @@ public class RobotHardware {
     // public Servo clawR = null;
     public DcMotor slideLeft = null;
     public DcMotor slideRight = null;
+    public Servo plane = null;
     public DcMotor intake = null;
     public CRServo drop = null;
-    public Servo plane = null;
-    public Servo hook = null;
-    public WebcamName camera = null;
-    public int tileSizeInches = 24;
 //    public BNO055IMU imu = null;
     public DcMotor[] motors;
-    public CRServo[] cservos;
-    public Servo[] servos;
-    public DcMotor[] driveMotors;
+    public CRServo[] servos;
+
 
     public LinearOpMode _opMode;
     public HardwareMap _hwMap;
@@ -74,17 +69,12 @@ public class RobotHardware {
         slideLeft = hwMap.get(DcMotor.class, "slideLeft");
         slideRight = hwMap.get(DcMotor.class, "slideRight");
         // The extra stuffs
+        plane = hwMap.get(Servo.class, "plane");
         intake = hwMap.get(DcMotor.class, "intake");
         // We should probably make call this "drop" in the hardware map
-        drop = hwMap.get(CRServo.class, "claw");
-        plane = hwMap.get(Servo.class, "plane");
-        hook = hwMap.get(Servo.class, "hook");
-//        camera = hwMap.get(WebcamName.class, "camera");
+        drop = hwMap.get(CRServo. class, "claw");
         motors = new DcMotor[]{frontLeft, frontRight, backLeft, backRight, slideLeft, slideRight, intake};
-        cservos = new CRServo[]{ drop };
-        servos = new Servo[] { plane, hook };
-        driveMotors = new DcMotor[]{frontLeft,frontRight, backLeft, backRight};
-
+        servos = new CRServo[]{ drop };
 //        servos.add(drop);
 //        imu = hwMap.get(BNO055IMU.class, "imu");
 
@@ -106,6 +96,8 @@ public class RobotHardware {
         slideLeft.setDirection(DcMotor.Direction.FORWARD);
         slideRight.setDirection(DcMotor.Direction.FORWARD);
 
+        plane.setDirection(Servo.Direction.REVERSE);
+
         // Set all motors to zero power, run with encoders, and ZPB to brake
         for (DcMotor e : motors)
         {
@@ -116,10 +108,6 @@ public class RobotHardware {
 
         this.telemetry.addData("Fabian Bafoonery", "Fabian Bafoonery");
         this.telemetry.update();
-    }
-
-    public int tiles(int amount) {
-        return amount * this.tileSizeInches;
     }
 
     public void addPowerOnButtonPress(boolean button, DcMotor motor, double pressPower, double releasePower) {
@@ -155,19 +143,61 @@ public class RobotHardware {
         this.backRight.setPower(br);
     }
 
-    public void toggleButton(CRServo thing, double pwr, boolean button) {
-        boolean tempToggleBool = true;
-        if(tempToggleBool) {
-            while (button) {
-                thing.setPower(pwr);
-                tempToggleBool = false;
+    public void encoderDrive(double speed,
+                             double leftInches,
+                             double rightInches,
+                             double timeoutS) {
+
+        // Ensure that the OpMode is still active
+        if (_opMode.opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            int leftCounted = (int)(leftInches * COUNTS_PER_INCH);
+            int rightCounted = (int)(rightInches * COUNTS_PER_INCH);
+            this.frontLeft.setTargetPosition(this.frontLeft.getCurrentPosition() + leftCounted);
+            this.backLeft.setTargetPosition(this.backLeft.getCurrentPosition() + leftCounted);
+            this.frontRight.setTargetPosition(this.frontRight.getCurrentPosition() + rightCounted);
+            this.backRight.setTargetPosition(this.backRight.getCurrentPosition() + rightCounted);
+
+            for (DcMotor e : this.motors)
+            {
+                e.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-            if (tempToggleBool == false) thing.setPower(0);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            for (DcMotor e : this.motors)
+            {
+                e.setPower(Math.abs(speed));
+            }
+
+            while (_opMode.opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (this.frontLeft.isBusy() && this.frontRight.isBusy()) &&
+                    (this.frontRight.isBusy() && this.frontLeft.isBusy())
+            ) {
+
+                // Display it for the driver.
+                this.telemetry.addData("Running to",  " %7d :%7d",
+                        this.frontLeft.getCurrentPosition() + leftCounted,
+                        this.frontRight.getCurrentPosition() + rightCounted);
+                this.telemetry.addData("Currently at",  " at fl%7d fr%7d bl%7d br%7d",
+                        this.frontLeft.getCurrentPosition(), this.frontRight.getCurrentPosition(),
+                        this.backLeft.getCurrentPosition(), this.backRight.getCurrentPosition());
+                this.telemetry.update();
+            }
+
+            // Stop all motion;
+            this.setAllPowerSpec(0,0,0,0);
+
+            // Turn off RUN_TO_POSITION
+            for (DcMotor e : this.motors)
+            {
+                e.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+
+            this._opMode.sleep(250);   // optional pause after each move.
         }
-    }
-
-    public void toggleButton(DcMotor thing, double pwr, boolean button) {
-
     }
 }
 

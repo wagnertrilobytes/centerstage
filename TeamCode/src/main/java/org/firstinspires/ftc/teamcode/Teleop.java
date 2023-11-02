@@ -36,9 +36,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="CenterStage: TeleOp", group="Linear OpMode")
+
 public class Teleop extends LinearOpMode {
     RobotHardware robot = new RobotHardware();
-    boolean lock;
 
     // Declare OpMode mem bers.
     /*
@@ -67,115 +67,34 @@ public class Teleop extends LinearOpMode {
             double numUp = 0.10*Range.clip((-Slide), -1, +1);
             //Fabian Bafoonery
 
-            // double frontLeftPower = robot.frontLeft.getPower();
-            // double frontRightPower = robot.frontRight.getPower();
-            // double backLeftPower = robot.backLeft.getPower();
-            // double backRightPower = robot.backRight.getPower();
-            // double planePower = robot.plane.getPower();
-            // double armP0oower = robot.arm.getPower();
-            // telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), arm (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, armPower);
+             double frontLeftPower = robot.frontLeft.getPower();
+             double frontRightPower = robot.frontRight.getPower();
+             double backLeftPower = robot.backLeft.getPower();
+             double backRightPower = robot.backRight.getPower();
+             telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower);
 
-            telemetry.addData("Gamepad2 Triangle/Y", "Drop Up");
-            telemetry.addData("Gamepad2 Cross/A", "Drop Down");
-            telemetry.addData("Gamepad2 DPad UP", "Intake Up");
-            telemetry.addData("Gamepad2 DPad DOWN", "Intake Down");
-            telemetry.addData("Gamepad2 Right Stick", "Slides");
-
-            telemetry.addLine();
-            telemetry.addData("Gamepad1 Left & Right Stick", "Drive");
-            telemetry.addData("Gamepad1 Circle/X", "Lock");
-            telemetry.addData("Gamepad1 Square/B", "Unlock");
-            telemetry.addData("Gamepad1 Triangle/Y", "Plane");
-            telemetry.addData("Gamepad1 Left Trigger", "Emergency Stop");
             //vroom drivey
             robot.slideLeft.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
             robot.slideRight.setPower(numUp - robot.SLIDE_SPEED + robot.SLIDE_SPEED);
-            telemetry.addLine();
-            telemetry.addData("Slide L,R", robot.slideLeft.getCurrentPosition() + "," + robot.slideRight.getCurrentPosition());
-            telemetry.addData("Intake Power", robot.intake.getCurrentPosition());
-            telemetry.addData("Drop Power", robot.drop.getPower());
-            telemetry.addData("Plane Power", robot.plane.getPosition());
-            telemetry.addData("Lock Power", robot.hook.getPosition());
+
             /* Controls */
-            telemetry.addData("Wheel Positions", robot.frontLeft.getCurrentPosition() + ", " + robot.frontRight.getCurrentPosition() + " : " + robot.backLeft.getCurrentPosition() + ", " + robot.backRight.getCurrentPosition());
-            telemetry.addData("Slide Positions", robot.slideLeft.getCurrentPosition() + " : " + robot.slideRight.getCurrentPosition());
+
             // plane shooty
+//            robot.addPowerOnButtonPress(gamepad2.right_bumper, robot.plane, 1, 0);
+
             // chicken flingy
+            robot.addPowerOnButtonPress(gamepad2.left_bumper, robot.drop, -1, 0);
 
             //intake grabby (in)
 //            robot.addPowerOnButtonPress(gamepad2.dpad_up, robot.intake, 1, 0);
-
-            boolean intakeStuff = true;
-            if(intakeStuff) {
-                // MOVE THIS TO GAMEPAD1
-                while (gamepad2.dpad_up) {
-                    robot.intake.setPower(0.25);
-                    intakeStuff = false;
-                }
-                while (gamepad2.dpad_down) {
-                    robot.intake.setPower(-0.25);
-                    intakeStuff = false;
-                }
-                if (intakeStuff == false) robot.intake.setPower(0);
-
-            }
-
-//            robot.addPowerOnButtonPress(gamepad2.triangle, robot.drop, 1, -1);
-
-
-
-            boolean dropStuff = true;
-            if(dropStuff) {
-                while (gamepad2.triangle) {
-                    robot.drop.setPower(1);
-                    dropStuff = false;
-                    telemetry.addData("Drop", "UP");
-                }
-                while (gamepad2.cross) {
-                    robot.drop.setPower(-1);
-                    dropStuff = false;
-                    telemetry.addData("Drop", "DOWN");
-                }
-                if (dropStuff == false) robot.drop.setPower(0);
-            }
-
-//            boolean hookThing = false;
-//
-//            if(gamepad1.x) {
-//                if (hookThing) {
-//                    robot.hook.setPower(0);
-//                    hookThing = !hookThing;
-//                } else {
-//                    robot.hook.setPower(-1);
-//                    hookThing = !hookThing;
-//                }
-//            }
-//            if(gamepad1.b) {
-//                robot.hook.setPower(1);
-//            }
-//
-//            boolean planeThing = true;
-//            if(planeThing) {
-//                while (gamepad1.triangle) {
-//                    robot.plane.setPower(-1);
-//                    planeThing = false;
-//                    telemetry.addData("Plane", "UP");
-//                }
-//                if (planeThing == false) robot.plane.setPower(0);
-//            }
-
-            // HOOK CIRCLE
-            // PLANE GAMEPAD1 TRIANGLE
-
-//            if (gamepad2.dpad_down) robot.intake.setPower(-1);
-//            if (gamepad2.dpad_up) robot.intake.setPower(1);
-//            if (gamepad2.dpad_right) robot.intake.setPower(0);
+            if (gamepad2.dpad_up) robot.intake.setPower(1);
+            if (gamepad2.dpad_down) robot.intake.setPower(-1);
+            if (gamepad2.dpad_right) robot.intake.setPower(0);
             if (gamepad2.left_trigger > 500) {
                 for (DcMotor motor : robot.motors) {
                    motor.setPower(0);
                 }
             }
-            telemetry.update();
 
             //intake spitty (out)
 //            robot.addPowerOnButtonPress(gamepad2.dpad_down, robot.intake, -1, 0);
