@@ -49,7 +49,6 @@ public class RobotHardware {
         claw = hwMap.get(CRServo.class,"claw");
         plane = hwMap.get(Servo.class, "plane");
         hook = hwMap.get(Servo.class, "hook");
-        
 
 
         //armB = hwMap.get(DcMotor.class, "armB");
