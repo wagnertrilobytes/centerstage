@@ -130,10 +130,10 @@ public class Teleop extends LinearOpMode {
             double frontRightPower = robot.frontRight.getPower();
             double backLeftPower = robot.backLeft.getPower();
             double backRightPower = robot.backRight.getPower();
-           // double  = robot.slideLeft.getPower();
-            double slideRight = robot.slideRight.getPower();
+            double slideLeftPower  = robot.slideLeft.getPower();
+            double slideRightPower = robot.slideRight.getPower();
             //telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
-            telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower);
+            telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), slideLeft (%.2f), slideRight (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, slideLeftPower, slideRightPower);
             telemetry.update();
 
 
