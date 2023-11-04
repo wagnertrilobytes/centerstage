@@ -86,7 +86,7 @@ public class Teleop extends LinearOpMode {
             double Turn = -gamepad1.left_stick_x;
             double Strafe = -gamepad1.right_stick_x;
             double Slide = gamepad2.right_stick_y;
-            //double suck = gamepad2.left_stick_x;
+            double suck = gamepad2.left_stick_x;
             double flip = -gamepad2.left_stick_y;
             double MAX_SPEED = 1.0;
 
@@ -145,38 +145,12 @@ public class Teleop extends LinearOpMode {
             robot.backLeft.setPower(numBl - MAX_SPEED + MAX_SPEED);
             robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
             //slides
-            //robot.intake.setPower(suck - 0.35 + 0.35);
+            robot.intake.setPower(suck - 0.35 + 0.35);
             robot.claw.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
             robot.slideLeft.setPower(numUp - MAX_SPEED + MAX_SPEED);
             robot.slideRight.setPower(numUp - MAX_SPEED + MAX_SPEED);
 
 
-            boolean intakeIn = true;
-            if(intakeIn == true)
-            {
-                while(gamepad2.dpad_down)
-                {
-                    robot.intake.setPower(-1);
-                    intakeIn = false;
-                }
-                if(intakeIn == false)
-                {
-                    robot.intake.setPower(0);
-                }
-            }
-            boolean intakeOut = true;
-            if(intakeOut == true)
-            {
-                while(gamepad2.dpad_up)
-                {
-                    robot.intake.setPower(1);
-                    intakeOut = false;
-                }
-                if(intakeOut == false)
-                {
-                    robot.intake.setPower(0);
-                }
-            }
 
 
 
