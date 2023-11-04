@@ -51,6 +51,7 @@ public class RobotHardware {
         hook = hwMap.get(Servo.class, "hook");
 
 
+
         //armB = hwMap.get(DcMotor.class, "armB");
 
    /*     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -86,7 +87,7 @@ public class RobotHardware {
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER );
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

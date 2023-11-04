@@ -122,8 +122,8 @@ public class SimpleAuto extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  55,  55, 55,55,7.0);  // S1: Forward 47 Inches with 5 Sec timeout
         sleep(500);
-        robot.intake.setPower(0.3);
-        sleep(3500);
+        robot.intake.setPower(0.2);
+        sleep(7000);
         robot.intake.setPower(0);
         sleep(1000);
 
