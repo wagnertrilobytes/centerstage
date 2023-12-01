@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
@@ -15,8 +12,8 @@ import org.opencv.core.Scalar;
 import java.util.function.DoubleSupplier;
 
 //@Disabled // remove this line to have this show up on your robot
-@Autonomous
-public class ColourMassDetectionOpMode extends OpMode {
+@Autonomous(name = "Backstage Blue")
+public class BackstageBlue extends OpMode {
 	private VisionPortal visionPortal;
 	private ElapsedTime runtime = new ElapsedTime();
 	static final double     COUNTS_PER_MOTOR_REV    = 384.5 ;    // eg: TETRIX Motor Encoder
@@ -42,8 +39,9 @@ public class ColourMassDetectionOpMode extends OpMode {
 		// the domains are: ([0, 180], [0, 255], [0, 255])
 		// this is tuned to detect red, so you will need to experiment to fine tune it for your robot
 		// and experiment to fine tune it for blue
-		Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
-		Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
+		Scalar lower = new Scalar(232, 69, 255); // the lower hsv threshold for your detection
+		Scalar upper = new Scalar(232, 255, 255); // the upper hsv threshold for your detection
+		//
 		DoubleSupplier minArea = () -> 100; // the minimum area for the detection to consider for your prop
 		DoubleSupplier left = () -> 213;
 		DoubleSupplier right = () -> 426;
