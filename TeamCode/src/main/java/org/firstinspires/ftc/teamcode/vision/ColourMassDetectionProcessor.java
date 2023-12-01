@@ -49,14 +49,19 @@ public class ColourMassDetectionProcessor implements VisionProcessor {
 	 * @param right   the diving point for the prop to be on the right
 	 */
 
-	public ColourMassDetectionProcessor() {
+	public ColourMassDetectionProcessor(Scalar lower, Scalar upper, DoubleSupplier minArea, DoubleSupplier left, DoubleSupplier right) {
 		this.contours = new ArrayList<>();
 		//These are very tight ranges for the blue indicator
-		this.lower = new Scalar(90, 160, 90); // the lower hsv threshold for your detection
-		this.upper = new Scalar(105, 200, 255); // the upper hsv threshold for your detection
-		this.minArea = () -> 100;
-		this.left = () -> 213; // the left dividing line, in this case the left third of the frame
-		this.right = () -> 426; // the left dividing line, in this case the right third of the frame
+//		this.lower = new Scalar(90, 160, 90); // the lower hsv threshold for your detection
+//		this.upper = new Scalar(105, 200, 255); // the upper hsv threshold for your detection
+//		this.minArea = () -> 100;
+//		this.left = () -> 213; // the left dividing line, in this case the left third of the frame
+//		this.right = () -> 426; // the left dividing line, in this case the right third of the frame
+		this.lower = lower;
+		this.upper = upper;
+		this.minArea = minArea;
+		this.left = left; // the left dividing line, in this case the left third of the frame
+		this.right = right; // the left dividing line, in this case the right third of the frame
 
 		// setting up the paint for the text in the center of the box
 		//The text doesnt work because textPaint doesn't work in EOCV

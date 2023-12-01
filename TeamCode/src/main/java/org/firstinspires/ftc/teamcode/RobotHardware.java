@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+
 @Disabled
 public class RobotHardware {
     /* Public OpMode members. */
@@ -23,6 +25,7 @@ public class RobotHardware {
     public DcMotor slideLeft = null;
     public DcMotor slideRight = null;
     public DcMotor intake = null;
+    public WebcamName camera = null;
     public Servo plane = null;
 
     public Servo hook = null;
@@ -45,6 +48,7 @@ public class RobotHardware {
         backLeft = hwMap.get(DcMotor.class, "backLeft");
         backRight = hwMap.get(DcMotor.class, "backRight");
         slideLeft = hwMap.get(DcMotor.class, "slideLeft");
+        camera = hwMap.get(WebcamName.class, "Webcam 1");
         slideRight = hwMap.get(DcMotor.class, "slideRight");
         intake = hwMap.get(DcMotor.class, "intake");
         clawLeft = hwMap.get(CRServo.class,"clawLeft");

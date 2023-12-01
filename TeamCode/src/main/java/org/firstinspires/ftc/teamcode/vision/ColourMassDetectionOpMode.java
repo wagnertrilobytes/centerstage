@@ -2,17 +2,32 @@ package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
 
-@Disabled // remove this line to have this show up on your robot
+import java.util.function.DoubleSupplier;
+
+//@Disabled // remove this line to have this show up on your robot
 @Autonomous
 public class ColourMassDetectionOpMode extends OpMode {
 	private VisionPortal visionPortal;
+	private ElapsedTime runtime = new ElapsedTime();
+	static final double     COUNTS_PER_MOTOR_REV    = 384.5 ;    // eg: TETRIX Motor Encoder
+	static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
+	static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+	static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+			(WHEEL_DIAMETER_INCHES * 3.1415);
+	static final double     DRIVE_SPEED             = 0.6;
+	static final double     TURN_SPEED              = 0.5;
 	private ColourMassDetectionProcessor colourMassDetectionProcessor;
+	RobotHardware robot = new RobotHardware();
 	
 	/**
 	 * User-defined init method
@@ -29,14 +44,17 @@ public class ColourMassDetectionOpMode extends OpMode {
 		// and experiment to fine tune it for blue
 		Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
 		Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
-		double minArea = 100; // the minimum area for the detection to consider for your prop
-		
-		colourMassDetectionProcessor = new ColourMassDetectionProcessor();
+		DoubleSupplier minArea = () -> 100; // the minimum area for the detection to consider for your prop
+		DoubleSupplier left = () -> 213;
+		DoubleSupplier right = () -> 426;
+
+		robot.init(hardwareMap);
+		colourMassDetectionProcessor = new ColourMassDetectionProcessor(lower, upper, minArea, left, right);
 		visionPortal = new VisionPortal.Builder()
-				.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1")) // the camera on your robot is named "Webcam 1" by default
+				.setCamera(robot.camera) // the camera on your robot is named "Webcam 1" by default
 				.addProcessor(colourMassDetectionProcessor)
 				.build();
-		
+
 		// you may also want to take a look at some of the examples for instructions on
 		// how to have a switchable camera (switch back and forth between two cameras)
 		// or how to manually edit the exposure and gain, to account for different lighting conditions
@@ -91,13 +109,16 @@ public class ColourMassDetectionOpMode extends OpMode {
 		switch (recordedPropPosition) {
 			case LEFT:
 				// code to do if we saw the prop on the left
+				encoderDrive(0.4, 15, 15, 15, 15, 7.0);
 				break;
 			case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
 			case MIDDLE:
 				// code to do if we saw the prop on the middle
+				encoderDrive(0.4, 15, -15, 15, -15, 7.0);
 				break;
 			case RIGHT:
 				// code to do if we saw the prop on the right
+				encoderDrive(0.4, -15, 15, -15, 15, 7.0);
 				break;
 		}
 	}
@@ -127,5 +148,73 @@ public class ColourMassDetectionOpMode extends OpMode {
 		// this closes down the portal when we stop the code, its good practice!
 		colourMassDetectionProcessor.close();
 		visionPortal.close();
+	}
+
+	public void encoderDrive(double speed,
+							 double leftFinches,
+							 double rightFinches,
+							 double leftBinches,
+							 double rightBinches,
+							 double timeoutS) {
+		int newLeftFTarget;
+		int newRightFTarget;
+		int newLeftBTarget;
+		int newRightBTarget;
+
+		// Ensure that the opmode is still active
+		newLeftFTarget = robot.frontRight.getCurrentPosition() + (int) (rightFinches * COUNTS_PER_INCH);
+		newRightFTarget = robot.frontLeft.getCurrentPosition() + (int) (leftFinches * COUNTS_PER_INCH);
+		newLeftBTarget = robot.backRight.getCurrentPosition() + (int) (rightBinches * COUNTS_PER_INCH);
+		newRightBTarget = robot.backLeft.getCurrentPosition() + (int) (leftBinches * COUNTS_PER_INCH);
+
+		robot.frontRight.setTargetPosition(newRightFTarget);
+		robot.frontLeft.setTargetPosition(newLeftFTarget);
+		robot.backRight.setTargetPosition(newRightBTarget);
+		robot.backLeft.setTargetPosition(newLeftBTarget);
+
+		// Turn On RUN_TO_POSITION
+		robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+		// reset the timeout time and start motion.
+		runtime.reset();
+		robot.frontRight.setPower(Math.abs(speed));
+		robot.frontLeft.setPower(Math.abs(speed));
+		robot.backRight.setPower(Math.abs(speed));
+		robot.backLeft.setPower(Math.abs(speed));
+
+		// keep looping while we are still active, and there is time left, and both motors are running.
+		// Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+		// its target position, the motion will stop.  This is "safer" in the event that the robot will
+		// always end the motion as soon as possible.
+		// However, if you require that BOTH motors have finished their moves before the robot continues
+		// onto the next step, use (isBusy() || isBusy()) in the loop test.
+
+
+		while (
+				(runtime.seconds() < timeoutS) &&
+				(robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy())) {
+			telemetry.addData("Path1", "Running to %7d :%7d", newLeftFTarget, newRightFTarget, newLeftBTarget, newRightBTarget);
+			telemetry.addData("Path2", "Running at %7d :%7d",
+					robot.frontLeft.getCurrentPosition(),
+					robot.frontRight.getCurrentPosition(),
+					robot.backLeft.getCurrentPosition(),
+					robot.backRight.getCurrentPosition());
+			telemetry.update();
+		}
+
+		// Stop all motion;
+		robot.frontRight.setPower(0);
+		robot.frontLeft.setPower(0);
+		robot.backRight.setPower(0);
+		robot.backLeft.setPower(0);
+
+		// Turn off RUN_TO_POSITION
+		robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 	}
 }
