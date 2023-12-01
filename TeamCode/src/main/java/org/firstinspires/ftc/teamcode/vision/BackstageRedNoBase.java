@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,8 +12,8 @@ import org.opencv.core.Scalar;
 import java.util.function.DoubleSupplier;
 
 //@Disabled // remove this line to have this show up on your robot
-@Autonomous(name = "Backstage Blue")
-public class BackstageBlue extends OpMode {
+@Autonomous(name = "Backstage Red - No Base")
+public class BackstageRedNoBase extends LinearOpMode {
 	private VisionPortal visionPortal;
 	private ElapsedTime runtime = new ElapsedTime();
 	static final double     COUNTS_PER_MOTOR_REV    = 384.5 ;    // eg: TETRIX Motor Encoder
@@ -25,23 +25,11 @@ public class BackstageBlue extends OpMode {
 	static final double     TURN_SPEED              = 0.5;
 	private ColourMassDetectionProcessor colourMassDetectionProcessor;
 	RobotHardware robot = new RobotHardware();
-	
-	/**
-	 * User-defined init method
-	 * <p>
-	 * This method will be called once, when the INIT button is pressed.
-	 */
+
 	@Override
-	public void init() {
-		// the current range set by lower and upper is the full range
-		// HSV takes the form: (HUE, SATURATION, VALUE)
-		// which means to select our colour, only need to change HUE
-		// the domains are: ([0, 180], [0, 255], [0, 255])
-		// this is tuned to detect red, so you will need to experiment to fine tune it for your robot
-		// and experiment to fine tune it for blue
-		Scalar lower = new Scalar(232, 69, 255); // the lower hsv threshold for your detection
-		Scalar upper = new Scalar(232, 255, 255); // the upper hsv threshold for your detection
-		//
+	public void runOpMode() {
+		Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
+		Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
 		DoubleSupplier minArea = () -> 100; // the minimum area for the detection to consider for your prop
 		DoubleSupplier left = () -> 213;
 		DoubleSupplier right = () -> 426;
@@ -52,98 +40,95 @@ public class BackstageBlue extends OpMode {
 				.setCamera(robot.camera) // the camera on your robot is named "Webcam 1" by default
 				.addProcessor(colourMassDetectionProcessor)
 				.build();
+		while(opModeInInit()) {
+			telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
+			telemetry.addData("Camera State", visionPortal.getCameraState());
+			telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
+			telemetry.addData("Currently Detected Mass Area", colourMassDetectionProcessor.getLargestContourArea());
+			telemetry.update();
+		}
 
-		// you may also want to take a look at some of the examples for instructions on
-		// how to have a switchable camera (switch back and forth between two cameras)
-		// or how to manually edit the exposure and gain, to account for different lighting conditions
-		// these may be extra features for you to work on to ensure that your robot performs
-		// consistently, even in different environments
-	}
-	
-	/**
-	 * User-defined init_loop method
-	 * <p>
-	 * This method will be called repeatedly during the period between when
-	 * the init button is pressed and when the play button is pressed (or the
-	 * OpMode is stopped).
-	 * <p>
-	 * This method is optional. By default, this method takes no action.
-	 */
-	@Override
-	public void init_loop() {
-		telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
-		telemetry.addData("Camera State", visionPortal.getCameraState());
-		telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
-		telemetry.addData("Currently Detected Mass Area", colourMassDetectionProcessor.getLargestContourArea());
-	}
-	
-	/**
-	 * User-defined start method
-	 * <p>
-	 * This method will be called once, when the play button is pressed.
-	 * <p>
-	 * This method is optional. By default, this method takes no action.
-	 * <p>
-	 * Example usage: Starting another thread.
-	 */
-	@Override
-	public void start() {
-		// shuts down the camera once the match starts, we dont need to look any more
+		waitForStart();
 		if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
 			visionPortal.stopLiveView();
 			visionPortal.stopStreaming();
 		}
-		
+
 		// gets the recorded prop position
 		ColourMassDetectionProcessor.PropPositions recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
-		
+
 		// now we can use recordedPropPosition to determine where the prop is! if we never saw a prop, your recorded position will be UNFOUND.
 		// if it is UNFOUND, you can manually set it to any of the other positions to guess
 		if (recordedPropPosition == ColourMassDetectionProcessor.PropPositions.UNFOUND) {
 			recordedPropPosition = ColourMassDetectionProcessor.PropPositions.MIDDLE;
 		}
-		
+		encoderDrive(0.5,
+				-6,
+				-6,
+				-6,
+				-6,
+				7.0);
 		// now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
 		switch (recordedPropPosition) {
 			case LEFT:
+				encoderDrive(0.5,
+						-robot.TILE_LEN * 0.7,
+						robot.TILE_LEN * 0.7,
+						robot.TILE_LEN * 0.7,
+						-robot.TILE_LEN * 0.7,
+						7.0);
 				// code to do if we saw the prop on the left
-				encoderDrive(0.4, 15, 15, 15, 15, 7.0);
+				encoderDrive(0.75,
+						-25,
+						-25,
+						-25,
+						-25,
+						7.0);
+				robot.intake.setPower(-0.4);
+				sleep(1000);
+				robot.intake.setPower(0);
+				encoderDrive(0.25,
+						12,
+						12,
+						12,
+						12,
+						7.0);
 				break;
 			case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
 			case MIDDLE:
 				// code to do if we saw the prop on the middle
-				encoderDrive(0.4, 15, -15, 15, -15, 7.0);
+				encoderDrive(1,
+						-44,
+						-44,
+						-44,
+						-44,
+						7.0);
+				encoderDrive(0.50,
+						10,
+						10,
+						10,
+						10,
+						7.0);
+				robot.intake.setPower(-0.4);
+				sleep(1000);
+				robot.intake.setPower(0);
+				encoderDrive(0.25,
+						12,
+						12,
+						12,
+						12,
+						7.0);
 				break;
 			case RIGHT:
 				// code to do if we saw the prop on the right
 				encoderDrive(0.4, -15, 15, -15, 15, 7.0);
 				break;
 		}
-	}
-	
-	/**
-	 * User-defined loop method
-	 * <p>
-	 * This method will be called repeatedly during the period between when
-	 * the play button is pressed and when the OpMode is stopped.
-	 */
-	@Override
-	public void loop() {
-	
-	}
-	
-	/**
-	 * User-defined stop method
-	 * <p>
-	 * This method will be called once, when this OpMode is stopped.
-	 * <p>
-	 * Your ability to control hardware from this method will be limited.
-	 * <p>
-	 * This method is optional. By default, this method takes no action.
-	 */
-	@Override
-	public void stop() {
-		// this closes down the portal when we stop the code, its good practice!
+		while(opModeIsActive()) {
+			if (isStopRequested()) {
+				stop();
+			}
+		}
 		colourMassDetectionProcessor.close();
 		visionPortal.close();
 	}
@@ -158,6 +143,16 @@ public class BackstageBlue extends OpMode {
 		int newRightFTarget;
 		int newLeftBTarget;
 		int newRightBTarget;
+
+		robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+		robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 		// Ensure that the opmode is still active
 		newLeftFTarget = robot.frontRight.getCurrentPosition() + (int) (rightFinches * COUNTS_PER_INCH);
@@ -191,7 +186,7 @@ public class BackstageBlue extends OpMode {
 		// onto the next step, use (isBusy() || isBusy()) in the loop test.
 
 
-		while (
+		while (opModeIsActive() &&
 				(runtime.seconds() < timeoutS) &&
 				(robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy())) {
 			telemetry.addData("Path1", "Running to %7d :%7d", newLeftFTarget, newRightFTarget, newLeftBTarget, newRightBTarget);

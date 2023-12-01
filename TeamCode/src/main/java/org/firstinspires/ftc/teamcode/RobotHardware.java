@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 
 @Disabled
 public class RobotHardware {
@@ -29,6 +30,8 @@ public class RobotHardware {
     public Servo plane = null;
 
     public Servo hook = null;
+    public ColourMassDetectionProcessor.PropPositions lastPropPos = null;
+    public int TILE_LEN = 24;
     /* local OpMode members. */
     HardwareMap hwMap = null;
     // BNO055IMU imu;
@@ -93,6 +96,12 @@ public class RobotHardware {
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
+
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
