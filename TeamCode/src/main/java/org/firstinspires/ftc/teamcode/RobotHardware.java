@@ -30,6 +30,7 @@ public class RobotHardware {
     public Servo plane = null;
 
     public Servo hook = null;
+    public DcMotor[] motors;
     public ColourMassDetectionProcessor.PropPositions lastPropPos = null;
     public int TILE_LEN = 24;
     /* local OpMode members. */
@@ -58,7 +59,15 @@ public class RobotHardware {
         clawRight = hwMap.get(CRServo.class, "clawRight");
         plane = hwMap.get(Servo.class, "plane");
 
-
+        motors = new DcMotor[]{
+                frontLeft,
+                frontRight,
+                backLeft,
+                backRight,
+                slideLeft,
+                slideRight,
+                intake
+        };
 
 
         //armB = hwMap.get(DcMotor.class, "armB");
@@ -82,48 +91,15 @@ public class RobotHardware {
         slideLeft.setDirection(DcMotor.Direction.REVERSE);
         slideRight.setDirection(DcMotor.Direction.REVERSE);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        //armB.setDirection(DcMotor.Direction.REVERSE);
 
-        // Set all motors to zero power
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        slideLeft.setPower(0);
-        slideRight.setPower(0);
-        intake.setPower(0);
+        // Set all motors to zero power, make them reset, set their zero pwr behavior to brake
 
-
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //claw = hwMap.get(CRServo.class, "claw");
-        //clawR = hwMap.get(Servo.class, "clawR");
-
-
-        //Brake Function
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
-
-
+        for (DcMotor motor : motors) {
+            motor.setPower(0);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
     }
 }
 

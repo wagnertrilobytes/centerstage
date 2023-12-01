@@ -31,8 +31,6 @@ public class ColorVisionAutoBase extends LinearOpMode {
     DoubleSupplier minArea = () -> 100; // the minimum area for the detection to consider for your prop
     DoubleSupplier left = () -> 213;
     DoubleSupplier right = () -> 426;
-
-
     @Override
     public void runOpMode() {
         setup();
@@ -42,11 +40,13 @@ public class ColorVisionAutoBase extends LinearOpMode {
                 .setCamera(robot.camera) // the camera on your robot is named "Webcam 1" by default
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
-        telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
-        telemetry.addData("Camera State", visionPortal.getCameraState());
-        telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
-        telemetry.addData("Currently Detected Mass Area", colourMassDetectionProcessor.getLargestContourArea());
-
+        while(opModeInInit()) {
+            telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
+            telemetry.addData("Camera State", visionPortal.getCameraState());
+            telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
+            telemetry.addData("Currently Detected Mass Area", colourMassDetectionProcessor.getLargestContourArea());
+            telemetry.update();
+        }
         waitForStart();
         if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
             visionPortal.stopLiveView();

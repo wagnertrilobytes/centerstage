@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,6 +14,7 @@ import java.util.function.DoubleSupplier;
 
 //@Disabled // remove this line to have this show up on your robot
 @Autonomous(name = "Backstage Red - No Base")
+@Disabled
 public class BackstageRedNoBase extends LinearOpMode {
 	private VisionPortal visionPortal;
 	private ElapsedTime runtime = new ElapsedTime();

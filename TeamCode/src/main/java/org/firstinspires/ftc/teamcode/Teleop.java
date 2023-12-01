@@ -83,7 +83,7 @@ public class Teleop extends LinearOpMode {
 
 
             double Speed = -gamepad1.left_stick_y;
-            double Turn = -gamepad1.left_stick_x;
+            double Turn = gamepad1.left_stick_x;
             double Strafe = -gamepad1.right_stick_x;
             double Slide = gamepad2.right_stick_y;
             double suck = gamepad2.left_stick_x;
@@ -92,11 +92,13 @@ public class Teleop extends LinearOpMode {
 
 
 
+
+
             double numFl = 0.8*Range.clip((+Speed - Turn - Strafe), -1, +1);
             double numFr = 0.8*Range.clip((+Speed + Turn + Strafe), -1, +1);
             double numBl = 0.8*Range.clip((+Speed + Turn - Strafe), -1, +1);
             double numBr = 0.8*Range.clip((+Speed - Turn + Strafe), -1, +1);
-            double numUp = 0.30*Range.clip((Slide), -1, +1);
+            double numUp = 0.75*Range.clip((Slide), -1, +1);
             double numFlip = 0.8*Range.clip((flip), -1, +1);
             //double numSuck = 0.2*Range.clip((+suck), -1, +1);
 

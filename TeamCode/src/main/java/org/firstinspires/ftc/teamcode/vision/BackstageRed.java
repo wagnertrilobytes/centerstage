@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "BackstageRed LinearOpMode Based")
+@Autonomous(name = "Backstage Red (based)")
 public class BackstageRed extends ColorVisionAutoBase {
     @Override
     public void setup() {
@@ -40,7 +40,7 @@ public class BackstageRed extends ColorVisionAutoBase {
                         -25,
                         7.0);
                 robot.intake.setPower(-0.4);
-                sleep(1000);
+                sleep(800);
                 robot.intake.setPower(0);
                 encoderDrive(0.25,
                         12,
@@ -53,16 +53,22 @@ public class BackstageRed extends ColorVisionAutoBase {
             case MIDDLE:
                 // code to do if we saw the prop on the middle
                 encoderDrive(1,
-                        -44,
-                        -44,
-                        -44,
-                        -44,
+                        -30,
+                        -30,
+                        -30,
+                        -30,
+                        7.0);
+                encoderDrive(0.5,
+                        -robot.TILE_LEN * 0.25,
+                        robot.TILE_LEN * 0.25,
+                        robot.TILE_LEN * 0.25,
+                        -robot.TILE_LEN * 0.25,
                         7.0);
                 encoderDrive(0.50,
-                        10,
-                        10,
-                        10,
-                        10,
+                        -5,
+                        -5,
+                        -5,
+                        -5,
                         7.0);
                 robot.intake.setPower(-0.4);
                 sleep(1000);
