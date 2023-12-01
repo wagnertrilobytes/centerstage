@@ -83,7 +83,7 @@ public class Teleop extends LinearOpMode {
 
 
             double Speed = -gamepad1.left_stick_y;
-            double Turn = gamepad1.left_stick_x;
+            double Turn = -gamepad1.left_stick_x;
             double Strafe = -gamepad1.right_stick_x;
             double Slide = gamepad2.right_stick_y;
             double suck = gamepad2.left_stick_x;
