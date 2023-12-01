@@ -96,16 +96,11 @@ public class Teleop extends LinearOpMode {
             double numFr = 0.8*Range.clip((+Speed + Turn + Strafe), -1, +1);
             double numBl = 0.8*Range.clip((+Speed + Turn - Strafe), -1, +1);
             double numBr = 0.8*Range.clip((+Speed - Turn + Strafe), -1, +1);
-            double numUp = 0.10*Range.clip((Slide), -1, +1);
-            double numFlip = 0.7*Range.clip((flip), -1, +1);
+            double numUp = 0.30*Range.clip((Slide), -1, +1);
+            double numFlip = 0.8*Range.clip((flip), -1, +1);
             //double numSuck = 0.2*Range.clip((+suck), -1, +1);
 
-            if (gamepad2.b){
-                robot.plane.setPosition(-0.7);
-            }
-            if (gamepad2.a){
-                robot.hook.setPosition(-1.0);
-            }
+
 
            /* if (gamepad2.b && rotation<2824)
                 robot.arm.setTargetPosition(1000);
@@ -145,9 +140,18 @@ public class Teleop extends LinearOpMode {
             robot.backLeft.setPower(numBl - MAX_SPEED + MAX_SPEED);
             robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
             //slides
-            robot.intake.setPower(suck - 0.35 + 0.35);
-            robot.claw.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
-            robot.slideLeft.setPower(numUp - MAX_SPEED + MAX_SPEED);
+//            robot.intake.setPower(suck - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
+
+            if (gamepad2.left_trigger > 0.3) robot.intake.setPower(gamepad2.left_trigger);
+            if (gamepad2.right_trigger > 0.3) robot.intake.setPower(-gamepad2.right_trigger);
+            if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
+            telemetry.addData("lt", gamepad2.left_trigger);
+            telemetry.addData("rt", gamepad2.right_trigger);
+
+
+            robot.clawLeft.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
+            robot.clawRight.setPower(-numFlip  -MAX_SPEED + MAX_SPEED);
+            robot.slideLeft.setPower(-numUp - MAX_SPEED + MAX_SPEED);
             robot.slideRight.setPower(numUp - MAX_SPEED + MAX_SPEED);
 
 

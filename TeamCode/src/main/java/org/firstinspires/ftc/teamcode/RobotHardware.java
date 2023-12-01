@@ -17,7 +17,8 @@ public class RobotHardware {
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
-    public CRServo claw = null;
+    public CRServo clawLeft = null;
+    public CRServo clawRight = null;
     //public Servo clawR = null;
     public DcMotor slideLeft = null;
     public DcMotor slideRight = null;
@@ -46,9 +47,10 @@ public class RobotHardware {
         slideLeft = hwMap.get(DcMotor.class, "slideLeft");
         slideRight = hwMap.get(DcMotor.class, "slideRight");
         intake = hwMap.get(DcMotor.class, "intake");
-        claw = hwMap.get(CRServo.class,"claw");
+        clawLeft = hwMap.get(CRServo.class,"clawLeft");
+        clawRight = hwMap.get(CRServo.class, "clawRight");
         plane = hwMap.get(Servo.class, "plane");
-        hook = hwMap.get(Servo.class, "hook");
+
 
 
 
@@ -69,6 +71,7 @@ public class RobotHardware {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.REVERSE);
+
         slideLeft.setDirection(DcMotor.Direction.REVERSE);
         slideRight.setDirection(DcMotor.Direction.REVERSE);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -87,7 +90,7 @@ public class RobotHardware {
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
