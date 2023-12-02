@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.tuners;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 
-@TeleOp(name = "ReadMotorPos", group = "ReadVal")
+@TeleOp(name = "Read Part Positions", group = "Tuners")
 public class ReadMotorPos extends LinearOpMode {
 RobotHardware robot = new RobotHardware();
     @Override

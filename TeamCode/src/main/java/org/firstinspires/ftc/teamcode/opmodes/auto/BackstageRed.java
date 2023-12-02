@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
+import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "Backstage Red (based)")
+@Autonomous(name = "Backstage Red", group="Backstage")
 public class BackstageRed extends ColorVisionAutoBase {
     @Override
     public void setup() {

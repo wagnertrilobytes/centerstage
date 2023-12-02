@@ -23,12 +23,12 @@ public class ColorVisionAutoBase extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     public ColourMassDetectionProcessor colourMassDetectionProcessor;
-    RobotHardware robot = new RobotHardware();
-    Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
-    Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
-    DoubleSupplier minArea = () -> 100; // the minimum area for the detection to consider for your prop
-    DoubleSupplier left = () -> 213;
-    DoubleSupplier right = () -> 426;
+    public RobotHardware robot = new RobotHardware();
+    public Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
+    public Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
+    public DoubleSupplier minArea = () -> 100; // the minimum area for the detection to consider for your prop
+    public DoubleSupplier left = () -> 213;
+    public DoubleSupplier right = () -> 426;
     @Override
     public void runOpMode() {
         setup();
