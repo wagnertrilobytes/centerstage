@@ -23,7 +23,7 @@ RobotHardware robot = new RobotHardware();
             telemetry.addData("Slide Right", robot.slideRight.getCurrentPosition());
             telemetry.addData("Intake", robot.intake.getCurrentPosition());
             telemetry.addLine("Servos");
-            telemetry.addData("Plane", robot.plane.getPosition());
+            telemetry.addData("Plane", "Not measurable sadly");
             telemetry.addData("Hook", robot.hook.getPosition());
             telemetry.addLine("Arrays");
             telemetry.addData("Total Motors", robot.motors.length);

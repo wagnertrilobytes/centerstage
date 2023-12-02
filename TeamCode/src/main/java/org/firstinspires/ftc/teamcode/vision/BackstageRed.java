@@ -29,48 +29,48 @@ public class BackstageRed extends ColorVisionAutoBase {
         switch (propPos) {
             case LEFT:
                 // code to do if we saw the prop on the left
-                encoderDrive(speed,
-                        -25,
-                        -25,
-                        -25,
-                        -25,
+                encoderDrive(speed + 0.3,
+                        -30,
+                        -30,
+                        -30,
+                        -30,
                         7.0);
                 encoderDrive(speed,
-                        robot.TILE_LEN * 0.5,
-                        -robot.TILE_LEN * 0.5,
-                        -robot.TILE_LEN * 0.5,
-                        robot.TILE_LEN * 0.5,
+                        -robot.TILE_LEN - 7,
+                        robot.TILE_LEN - 7,
+                        robot.TILE_LEN - 7,
+                        -robot.TILE_LEN - 7,
                         7.0);
                 robot.intake.setPower(-0.4);
                 sleep(800);
                 robot.intake.setPower(0);
-                encoderDrive(speed,
-                        -robot.TILE_LEN * 0.85,
-                        robot.TILE_LEN * 0.85,
-                        robot.TILE_LEN * 0.85,
-                        -robot.TILE_LEN * 0.85,
+                encoderDrive(speed + 0.3,
+                        robot.TILE_LEN * 3.2,
+                        -robot.TILE_LEN * 3.2,
+                        -robot.TILE_LEN * 3.2,
+                        robot.TILE_LEN * 3.2,
                         7.0);
                 break;
             case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
             case MIDDLE:
                 // code to do if we saw the prop on the middle
                 encoderDrive(speed,
-                        -24,
-                        -24,
-                        -24,
-                        -24,
+                        -20,
+                        -20,
+                        -20,
+                        -20,
                         7.0);
                 encoderDrive(speed,
-                        -robot.TILE_LEN * 0.25,
-                        robot.TILE_LEN * 0.25,
-                        robot.TILE_LEN * 0.25,
-                        -robot.TILE_LEN * 0.25,
+                        -robot.TILE_LEN * 0.35,
+                        robot.TILE_LEN * 0.35,
+                        robot.TILE_LEN * 0.35,
+                        -robot.TILE_LEN * 0.35,
                         7.0);
                 encoderDrive(speed,
-                        -5,
-                        -5,
-                        -5,
-                        -5,
+                        -15,
+                        -15,
+                        -15,
+                        -15,
                         7.0);
                 robot.intake.setPower(-0.25);
                 sleep(1500);
@@ -82,34 +82,34 @@ public class BackstageRed extends ColorVisionAutoBase {
                         12,
                         7.0);
                 encoderDrive(0.75,
-                        60,
-                        -60,
-                        -60,
-                        60,
+                        65,
+                        -65,
+                        -65,
+                        65,
                         7.0);
                 break;
             case RIGHT:
                 // code to do if we saw the prop on the right
                 encoderDrive(speed,
-                        -25,
-                        -25,
-                        -25,
-                        -25,
+                        -17,
+                        -17,
+                        -17,
+                        -17,
                         7.0);
                 encoderDrive(speed,
-                        -12,
-                        12,
-                        12,
-                        -12,
+                        16,
+                        -16,
+                        -16,
+                        16,
                         7.0);
                 robot.intake.setPower(-0.4);
                 sleep(800);
                 robot.intake.setPower(0);
                 encoderDrive(speed,
-                        -30,
-                        30,
-                        30,
-                        -30,
+                        42,
+                        -42,
+                        -42,
+                        42,
                         7.0);
                 break;
         }
