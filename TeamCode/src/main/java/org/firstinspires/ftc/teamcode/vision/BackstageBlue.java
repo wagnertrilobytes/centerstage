@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "Backstage Red (based)")
-public class BackstageRed extends ColorVisionAutoBase {
+@Autonomous(name = "Backstage Blue (based)")
+public class BackstageBlue extends ColorVisionAutoBase {
     @Override
     public void setup() {
         this.lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
@@ -25,7 +25,13 @@ public class BackstageRed extends ColorVisionAutoBase {
                 7.0);
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         switch (propPos) {
-            case LEFT:
+            case RIGHT:
+                encoderDrive(0.5,
+                        -robot.TILE_LEN * 0.7,
+                        robot.TILE_LEN * 0.7,
+                        robot.TILE_LEN * 0.7,
+                        -robot.TILE_LEN * 0.7,
+                        7.0);
                 // code to do if we saw the prop on the left
                 encoderDrive(0.75,
                         -25,
@@ -33,20 +39,14 @@ public class BackstageRed extends ColorVisionAutoBase {
                         -25,
                         -25,
                         7.0);
-                encoderDrive(0.5,
-                        robot.TILE_LEN * 0.5,
-                        -robot.TILE_LEN * 0.5,
-                        -robot.TILE_LEN * 0.5,
-                        robot.TILE_LEN * 0.5,
-                        7.0);
                 robot.intake.setPower(-0.4);
                 sleep(800);
                 robot.intake.setPower(0);
-                encoderDrive(0.5,
-                        -robot.TILE_LEN * 0.85,
-                        robot.TILE_LEN * 0.85,
-                        robot.TILE_LEN * 0.85,
-                        -robot.TILE_LEN * 0.85,
+                encoderDrive(0.25,
+                        12,
+                        12,
+                        12,
+                        12,
                         7.0);
                 break;
             case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
@@ -80,13 +80,13 @@ public class BackstageRed extends ColorVisionAutoBase {
                         12,
                         7.0);
                 encoderDrive(0.75,
-                        -12,
-                        12,
                         12,
                         -12,
+                        -12,
+                        12,
                         7.0);
                 break;
-            case RIGHT:
+            case LEFT:
                 // code to do if we saw the prop on the right
                 encoderDrive(0.5,
                         -25,

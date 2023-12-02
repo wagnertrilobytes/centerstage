@@ -22,9 +22,7 @@ public class ColorVisionAutoBase extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
-    private ColourMassDetectionProcessor colourMassDetectionProcessor;
+    public ColourMassDetectionProcessor colourMassDetectionProcessor;
     RobotHardware robot = new RobotHardware();
     Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
     Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
@@ -41,6 +39,7 @@ public class ColorVisionAutoBase extends LinearOpMode {
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
         while(opModeInInit()) {
+            setupLoop();
             telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
             telemetry.addData("Camera State", visionPortal.getCameraState());
             telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
@@ -74,6 +73,7 @@ public class ColorVisionAutoBase extends LinearOpMode {
         visionPortal.close();
     }
     public void setup() {}
+    public void setupLoop() {}
     public void opModeActiveLoop() {}
     public void onStartedColor(ColourMassDetectionProcessor.PropPositions propPos) {} // TO BE OVERRIDDEN IN ANY EXTENDED CLASSES
 
@@ -83,20 +83,12 @@ public class ColorVisionAutoBase extends LinearOpMode {
                              double leftBinches,
                              double rightBinches,
                              double timeoutS) {
-        int newLeftFTarget;
-        int newRightFTarget;
-        int newLeftBTarget;
-        int newRightBTarget;
+        int newLeftFTarget, newRightFTarget, newLeftBTarget, newRightBTarget;
 
-        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        for (DcMotor dm : robot.driveMotors) {
+            dm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            dm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
 
         // Ensure that the opmode is still active
         newLeftFTarget = robot.frontRight.getCurrentPosition() + (int) (rightFinches * COUNTS_PER_INCH);
@@ -110,18 +102,15 @@ public class ColorVisionAutoBase extends LinearOpMode {
         robot.backLeft.setTargetPosition(newLeftBTarget);
 
         // Turn On RUN_TO_POSITION
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        for (DcMotor dm : robot.driveMotors) {
+            dm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
 
         // reset the timeout time and start motion.
         runtime.reset();
-        robot.frontRight.setPower(Math.abs(speed));
-        robot.frontLeft.setPower(Math.abs(speed));
-        robot.backRight.setPower(Math.abs(speed));
-        robot.backLeft.setPower(Math.abs(speed));
-
+        for (DcMotor dm : robot.driveMotors) {
+            dm.setPower(Math.abs(speed));
+        }
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
         // its target position, the motion will stop.  This is "safer" in the event that the robot will
@@ -142,16 +131,10 @@ public class ColorVisionAutoBase extends LinearOpMode {
             telemetry.update();
         }
 
-        // Stop all motion;
-        robot.frontRight.setPower(0);
-        robot.frontLeft.setPower(0);
-        robot.backRight.setPower(0);
-        robot.backLeft.setPower(0);
-
-        // Turn off RUN_TO_POSITION
-        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // Stop all motion, then reset encoders
+        for (DcMotor dm : robot.driveMotors) {
+            dm.setPower(0);
+            dm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
     }
 }

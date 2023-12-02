@@ -147,6 +147,11 @@ public class Teleop extends LinearOpMode {
             if (gamepad2.left_trigger > 0.3) robot.intake.setPower(gamepad2.left_trigger);
             if (gamepad2.right_trigger > 0.3) robot.intake.setPower(-gamepad2.right_trigger);
             if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
+
+            if (gamepad2.b){
+                robot.plane.setPosition(-0.7);
+            }
+
             telemetry.addData("lt", gamepad2.left_trigger);
             telemetry.addData("rt", gamepad2.right_trigger);
 

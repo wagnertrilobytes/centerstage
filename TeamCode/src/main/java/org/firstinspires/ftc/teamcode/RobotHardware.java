@@ -31,6 +31,7 @@ public class RobotHardware {
 
     public Servo hook = null;
     public DcMotor[] motors;
+    public DcMotor[] driveMotors;
     public ColourMassDetectionProcessor.PropPositions lastPropPos = null;
     public int TILE_LEN = 24;
     /* local OpMode members. */
@@ -67,6 +68,12 @@ public class RobotHardware {
                 slideLeft,
                 slideRight,
                 intake
+        };
+        driveMotors = new DcMotor[]{
+                frontLeft,
+                frontRight,
+                backLeft,
+                backRight
         };
 
 
