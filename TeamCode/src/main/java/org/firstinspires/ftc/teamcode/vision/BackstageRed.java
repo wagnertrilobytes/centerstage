@@ -15,9 +15,11 @@ public class BackstageRed extends ColorVisionAutoBase {
         this.right = () -> 426;
     }
 
+    double speed = 0.4;
+
     @Override
     public void onStartedColor(ColourMassDetectionProcessor.PropPositions propPos) {
-        encoderDrive(0.5,
+        encoderDrive(speed,
                 -6,
                 -6,
                 -6,
@@ -27,13 +29,13 @@ public class BackstageRed extends ColorVisionAutoBase {
         switch (propPos) {
             case LEFT:
                 // code to do if we saw the prop on the left
-                encoderDrive(0.75,
+                encoderDrive(speed,
                         -25,
                         -25,
                         -25,
                         -25,
                         7.0);
-                encoderDrive(0.5,
+                encoderDrive(speed,
                         robot.TILE_LEN * 0.5,
                         -robot.TILE_LEN * 0.5,
                         -robot.TILE_LEN * 0.5,
@@ -42,7 +44,7 @@ public class BackstageRed extends ColorVisionAutoBase {
                 robot.intake.setPower(-0.4);
                 sleep(800);
                 robot.intake.setPower(0);
-                encoderDrive(0.5,
+                encoderDrive(speed,
                         -robot.TILE_LEN * 0.85,
                         robot.TILE_LEN * 0.85,
                         robot.TILE_LEN * 0.85,
@@ -52,49 +54,49 @@ public class BackstageRed extends ColorVisionAutoBase {
             case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
             case MIDDLE:
                 // code to do if we saw the prop on the middle
-                encoderDrive(1,
-                        -30,
-                        -30,
-                        -30,
-                        -30,
+                encoderDrive(speed,
+                        -24,
+                        -24,
+                        -24,
+                        -24,
                         7.0);
-                encoderDrive(0.5,
+                encoderDrive(speed,
                         -robot.TILE_LEN * 0.25,
                         robot.TILE_LEN * 0.25,
                         robot.TILE_LEN * 0.25,
                         -robot.TILE_LEN * 0.25,
                         7.0);
-                encoderDrive(0.50,
+                encoderDrive(speed,
                         -5,
                         -5,
                         -5,
                         -5,
                         7.0);
-                robot.intake.setPower(-0.3);
-                sleep(900);
+                robot.intake.setPower(-0.25);
+                sleep(1500);
                 robot.intake.setPower(0);
-                encoderDrive(0.25,
+                encoderDrive(speed,
                         12,
                         12,
                         12,
                         12,
                         7.0);
                 encoderDrive(0.75,
-                        -12,
-                        12,
-                        12,
-                        -12,
+                        60,
+                        -60,
+                        -60,
+                        60,
                         7.0);
                 break;
             case RIGHT:
                 // code to do if we saw the prop on the right
-                encoderDrive(0.5,
+                encoderDrive(speed,
                         -25,
                         -25,
                         -25,
                         -25,
                         7.0);
-                encoderDrive(0.5,
+                encoderDrive(speed,
                         -12,
                         12,
                         12,
@@ -103,7 +105,7 @@ public class BackstageRed extends ColorVisionAutoBase {
                 robot.intake.setPower(-0.4);
                 sleep(800);
                 robot.intake.setPower(0);
-                encoderDrive(0.5,
+                encoderDrive(speed,
                         -30,
                         30,
                         30,
