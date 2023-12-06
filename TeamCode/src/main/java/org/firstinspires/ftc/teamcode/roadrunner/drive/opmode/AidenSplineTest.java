@@ -40,7 +40,7 @@ public class AidenSplineTest extends LinearOpMode {
 //                .turn(Math.toRadians(-90))
 //                .forward(24)
 //                .build());
-        drive.setPoseEstimate(new Pose2d(7, 61, 0));
+        drive.setPoseEstimate(new Pose2d(7, 61, 0)); // YOU NEED DECIMAL POINTS OR ELSE ACCURACY IS GONE
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(7, 61, 0))
                 .splineTo(new Vector2d(7, 33), 3)
                 .build());
