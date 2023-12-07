@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.roadrunner.drive.opmode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 /*
  * This is an example of a more complex path to really test the tuning.
@@ -40,9 +42,35 @@ public class AidenSplineTest extends LinearOpMode {
 //                .turn(Math.toRadians(-90))
 //                .forward(24)
 //                .build());
-        drive.setPoseEstimate(new Pose2d(7, 61, 0)); // YOU NEED DECIMAL POINTS OR ELSE ACCURACY IS GONE
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(7, 61, 0))
-                .splineTo(new Vector2d(7, 33), 3)
-                .build());
+
+        // TRY 2
+//        Pose2d startPos = new Pose2d(12, 63, Math.toRadians(270));
+//        drive.setPoseEstimate(startPos);
+//        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(0,0,0))
+//                .splineTo(new Vector2d(startPos.getX(), 40), Math.toRadians(0))
+//                .build());
+
+        //TRY 3
+//        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
+//                        .forward(24)
+//                        .turn(Math.toRadians(0))
+//                .build());
+        // TRY 4, USING ROADRUNNER GUI
+        Pose2d startPose = new Pose2d(14, 61, Math.toRadians(270));
+        drive.setPoseEstimate(startPose);
+        TrajectorySequenceBuilder stepOne = drive.trajectorySequenceBuilder(startPose)
+                .lineTo(new Vector2d(25, 61))
+                .lineTo(new Vector2d(25, 40));
+        TrajectorySequence sob = stepOne.build();
+        drive.followTrajectorySequence(sob);
+        hardwareMap.get(DcMotor.class, "intake").setPower(0.4);
+        sleep(250);
+        hardwareMap.get(DcMotor.class, "intake").setPower(0);
+        TrajectorySequenceBuilder st = drive.trajectorySequenceBuilder(sob.end())
+                .lineTo(new Vector2d(25, 50))
+                .lineTo(new Vector2d(46, 40));
+        TrajectorySequence stb = st.build();
+        drive.followTrajectorySequence(stb);
+        drive.followTrajectorySequence(st.setReversed(true).build());
     }
 }
