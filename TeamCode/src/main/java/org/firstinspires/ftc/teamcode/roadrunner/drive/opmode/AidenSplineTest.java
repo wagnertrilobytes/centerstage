@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 /*
  * This is an example of a more complex path to really test the tuning.
  */
-@Autonomous(group = "drive")
+@Autonomous(group = "drive", name="Backstage Blue Left Spline Test")
 public class AidenSplineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -71,6 +71,5 @@ public class AidenSplineTest extends LinearOpMode {
                 .lineTo(new Vector2d(46, 40));
         TrajectorySequence stb = st.build();
         drive.followTrajectorySequence(stb);
-        drive.followTrajectorySequence(st.setReversed(true).build());
     }
 }
