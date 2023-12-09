@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
+import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessorTwo;
 import org.opencv.core.Scalar;
 
 @Autonomous(name = "Backstage Blue", group="Backstage")
@@ -18,7 +19,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
     }
 
     @Override
-    public void onStartedColor(ColourMassDetectionProcessor.PropPositions propPos) {
+    public void onStartedColor(ColourMassDetectionProcessor.PropPositions propPosL, ColourMassDetectionProcessorTwo.PropPositions propPosR) {
         encoderDrive(0.5,
                 -6,
                 -6,
@@ -26,7 +27,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 -6,
                 7.0);
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
-        switch (propPos) {
+        switch (propPosL) {
             case RIGHT:
                 encoderDrive(0.5,
                         -robot.TILE_LEN * 0.7,

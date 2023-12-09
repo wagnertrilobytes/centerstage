@@ -15,29 +15,26 @@ public class BlueTuneTest extends ColorVisionAutoBase {
     public static double lower1 = 100;
     public static double lower2 = 100;
 
-    public static double upper0 = 60;
+    public static double upper0 = 180;
     public static double upper1 = 255;
     public static double upper2 = 255;
+    public static double minAreaC = 8000;
+    public static double leftC = 213;
+    public static double rightC = 416;
 
     public FtcDashboard dashboard = FtcDashboard.getInstance();
     @Override
     public void setup() {
         this.lower = new Scalar(lower0, lower1, lower2);
         this.upper = new Scalar(upper0, upper1, upper2); // the upper hsv threshold for your detection
-        this.minArea = () -> 100; // the minimum area for the detection to consider for your prop
-        this.left = () -> 213;
-        this.right = () -> 426;
+        this.minArea = () -> minAreaC; // the minimum area for the detection to consider for your prop
+        this.left = () -> leftC;
+        this.right = () -> rightC;
     }
 
     @Override
     public void setupLoop() {
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.fieldOverlay().clear();
-        dashboard.sendTelemetryPacket(packet);
-        TelemetryPacket packetToo = new TelemetryPacket();
-        packet.fieldOverlay()
-                .fillText(this.colourMassDetectionProcessor.getRecordedPropPosition().toString(), 0, 0, "8px Arial", -Math.toRadians(45), false);
-        dashboard.sendTelemetryPacket(packetToo);
+
     }
 
     @Override

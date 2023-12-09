@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 
 /**
@@ -52,8 +53,6 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 @TeleOp(name="CenterStage: Teleop", group="Main")
 //@Disabled
 public class Teleop extends LinearOpMode {
-    RobotHardware robot = new RobotHardware();
-
     // Declare OpMode mem bers.
     //private ElapsedTime runtime = new ElapsedTime();
     //private DcMotor leftDrive = null;
@@ -63,7 +62,7 @@ public class Teleop extends LinearOpMode {
 
     //@Override
     public void runOpMode() {
-        robot.init(hardwareMap);
+        SampleMecanumDrive robot = new SampleMecanumDrive(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -78,39 +77,22 @@ public class Teleop extends LinearOpMode {
         //runtime.reset();
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !isStopRequested()) {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
-
-
-            double Speed = gamepad1.left_stick_y;
-            double Turn = gamepad1.left_stick_x;
-            double Strafe = -gamepad1.right_stick_x;
-            double Slide = gamepad2.right_stick_y;
-            double suck = gamepad2.left_stick_x;
+            double Speed = -gamepad1.left_stick_y;
+            double Strafe = -gamepad1.left_stick_x;
+            double Turn = gamepad1.right_stick_x;
+            double Slide = -gamepad2.right_stick_y;
             double flip = -gamepad2.left_stick_y;
             double MAX_SPEED = 1.0;
 
-
-
-
-
-            double numFl = 0.8*Range.clip((+Speed - Turn - Strafe), -1, +1);
-            double numFr = 0.8*Range.clip((+Speed + Turn + Strafe), -1, +1);
-            double numBl = 0.8*Range.clip((+Speed + Turn - Strafe), -1, +1);
-            double numBr = 0.8*Range.clip((+Speed - Turn + Strafe), -1, +1);
-            double numUp = 0.75*Range.clip((Slide), -1, +1);
+            double numFl = 0.75*Range.clip((+Speed - Turn - Strafe), -1, +1);
+            double numFr = 0.75*Range.clip((+Speed + Turn + Strafe), -1, +1);
+            double numBl = 0.75*Range.clip((+Speed + Turn - Strafe), -1, +1);
+            double numBr = 0.75*Range.clip((+Speed - Turn + Strafe), -1, +1);
+            double numUp = 0.5*Range.clip((Slide), -1, +1);
             double numFlip = 0.8*Range.clip((flip), -1, +1);
-            //double numSuck = 0.2*Range.clip((+suck), -1, +1);
-
-
-
-           /* if (gamepad2.b && rotation<2824)
-                robot.arm.setTargetPosition(1000);
-                robot.arm.getCurrentPosition();
-                if (robot.arm.)
-                robot.arm.setPower(.5);*/
             //Fabian Bafoonery
 
             //rotation values for height
@@ -150,8 +132,11 @@ public class Teleop extends LinearOpMode {
             if (gamepad2.right_trigger > 0.3) robot.intake.setPower(-gamepad2.right_trigger);
             if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
 
-            if (gamepad2.b){
+            while (gamepad2.b){
                 robot.plane.setPosition(-0.7);
+            }
+            while (!gamepad2.b) {
+                robot.plane.setPosition(0.7);
             }
 
             telemetry.addData("lt", gamepad2.left_trigger);

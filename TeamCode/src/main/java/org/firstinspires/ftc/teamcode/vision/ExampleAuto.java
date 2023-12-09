@@ -24,9 +24,9 @@ public class ExampleAuto extends ColorVisionAutoBase {
     }
 
     @Override
-    public void onStartedColor(ColourMassDetectionProcessor.PropPositions propPos) {
-        robot.lastPropPos = propPos;
-        switch(propPos) {
+    public void onStartedColor(ColourMassDetectionProcessor.PropPositions propPosL, ColourMassDetectionProcessorTwo.PropPositions propPosR) {
+        robot.lastPropPos = propPosL;
+        switch(propPosL) {
             case LEFT:
                 telemetry.addData("Seen", "Left");
                 break;

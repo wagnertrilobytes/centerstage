@@ -19,15 +19,18 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
@@ -37,6 +40,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,6 +75,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
+    public static int TILE_LEN = 24;
+    public ColourMassDetectionProcessor.PropPositions lastPropPos;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -79,8 +85,17 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
-    private List<DcMotorEx> motors;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    public DcMotorEx frontLeft, frontRight, backLeft, backRight; /* FALLBACK INCASE I FORGET TO REFACTOR */
+    public DcMotorEx slideLeft, slideRight, intake;
+    public Servo plane;
+    public CRServo clawLeft, clawRight;
+    public List<Servo> servos;
+    public List<CRServo> claw;
+    public List<DcMotorEx> slide;
+    public List<DcMotorEx> motors;
+    public WebcamName cameraLeft;
+    public WebcamName cameraRight;
 
     private IMU imu;
     private VoltageSensor batteryVoltageSensor;
@@ -113,7 +128,33 @@ public class SampleMecanumDrive extends MecanumDrive {
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
+        backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
+
+        clawLeft = hardwareMap.get(CRServo.class, "clawLeft");
+        clawRight = hardwareMap.get(CRServo.class, "clawRight");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
+        slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
+
+        cameraLeft = hardwareMap.get(WebcamName.class, "Webcam 1");
+        cameraRight = hardwareMap.get(WebcamName.class, "Webcam 2");
+
+        plane = hardwareMap.get(Servo.class, "plane");
+
+        motors = Arrays.asList(
+                leftFront, leftRear, rightRear, rightFront,
+                slideLeft, slideRight,
+                intake
+        );
+
+        claw = Arrays.asList(clawLeft, clawRight);
+
+        slide = Arrays.asList(slideLeft, slideRight);
+
+        servos = Arrays.asList(plane);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
