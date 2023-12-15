@@ -4,6 +4,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
@@ -12,6 +14,8 @@ import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 import java.lang.annotation.Target;
+import java.util.Timer;
+
 @Autonomous(name = "Backstage Blue", group="Backstage")
 public class BackstageBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
@@ -129,12 +133,12 @@ public class BackstageBlue extends ColorVisionAutoBase {
                     sleep(750);
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
-                    sleep(250);
-                    robot.clawLeft.setPower(-clawSpeed);
-                    robot.clawRight.setPower(clawSpeed);
+                    ElapsedTime a = new ElapsedTime();
+                    while (a.seconds() != 1) {
+                        robot.clwLeft.negative(clawSpeed);
+                        robot.clwRight.positive(clawSpeed);
+                    }
                     sleep(750);
-                    robot.clawLeft.setPower(0);
-                    robot.clawRight.setPower(0);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                     sleep(350);
                     robot.slideLeft.setPower(0.75);

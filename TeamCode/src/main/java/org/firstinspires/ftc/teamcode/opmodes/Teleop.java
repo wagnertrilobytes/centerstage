@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.auto.TestServo;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 
@@ -63,6 +64,8 @@ public class Teleop extends LinearOpMode {
     //@Override
     public void runOpMode() {
         SampleMecanumDrive robot = new SampleMecanumDrive(hardwareMap);
+        TestServo clawLeft = new TestServo(robot.clawLeft);
+        TestServo clawRight = new TestServo(robot.clawRight);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -135,8 +138,8 @@ public class Teleop extends LinearOpMode {
                 robot.plane.setPosition(0.7);
             }
 
-            robot.clawLeft.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
-            robot.clawRight.setPower(-numFlip  -MAX_SPEED + MAX_SPEED);
+            clawLeft.positive(numFlip - MAX_SPEED  + MAX_SPEED);
+            clawRight.negative(-numFlip  -MAX_SPEED + MAX_SPEED);
             robot.slideLeft.setPower(-numUp - MAX_SPEED + MAX_SPEED);
             robot.slideRight.setPower(numUp - MAX_SPEED + MAX_SPEED);
 
@@ -199,8 +202,8 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Intake", robot.intake.getCurrentPosition());
             telemetry.addLine("Servos");
             telemetry.addData("Plane", robot.plane.getPosition());
-            telemetry.addData("clwL", robot.clawLeft.getPower());
-            telemetry.addData("clwR", robot.clawRight.getPower());
+            telemetry.addData("clwL", robot.clawLeft.getPosition());
+            telemetry.addData("clwR", robot.clawRight.getPosition());
 
             telemetry.update();
         }

@@ -32,6 +32,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.opmodes.auto.TestServo;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
@@ -89,9 +90,11 @@ public class SampleMecanumDrive extends MecanumDrive {
     public DcMotorEx frontLeft, frontRight, backLeft, backRight; /* FALLBACK INCASE I FORGET TO REFACTOR */
     public DcMotorEx slideLeft, slideRight, intake;
     public Servo plane;
-    public CRServo clawLeft, clawRight;
+    public Servo clawLeft, clawRight;
+    public TestServo clwLeft, clwRight;
+//    public Servo testServo;
     public List<Servo> servos;
-    public List<CRServo> claw;
+    public List<Servo> claw;
     public List<DcMotorEx> slide;
     public List<DcMotorEx> motors;
     public WebcamName cameraLeft;
@@ -133,8 +136,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
 
-        clawLeft = hardwareMap.get(CRServo.class, "clawLeft");
-        clawRight = hardwareMap.get(CRServo.class, "clawRight");
+        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
+        clawRight = hardwareMap.get(Servo.class, "clawRight");
+//        testServo = hardwareMap.get(Servo.class, "servoTest");
+        clwLeft = new TestServo(clawLeft);
+        clwRight = new TestServo(clawRight);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
         slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");

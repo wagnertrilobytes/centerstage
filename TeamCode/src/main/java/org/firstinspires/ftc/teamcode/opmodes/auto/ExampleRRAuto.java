@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -31,11 +32,12 @@ public class ExampleRRAuto extends LinearOpMode {
         robot.slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.clawLeft.setPower(+clawSpeed);
-        robot.clawRight.setPower(-clawSpeed);
+        ElapsedTime a = new ElapsedTime();
+        while (a.seconds() != 1) {
+            robot.clwLeft.positive(clawSpeed);
+            robot.clwRight.negative(clawSpeed);
+        }
         sleep(750);
-        robot.clawLeft.setPower(0);
-        robot.clawRight.setPower(0);
 
         robot.followTrajectorySequence(robot.trajectorySequenceBuilder(trajSec.end())
                 .setReversed(true)

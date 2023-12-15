@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
@@ -120,11 +121,12 @@ public class BackstageRed extends ColorVisionAutoBase {
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
                     sleep(250);
-                    robot.clawLeft.setPower(-clawSpeed);
-                    robot.clawRight.setPower(clawSpeed);
+                    ElapsedTime a = new ElapsedTime();
+                    while (a.seconds() != 1) {
+                        robot.clwLeft.negative(clawSpeed);
+                        robot.clwRight.positive(clawSpeed);
+                    }
                     sleep(750);
-                    robot.clawLeft.setPower(0);
-                    robot.clawRight.setPower(0);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                 }
                 break;

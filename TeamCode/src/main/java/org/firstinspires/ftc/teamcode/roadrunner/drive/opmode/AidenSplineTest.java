@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
@@ -82,11 +83,12 @@ public class AidenSplineTest extends LinearOpMode {
         drive.slideLeft.setPower(0);
         drive.slideRight.setPower(0);
         sleep(250);
-        drive.clawLeft.setPower(-clawSpeed);
-        drive.clawRight.setPower(clawSpeed);
+        ElapsedTime a = new ElapsedTime();
+        while (a.seconds() != 1) {
+            drive.clwLeft.negative(clawSpeed);
+            drive.clwRight.positive(clawSpeed);
+        }
         sleep(750);
-        drive.clawLeft.setPower(0);
-        drive.clawRight.setPower(0);
 
     }
 }

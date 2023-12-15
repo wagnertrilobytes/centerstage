@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
@@ -131,11 +132,12 @@ public class FrontstageBlue extends ColorVisionAutoBase {
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
                     sleep(250);
-                    robot.clawLeft.setPower(-clawSpeed);
-                    robot.clawRight.setPower(clawSpeed);
+                    ElapsedTime a = new ElapsedTime();
+                    while (a.seconds() != 1) {
+                        robot.clwLeft.negative(clawSpeed);
+                        robot.clwRight.positive(clawSpeed);
+                    }
                     sleep(750);
-                    robot.clawLeft.setPower(0);
-                    robot.clawRight.setPower(0);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                     sleep(350);
                     robot.slideLeft.setPower(0.75);
