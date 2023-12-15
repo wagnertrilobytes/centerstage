@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.roadrunner.drive.opmode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -71,5 +69,24 @@ public class AidenSplineTest extends LinearOpMode {
                 .lineTo(new Vector2d(46, 40));
         TrajectorySequence stb = st.build();
         drive.followTrajectorySequence(stb);
+
+
+        TrajectorySequence trajSec = drive.trajectorySequenceBuilder(stb.end())
+                .turn(Math.toRadians(90))
+                .build();
+        drive.followTrajectorySequence(trajSec);
+        double clawSpeed = 0.75;
+        drive.slideLeft.setPower(-0.75);
+        drive.slideRight.setPower(0.75);
+        sleep(750);
+        drive.slideLeft.setPower(0);
+        drive.slideRight.setPower(0);
+        sleep(250);
+        drive.clawLeft.setPower(-clawSpeed);
+        drive.clawRight.setPower(clawSpeed);
+        sleep(750);
+        drive.clawLeft.setPower(0);
+        drive.clawRight.setPower(0);
+
     }
 }

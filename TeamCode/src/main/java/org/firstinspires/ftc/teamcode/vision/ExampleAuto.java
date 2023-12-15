@@ -18,15 +18,14 @@ public class ExampleAuto extends ColorVisionAutoBase {
     }
 
     @Override
-    public void opModeActiveLoop() {
+    public void onStarted(ColourMassDetectionProcessor.Prop prop) {
         telemetry.addData("Test", robot.lastPropPos.toString());
         telemetry.update();
     }
 
     @Override
-    public void onStartedColor(ColourMassDetectionProcessor.PropPositions propPosL, ColourMassDetectionProcessorTwo.PropPositions propPosR) {
-        robot.lastPropPos = propPosL;
-        switch(propPosL) {
+    public void onStartedColor(ColourMassDetectionProcessor.Prop propPosL) {
+        switch(propPosL.getPosition()) {
             case LEFT:
                 telemetry.addData("Seen", "Left");
                 break;

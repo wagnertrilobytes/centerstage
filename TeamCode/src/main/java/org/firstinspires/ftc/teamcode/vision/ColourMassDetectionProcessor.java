@@ -235,4 +235,26 @@ public class ColourMassDetectionProcessor implements VisionProcessor {
 		RIGHT,
 		UNFOUND;
 	}
+
+	public static class Prop {
+		PropPositions position;
+		String name;
+		public Prop() {
+			position = PropPositions.UNFOUND;
+			name = "None";
+		}
+		public Prop(PropPositions position, String name) {
+			this();
+			this.position = position;
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public PropPositions getPosition() {
+			return position;
+		}
+	}
 }

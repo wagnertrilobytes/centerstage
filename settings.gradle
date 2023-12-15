@@ -14,3 +14,4 @@ gradleEnterprise {
 
 include ':FtcRobotController'
 include ':TeamCode'
+include ':MeepMeepVisualizer'

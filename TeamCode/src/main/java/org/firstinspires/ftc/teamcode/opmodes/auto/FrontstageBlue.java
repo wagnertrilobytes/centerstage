@@ -2,19 +2,15 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
-import java.lang.annotation.Target;
-
-@Autonomous(name = "Backstage Red", group="Backstage")
-public class BackstageRed extends ColorVisionAutoBase {
+@Autonomous(name = "Frontstage Blue", group="Backstage")
+public class FrontstageBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
     TrajectorySequence left_trajOne;
@@ -28,47 +24,57 @@ public class BackstageRed extends ColorVisionAutoBase {
 
     @Override
     public void setup() {
-        this.lower = new Scalar(0, 100, 100); // the lower hsv threshold for your detection
-        this.upper = new Scalar(255, 255, 255); // the upper hsv threshold for your detection
+        this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
+        this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
         this.minArea = () -> 8000; // the minimum area for the detection to consider for your prop
         this.left = () -> 213;
         this.right = () -> 426;
-        this.name = "Red";
+        this.name = "Blue";
         robot.setPoseEstimate(startPos);
 
-        left_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .splineTo(new Vector2d(32, -30), Math.toRadians(180))
-                .splineTo(new Vector2d(14, -32), Math.toRadians(180))
+//        left_trajOne = robot.trajectorySequenceBuilder(startPos)
+//                .splineTo(new Vector2d(32, 30), Math.toRadians(180))
+//                .splineTo(new Vector2d(14, 32), Math.toRadians(180))
+//                .build();
+
+        left_trajOne =robot.trajectorySequenceBuilder(startPos)
+                .lineTo(new Vector2d(25, 61))
+                .lineTo(new Vector2d(25, 40))
                 .build();
 
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToLinearHeading(new Pose2d(14, -35, Math.toRadians(90)))
+                .lineTo(new Vector2d(-36, 0))
+                .lineToLinearHeading(new Pose2d(-36, 36, Math.toRadians(180)))
+                .lineTo(new Vector2d(-36, 0))
+                .lineTo(new Vector2d(0,0))
+                .lineToLinearHeading(new Pose2d(30, 0, Math.toRadians(360)))
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
-                .build();
-        right_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(25, -61))
-                .lineTo(new Vector2d(25, -40))
-                .build();
-        right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineTo(new Vector2d(25, -61))
-                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
                 .build();
 
-        drop_trajOne = robot.trajectorySequenceBuilder(new Pose2d(36, -36, Math.toRadians(270)))
-                .splineTo(new Vector2d(40, -36), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(48, -36), Math.toRadians(180))
+        right_trajOne = robot.trajectorySequenceBuilder(startPos)
+                .lineTo(new Vector2d(25, 61))
+                .lineTo(new Vector2d(25, 40))
+                .lineToLinearHeading(new Pose2d(10, 36, Math.toRadians(180)))
+                .build();
+        right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
+                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
+                .build();
+
+        drop_trajOne = robot.trajectorySequenceBuilder(new Pose2d(36, 36, Math.toRadians(90)))
+                .splineTo(new Vector2d(40, 36), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(48, 36), Math.toRadians(180))
                 .build();
 
     }
 
-    Pose2d startPos = new Pose2d(14, -60, Math.toRadians(90));
+    Pose2d startPos = new Pose2d(-36, 60, Math.toRadians(270));
     double INTAKE_POWER = -0.4;
 
     enum State {
@@ -110,6 +116,11 @@ public class BackstageRed extends ColorVisionAutoBase {
     public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {;
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         switch (currentStep) {
+            case FINISH:
+                if (!robot.isBusy()) {
+                    stop();
+                }
+                break;
             case DROP:
                 if (!robot.isBusy()) {
                     currentStep = Step.FINISH;
@@ -126,6 +137,12 @@ public class BackstageRed extends ColorVisionAutoBase {
                     robot.clawLeft.setPower(0);
                     robot.clawRight.setPower(0);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
+                    sleep(350);
+                    robot.slideLeft.setPower(0.75);
+                    robot.slideRight.setPower(-0.75);
+                    sleep(750);
+                    robot.slideLeft.setPower(0);
+                    robot.slideRight.setPower(0);
                 }
                 break;
             case TWO:

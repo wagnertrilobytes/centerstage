@@ -67,8 +67,8 @@ import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.enc
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7.65, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7.75, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7.5, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.25;
 
@@ -95,7 +95,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public List<DcMotorEx> slide;
     public List<DcMotorEx> motors;
     public WebcamName cameraLeft;
-    public WebcamName cameraRight;
+//    public WebcamName cameraRight;
 
     private IMU imu;
     private VoltageSensor batteryVoltageSensor;
@@ -140,7 +140,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
 
         cameraLeft = hardwareMap.get(WebcamName.class, "Webcam 1");
-        cameraRight = hardwareMap.get(WebcamName.class, "Webcam 2");
+//        cameraRight = hardwareMap.get(WebcamName.class, "Webcam 2");
 
         plane = hardwareMap.get(Servo.class, "plane");
 
@@ -163,6 +163,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         if (RUN_USING_ENCODER) {
+            setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 

@@ -81,8 +81,8 @@ public class Teleop extends LinearOpMode {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             double Speed = -gamepad1.left_stick_y;
-            double Strafe = -gamepad1.left_stick_x;
-            double Turn = gamepad1.right_stick_x;
+            double Turn = -gamepad1.left_stick_x;
+            double Strafe = gamepad1.right_stick_x;
             double Slide = -gamepad2.right_stick_y;
             double flip = -gamepad2.left_stick_y;
             double MAX_SPEED = 1.0;
@@ -115,43 +115,30 @@ public class Teleop extends LinearOpMode {
             double slideRightPower = robot.slideRight.getPower();
             //telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
             telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), slideLeft (%.2f), slideRight (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, slideLeftPower, slideRightPower);
-            telemetry.update();
+            telemetry.addData("lt", gamepad2.left_trigger);
+            telemetry.addData("rt", gamepad2.right_trigger);
 
-
-
-
-            //robot.armB.setPower(numUp - MAX_SPEED + MAX_SPEED);
             robot.frontLeft.setPower(numFl - MAX_SPEED + MAX_SPEED);
             robot.frontRight.setPower(numFr - MAX_SPEED + MAX_SPEED);
             robot.backLeft.setPower(numBl - MAX_SPEED + MAX_SPEED);
             robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
             //slides
-//            robot.intake.setPower(suck - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
+//            robot.intake.setPower(gamepad2.right_stick_x - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
 
             if (gamepad2.left_trigger > 0.3) robot.intake.setPower(gamepad2.left_trigger);
             if (gamepad2.right_trigger > 0.3) robot.intake.setPower(-gamepad2.right_trigger);
             if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
 
-            while (gamepad2.b){
+            if (gamepad2.b){
                 robot.plane.setPosition(-0.7);
-            }
-            while (!gamepad2.b) {
+            } else {
                 robot.plane.setPosition(0.7);
             }
-
-            telemetry.addData("lt", gamepad2.left_trigger);
-            telemetry.addData("rt", gamepad2.right_trigger);
-
 
             robot.clawLeft.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
             robot.clawRight.setPower(-numFlip  -MAX_SPEED + MAX_SPEED);
             robot.slideLeft.setPower(-numUp - MAX_SPEED + MAX_SPEED);
             robot.slideRight.setPower(numUp - MAX_SPEED + MAX_SPEED);
-
-
-
-
-
 
             boolean vroom = true;
             if(vroom == true)
@@ -201,17 +188,19 @@ public class Teleop extends LinearOpMode {
                 robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
             }
 
-            robot.frontLeft.setPower(numFl - MAX_SPEED + MAX_SPEED);
-            if (robot.backLeft != null) {
-                robot.backLeft.setPower(numBl - MAX_SPEED + MAX_SPEED);
-            }
-            robot.frontRight.setPower(numFr - MAX_SPEED + MAX_SPEED);
-            if (robot.backRight != null) {
-                robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
-            }
-
-
-
+            telemetry.addLine("Motors: Drive");
+            telemetry.addData("Front Left", robot.frontLeft.getCurrentPosition());
+            telemetry.addData("Front Right", robot.frontRight.getCurrentPosition());
+            telemetry.addData("Back Left", robot.backLeft.getCurrentPosition());
+            telemetry.addData("Back Right", robot.backRight.getCurrentPosition());
+            telemetry.addLine("Motors: Other");
+            telemetry.addData("Slide Left", robot.slideLeft.getCurrentPosition());
+            telemetry.addData("Slide Right", robot.slideRight.getCurrentPosition());
+            telemetry.addData("Intake", robot.intake.getCurrentPosition());
+            telemetry.addLine("Servos");
+            telemetry.addData("Plane", robot.plane.getPosition());
+            telemetry.addData("clwL", robot.clawLeft.getPower());
+            telemetry.addData("clwR", robot.clawRight.getPower());
 
             telemetry.update();
         }

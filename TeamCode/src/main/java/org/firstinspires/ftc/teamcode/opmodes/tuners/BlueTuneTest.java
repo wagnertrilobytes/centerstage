@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
+import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 @Config
@@ -37,8 +38,9 @@ public class BlueTuneTest extends ColorVisionAutoBase {
 
     }
 
+
     @Override
-    public void opModeActiveLoop() {
+    public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {
         telemetry.addData("Uhh", "This OpMode is not meant to be ran, only initialized. Change each value in FTC Dashboard until the camera can see it [marker] at any position (left, middle, right)");
         telemetry.addData("thumsb up emoji", ":+1: (:thumbsup:)");
     }

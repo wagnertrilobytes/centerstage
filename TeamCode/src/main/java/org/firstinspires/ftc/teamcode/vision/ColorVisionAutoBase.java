@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import android.util.Size;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
@@ -19,7 +15,6 @@ import java.util.function.DoubleSupplier;
 //@Autonomous(name = "Backstage Red")
 public class ColorVisionAutoBase extends LinearOpMode {
     private VisionPortal visionPortal;
-    private VisionPortal visionPortalToo;
     private ElapsedTime runtime = new ElapsedTime();
     static final double     COUNTS_PER_MOTOR_REV    = 384.5 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
@@ -27,77 +22,66 @@ public class ColorVisionAutoBase extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     public ColourMassDetectionProcessor colourMassDetectionProcessor;
-    public ColourMassDetectionProcessorTwo colourMassDetectionProcessorTwo;
     public Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
     public Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
     public DoubleSupplier minArea = () -> 100; // the minimum area for the detection to consider for your prop
     public DoubleSupplier left = () -> 213;
     public DoubleSupplier right = () -> 426;
+    public String name = "None";
     public SampleMecanumDrive robot;
     @Override
     public void runOpMode() {
-        setup();
         this.robot = new SampleMecanumDrive(hardwareMap);
+        setup();
         colourMassDetectionProcessor = new ColourMassDetectionProcessor(this.lower, this.upper, this.minArea, this.left, this.right);
-        colourMassDetectionProcessorTwo  = new ColourMassDetectionProcessorTwo(this.lower, this.upper, this.minArea, this.left, this.right);
         visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.cameraLeft) // the camera on your robot is named "Webcam 1" by default
-                .setCameraResolution(new Size(320, 240))
                 .addProcessor(colourMassDetectionProcessor)
-                .build();
-        visionPortalToo = new VisionPortal.Builder()
-                .setCamera(robot.cameraRight) // the camera on your robot is named "Webcam 1" by default
-                .setCameraResolution(new Size(320, 240))
-                .addProcessor(colourMassDetectionProcessorTwo)
                 .build();
         while(opModeInInit()) {
             setupLoop();
-            telemetry.addData("Currently Recorded Position [LEFT]", colourMassDetectionProcessor.getRecordedPropPosition());
-            telemetry.addData("Currently Recorded Position [RIGHT]", colourMassDetectionProcessorTwo.getRecordedPropPosition());
-            telemetry.addData("CameraLeft State", visionPortal.getCameraState());
-            telemetry.addData("CameraRight State", visionPortalToo.getCameraState());
-            telemetry.addData("Currently Detected Mass Center [L]", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
-            telemetry.addData("Currently Detected Mass Center [R]", "x: " + colourMassDetectionProcessorTwo.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
-            telemetry.addData("Currently Detected Mass Area [L]", colourMassDetectionProcessor.getLargestContourArea());
-            telemetry.addData("Currently Detected Mass Area [R]", colourMassDetectionProcessorTwo.getLargestContourArea());
+            telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
+            telemetry.addData("Camera State", visionPortal.getCameraState());
+            telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
+            telemetry.addData("Currently Detected Mass Area", colourMassDetectionProcessor.getLargestContourArea());
             telemetry.update();
         }
         waitForStart();
+        if (isStopRequested()) return;
         if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
             visionPortal.stopLiveView();
             visionPortal.stopStreaming();
         }
-        if (visionPortalToo.getCameraState() == VisionPortal.CameraState.STREAMING) {
-            visionPortalToo.stopLiveView();
-            visionPortalToo.stopStreaming();
-        }
 
         // gets the recorded prop position
         ColourMassDetectionProcessor.PropPositions recordedPropPositionL = colourMassDetectionProcessor.getRecordedPropPosition();
-        ColourMassDetectionProcessorTwo.PropPositions recordedPropPositionR = colourMassDetectionProcessorTwo.getRecordedPropPosition();
 
         // now we can use recordedPropPosition to determine where the prop is! if we never saw a prop, your recorded position will be UNFOUND.
         // if it is UNFOUND, you can manually set it to any of the other positions to guess
         if (recordedPropPositionL == ColourMassDetectionProcessor.PropPositions.UNFOUND) recordedPropPositionL = ColourMassDetectionProcessor.PropPositions.MIDDLE;
-        if (recordedPropPositionR == ColourMassDetectionProcessorTwo.PropPositions.UNFOUND) recordedPropPositionR = ColourMassDetectionProcessorTwo.PropPositions.MIDDLE;
+
+        onStarted(new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name));
 
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
-        onStartedColor(recordedPropPositionL, recordedPropPositionR);
-        while(opModeIsActive()) {
-            opModeActiveLoop();
-            if (isStopRequested()) {
-                stop();
-            }
+        while(opModeIsActive() && !isStopRequested()) {
+            onStartedColor(new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name));
+
+            this.robot.update();
+            Pose2d poseEstimate = this.robot.getPoseEstimate();
+            Storage.currentPose = poseEstimate;
+
+            telemetry.addData("x", poseEstimate.getX());
+            telemetry.addData("y", poseEstimate.getY());
+            telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.update();
         }
         colourMassDetectionProcessor.close();
-        colourMassDetectionProcessorTwo.close();
         visionPortal.close();
-        visionPortalToo.close();
     }
     public void setup() {}
     public void setupLoop() {}
-    public void opModeActiveLoop() {}
-    public void onStartedColor(ColourMassDetectionProcessor.PropPositions propPosLeft, ColourMassDetectionProcessorTwo.PropPositions propPosRight) {} // TO BE OVERRIDDEN IN ANY EXTENDED CLASSES
+    public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {}
+    public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {} // TO BE OVERRIDDEN IN ANY EXTENDED CLASSES
 
     public void encoderDrive(double speed,
                              double leftFinches,
