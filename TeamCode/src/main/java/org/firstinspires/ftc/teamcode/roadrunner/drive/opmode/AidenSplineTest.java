@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.roadrunner.drive.opmode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
  * This is an example of a more complex path to really test the tuning.
  */
 @Autonomous(group = "drive", name="Backstage Blue Left Spline Test")
+@Disabled
 public class AidenSplineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -85,8 +87,8 @@ public class AidenSplineTest extends LinearOpMode {
         sleep(250);
         ElapsedTime a = new ElapsedTime();
         while (a.seconds() != 1) {
-            drive.clwLeft.negative(clawSpeed);
-            drive.clwRight.positive(clawSpeed);
+            drive.clwLeft.setPower(clawSpeed);
+            drive.clwRight.setPower(-clawSpeed);
         }
         sleep(750);
 

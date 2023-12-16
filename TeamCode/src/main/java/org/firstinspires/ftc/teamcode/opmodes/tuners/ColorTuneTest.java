@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes.tuners;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
@@ -10,8 +9,8 @@ import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 @Config
-@Autonomous(name = "Blue Tuning", group = "Tuners")
-public class BlueTuneTest extends ColorVisionAutoBase {
+@Autonomous(name = "Color Tuning", group = "Tuners")
+public class ColorTuneTest extends ColorVisionAutoBase {
     public static double lower0 = 40;
     public static double lower1 = 100;
     public static double lower2 = 100;

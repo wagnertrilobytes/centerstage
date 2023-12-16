@@ -1,13 +1,15 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.opmodes.auto.examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
+import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 @Autonomous(name = "Example Color Vision Autonomous")
 @Disabled
-public class ExampleAuto extends ColorVisionAutoBase {
+public class ExampleColorVisionAuto extends ColorVisionAutoBase {
     @Override
     public void setup() {
         this.lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection

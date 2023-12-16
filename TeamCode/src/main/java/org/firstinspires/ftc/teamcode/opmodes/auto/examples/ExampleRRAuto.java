@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.examples;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name = "Example RR Auto", group = "RR Example")
+@Disabled
 public class ExampleRRAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -34,8 +36,8 @@ public class ExampleRRAuto extends LinearOpMode {
         robot.slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ElapsedTime a = new ElapsedTime();
         while (a.seconds() != 1) {
-            robot.clwLeft.positive(clawSpeed);
-            robot.clwRight.negative(clawSpeed);
+            robot.clwLeft.setPower(clawSpeed);
+            robot.clwRight.setPower(-clawSpeed);
         }
         sleep(750);
 
