@@ -63,8 +63,6 @@ public class Teleop extends LinearOpMode {
     //@Override
     public void runOpMode() {
         SampleMecanumDrive robot = new SampleMecanumDrive(hardwareMap);
-        PosCRServo clawLeft = new PosCRServo(robot.clawLeft);
-        PosCRServo clawRight = new PosCRServo(robot.clawRight);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -137,8 +135,8 @@ public class Teleop extends LinearOpMode {
                 robot.plane.setPosition(0.7);
             }
 
-            clawLeft.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
-            clawRight.setPower(-numFlip  -MAX_SPEED + MAX_SPEED);
+            robot.clwLeft.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
+            robot.clwRight.setPower(-numFlip  -MAX_SPEED + MAX_SPEED);
             robot.slideLeft.setPower(-numUp - MAX_SPEED + MAX_SPEED);
             robot.slideRight.setPower(numUp - MAX_SPEED + MAX_SPEED);
 

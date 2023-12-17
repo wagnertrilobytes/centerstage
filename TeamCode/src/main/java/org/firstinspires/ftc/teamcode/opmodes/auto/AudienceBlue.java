@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "Frontstage Blue", group="Backstage")
-public class FrontstageBlue extends ColorVisionAutoBase {
+@Autonomous(name = "Audience Blue", group="Audience")
+public class AudienceBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
     TrajectorySequence left_trajOne;
@@ -134,8 +134,8 @@ public class FrontstageBlue extends ColorVisionAutoBase {
                     sleep(250);
                     ElapsedTime a = new ElapsedTime();
                     while (a.seconds() != 1) {
-                        robot.clwLeft.negative(clawSpeed);
-                        robot.clwRight.positive(clawSpeed);
+                        robot.clwLeft.setPower(-clawSpeed);
+                        robot.clwRight.setPower(clawSpeed);
                     }
                     sleep(750);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
