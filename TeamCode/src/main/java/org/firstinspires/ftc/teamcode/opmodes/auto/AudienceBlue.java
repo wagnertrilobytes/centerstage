@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
@@ -14,7 +15,7 @@ import org.opencv.core.Scalar;
 public class AudienceBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
-    TrajectorySequence left_trajOne;
+//    TrajectorySequence left_trajOne;
     TrajectorySequence left_trajTwo;
 
     TrajectorySequence middle_trajOne;
@@ -38,12 +39,12 @@ public class AudienceBlue extends ColorVisionAutoBase {
 //                .splineTo(new Vector2d(14, 32), Math.toRadians(180))
 //                .build();
 
-        left_trajOne =robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(25, 61))
-                .lineTo(new Vector2d(25, 40))
-                .build();
+//        left_trajOne =robot.trajectorySequenceBuilder(startPos)
+//                .lineTo(new Vector2d(25, 61))
+//                .lineTo(new Vector2d(25, 40))
+//                .build();
 
-        left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
+        left_trajTwo = robot.trajectorySequenceBuilder(Storage.TRAJECTORIES.AUDIENCE.BLUE.LEFT.trajOne.end())
                 .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
                 .build();
 
@@ -101,7 +102,8 @@ public class AudienceBlue extends ColorVisionAutoBase {
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
-            robot.followTrajectorySequenceAsync(left_trajOne);
+            robot.followTrajectorySequenceAsync(Storage.TRAJECTORIES.AUDIENCE.BLUE.LEFT.trajOne);
+            // the above is a test..
         } else if(detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.RIGHT) {
             currentState = State.RIGHT;
             robot.followTrajectorySequenceAsync(right_trajOne);
