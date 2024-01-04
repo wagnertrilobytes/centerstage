@@ -17,13 +17,13 @@ public class TestServoAsCR extends LinearOpMode {
         waitForStart();
         while(opModeIsActive() && !isStopRequested()) {
             if (gamepad1.a) {
-                drive.clwLeft.setPower(powerPos);
+                drive.testServo.setPower(powerPos);
             }
             if (gamepad1.b) {
-                drive.clwLeft.setPower(powerNeg);
+                drive.testServo.setPower(powerNeg);
             }
             if (gamepad1.y) {
-                drive.clwLeft.zero();
+                drive.testServo.zero();
             }
             telemetry.addData("Gp1 A", "Servo PWR +1");
             telemetry.addData("Gp1 B", "Servo PWR -1");
