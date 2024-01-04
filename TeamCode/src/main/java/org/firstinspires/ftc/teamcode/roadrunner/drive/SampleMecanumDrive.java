@@ -79,7 +79,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public Servo plane;
     public Servo clawLeft, clawRight;
     public PosCRServo clwLeft, clwRight;
-//    public Servo testServo;
+    public Servo testServo;
     public List<Servo> servos;
     public List<Servo> claw;
     public List<DcMotorEx> slide;
@@ -125,7 +125,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
-//        testServo = hardwareMap.get(Servo.class, "servoTest");
+        testServo = hardwareMap.get(Servo.class, "servoTest");
         clwLeft = new PosCRServo(clawLeft);
         clwRight = new PosCRServo(clawRight);
         intake = hardwareMap.get(DcMotorEx.class, "intake");

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.test;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
+@Config
 @Autonomous(name = "Testing: servo as CR")
 public class TestServoAsCR extends LinearOpMode {
     public static double powerPos = 0.1;
