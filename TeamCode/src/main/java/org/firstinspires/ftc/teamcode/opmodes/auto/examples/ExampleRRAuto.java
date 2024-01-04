@@ -36,8 +36,8 @@ public class ExampleRRAuto extends LinearOpMode {
         robot.slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ElapsedTime a = new ElapsedTime();
         while (a.seconds() != 1) {
-            robot.clwLeft.setPower(clawSpeed);
-            robot.clwRight.setPower(-clawSpeed);
+            robot.clawLeft.setPower(clawSpeed);
+            robot.clawRight.setPower(-clawSpeed);
         }
         sleep(750);
 

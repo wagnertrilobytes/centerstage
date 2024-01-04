@@ -19,6 +19,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -77,8 +78,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     public DcMotorEx frontLeft, frontRight, backLeft, backRight; /* FALLBACK INCASE I FORGET TO REFACTOR */
     public DcMotorEx slideLeft, slideRight, intake;
     public Servo plane;
-    public Servo clawLeft, clawRight;
-    public PosCRServo clwLeft, clwRight;
+    public CRServo clawLeft, clawRight;
+//    public PosCRServo clwLeft, clwRight;
     public PosCRServo testServo;
     public Servo tstServo;
     public List<Servo> servos;
@@ -124,11 +125,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
 
-        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
-        clawRight = hardwareMap.get(Servo.class, "clawRight");
+        clawLeft = hardwareMap.get(CRServo.class, "clawLeft");
+        clawRight = hardwareMap.get(CRServo.class, "clawRight");
         tstServo = hardwareMap.get(Servo.class, "servoTest");
-        clwLeft = new PosCRServo(clawLeft);
-        clwRight = new PosCRServo(clawRight);
+//        clwLeft = new PosCRServo(clawLeft);
+//        clwRight = new PosCRServo(clawRight);
         testServo = new PosCRServo(tstServo);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
@@ -145,7 +146,7 @@ public class SampleMecanumDrive extends MecanumDrive {
                 intake
         );
 
-        claw = Arrays.asList(clawLeft, clawRight);
+//        claw = Arrays.asList(clawLeft, clawRight);
 
         slide = Arrays.asList(slideLeft, slideRight);
 
