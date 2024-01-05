@@ -87,8 +87,8 @@ public class AidenSplineTest extends LinearOpMode {
         sleep(250);
         ElapsedTime a = new ElapsedTime();
         while (a.seconds() != 1) {
-            drive.clwLeft.setPower(clawSpeed);
-            drive.clwRight.setPower(-clawSpeed);
+            drive.clawLeft.setPower(clawSpeed);
+            drive.clawRight.setPower(-clawSpeed);
         }
         sleep(750);
 

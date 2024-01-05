@@ -28,8 +28,8 @@ public class TestServoAsCR extends LinearOpMode {
             telemetry.addData("Gp1 A", "Servo PWR +1");
             telemetry.addData("Gp1 B", "Servo PWR -1");
             telemetry.addData("Gp1 Y", "Servo POS 0");
-            telemetry.addData("POS", drive.clwLeft.getServo().getPosition());
-            telemetry.addData("LAST POWER ", drive.clwLeft.getLastPower());
+//            telemetry.addData("POS", drive.clawLeft.getServo().getPosition());
+//            telemetry.addData("LAST POWER ", drive.clawLeft.getLastPower());
             telemetry.update();
         }
     }
