@@ -121,11 +121,8 @@ public class BackstageRed extends ColorVisionAutoBase {
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
                     sleep(250);
-                    ElapsedTime a = new ElapsedTime();
-                    while (a.seconds() != 1) {
-                        robot.clawLeft.setPower(clawSpeed);
-                        robot.clawRight.setPower(-clawSpeed);
-                    }
+                    robot.clawLeft.setPower(clawSpeed);
+                    robot.clawRight.setPower(-clawSpeed);
                     sleep(750);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                 }
