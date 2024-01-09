@@ -41,49 +41,50 @@ public class AprilTagScanningTest extends LinearOpMode {
             double calculatedDist = 0;
             double turn = 0;
             for (AprilTagDetection detection : currentDetections) {
-                if (detection.id != WANTED_ID) return;
-                AprilTagDetection currTag = detection;
-                // Look to see if we have size info on this tag.
-                telemetry.addData("Tag ID", detection.id);
-                telemetry.addData("x", detection.ftcPose.x);
-                telemetry.addData("y", detection.ftcPose.y);
-                telemetry.addData("z", detection.ftcPose.z);
-                telemetry.addData("yaw", detection.ftcPose.yaw);
-                telemetry.addData("pitch", detection.ftcPose.pitch);
-                telemetry.addData("roll", detection.ftcPose.roll);
-                telemetry.addData("bearing", detection.ftcPose.bearing);
-                telemetry.addData("range", detection.ftcPose.range);
-                telemetry.addData("elevation", detection.ftcPose.elevation);
-                calculatedDist = currTag.ftcPose.range - 5;
-                telemetry.addData("Gamepad1 A", "Go to that tag (move forward " + calculatedDist +"in)");
-                telemetry.addData("Gamepad1 B", "Face tag [BEARING] (" + currTag.ftcPose.bearing+"deg)");
-                telemetry.addData("Gamepad1 X", "Face tag [YAW] (" + currTag.ftcPose.yaw+"deg)");
-                telemetry.addData("Gamepad1 Y", "Face tag [PITCH] (" + currTag.ftcPose.pitch+"deg)");
-                telemetry.update();
+                if (detection.id != WANTED_ID) {} else {
+                    AprilTagDetection currTag = detection;
+                    // Look to see if we have size info on this tag.
+                    telemetry.addData("Tag ID", detection.id);
+                    telemetry.addData("x", detection.ftcPose.x);
+                    telemetry.addData("y", detection.ftcPose.y);
+                    telemetry.addData("z", detection.ftcPose.z);
+                    telemetry.addData("yaw", detection.ftcPose.yaw);
+                    telemetry.addData("pitch", detection.ftcPose.pitch);
+                    telemetry.addData("roll", detection.ftcPose.roll);
+                    telemetry.addData("bearing", detection.ftcPose.bearing);
+                    telemetry.addData("range", detection.ftcPose.range);
+                    telemetry.addData("elevation", detection.ftcPose.elevation);
+                    calculatedDist = currTag.ftcPose.range - 5;
+                    telemetry.addData("Gamepad1 A", "Go to that tag (move forward " + calculatedDist + "in)");
+                    telemetry.addData("Gamepad1 B", "Face tag [BEARING] (" + currTag.ftcPose.bearing + "deg)");
+                    telemetry.addData("Gamepad1 X", "Face tag [YAW] (" + currTag.ftcPose.yaw + "deg)");
+                    telemetry.addData("Gamepad1 Y", "Face tag [PITCH] (" + currTag.ftcPose.pitch + "deg)");
+                    telemetry.update();
 
-                if (gamepad1.a) {
-                    TrajectorySequence trajsec = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .forward(calculatedDist)
-                            .build();
-                    robot.followTrajectorySequence(trajsec);
-                }
-                if (gamepad1.b) {
-                    TrajectorySequence trajsec = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .turn(Math.toRadians(currTag.ftcPose.bearing))
-                            .build();
-                    robot.followTrajectorySequence(trajsec);
-                }
-                if (gamepad1.x) {
-                    TrajectorySequence trajsec = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .turn(Math.toRadians(currTag.ftcPose.yaw))
-                            .build();
-                    robot.followTrajectorySequence(trajsec);
-                }
-                if (gamepad1.y) {
-                    TrajectorySequence trajsec = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .turn(Math.toRadians(currTag.ftcPose.pitch))
-                            .build();
-                    robot.followTrajectorySequence(trajsec);
+                    if (gamepad1.a) {
+                        TrajectorySequence trajsec = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                                .forward(calculatedDist)
+                                .build();
+                        robot.followTrajectorySequence(trajsec);
+                    }
+                    if (gamepad1.b) {
+                        TrajectorySequence trajsec = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                                .turn(Math.toRadians(currTag.ftcPose.bearing))
+                                .build();
+                        robot.followTrajectorySequence(trajsec);
+                    }
+                    if (gamepad1.x) {
+                        TrajectorySequence trajsec = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                                .turn(Math.toRadians(currTag.ftcPose.yaw))
+                                .build();
+                        robot.followTrajectorySequence(trajsec);
+                    }
+                    if (gamepad1.y) {
+                        TrajectorySequence trajsec = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                                .turn(Math.toRadians(currTag.ftcPose.pitch))
+                                .build();
+                        robot.followTrajectorySequence(trajsec);
+                    }
                 }
             }
         }
