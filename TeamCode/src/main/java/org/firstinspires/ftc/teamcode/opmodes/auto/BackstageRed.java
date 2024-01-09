@@ -31,7 +31,7 @@ public class BackstageRed extends ColorVisionAutoBase {
     public void setup() {
         this.lower = new Scalar(0, 100, 100); // the lower hsv threshold for your detection
         this.upper = new Scalar(255, 255, 255); // the upper hsv threshold for your detection
-        this.minArea = () -> 8000; // the minimum area for the detection to consider for your prop
+        this.minArea = () -> 2000; // the minimum area for the detection to consider for your prop
         this.left = () -> 213;
         this.right = () -> 426;
         this.name = "Red";
