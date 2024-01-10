@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes.test;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,6 +19,7 @@ import java.util.List;
 @Config
 public class AprilTagScanningTest extends LinearOpMode {
     public static int WANTED_ID = 1;
+    public static double INCHES_AWAY = 8.5;
     @Override
     public void runOpMode() {
         SampleMecanumDrive robot = new SampleMecanumDrive(hardwareMap);
@@ -39,7 +42,6 @@ public class AprilTagScanningTest extends LinearOpMode {
         while (!isStopRequested() && opModeIsActive()) {
             List<AprilTagDetection> currentDetections = aprilTags.getDetections();
             double calculatedDist = 0;
-            double turn = 0;
             AprilTagDetection detection = null;
             for (AprilTagDetection currDet : currentDetections) {
                 if(currDet.id != WANTED_ID) {
@@ -47,12 +49,15 @@ public class AprilTagScanningTest extends LinearOpMode {
                 } else {
                     detection = currDet;
                 }
-                // Look to see if we have size info on this tag.
+                // Look to see if we have a tag.
             }
 
+            String msg = "Thumbs up";
+            if (currentDetections.size() == 0) msg = "Not currently seeing any tag. Using last known position.";
+            telemetry.addData("Status", msg);
+
             if (detection != null) {
-                telemetry.addData("Wanted", WANTED_ID);
-                telemetry.addData("Do we want this?", detection.id == WANTED_ID ? "Yea" : "NO");
+                calculatedDist = detection.ftcPose.range - INCHES_AWAY;
                 telemetry.addData("Tag ID", detection.id);
                 telemetry.addData("x", detection.ftcPose.x);
                 telemetry.addData("y", detection.ftcPose.y);
@@ -63,10 +68,9 @@ public class AprilTagScanningTest extends LinearOpMode {
                 telemetry.addData("bearing", detection.ftcPose.bearing);
                 telemetry.addData("range", detection.ftcPose.range);
                 telemetry.addData("elevation", detection.ftcPose.elevation);
-                calculatedDist = detection.ftcPose.range - 5;
                 telemetry.addData("Gamepad1 A", "Turn & go to that tag (move forward " + calculatedDist + "in)");
                 telemetry.addData("Gamepad1 B", "Face tag [BEARING] (" + detection.ftcPose.bearing + "deg)");
-                telemetry.addData("Gamepad1 X", "Face tag [YAW] (" + detection.ftcPose.yaw + "deg)");
+                telemetry.addData("Gamepad1 X", "RUN AN EXAMPLE TEST");
                 telemetry.update();
                 TrajectorySequence newTraj = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                         .turn(Math.toRadians(detection.ftcPose.bearing))
@@ -83,10 +87,27 @@ public class AprilTagScanningTest extends LinearOpMode {
                     robot.followTrajectorySequence(trajsec);
                 }
                 if (gamepad1.x) {
-                    TrajectorySequence trajsec = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .turn(Math.toRadians(detection.ftcPose.yaw))
+                    double setMotorTime = 2; // What time we set the motor power
+                    double setMotorWait = 1.3; // How long we wait until we turn off the motor
+                    Pose2d startPos =new Pose2d(14, 60, Math.toRadians(270));
+
+                    // This is a test!
+                    TrajectorySequence left_trajOne =robot.trajectorySequenceBuilder(startPos)
+                            .lineTo(new Vector2d(25, 61))
+                            .lineTo(new Vector2d(25, 40))
+                            .addTemporalMarker(setMotorTime, () -> {
+                                robot.intake.setPower(0.75);
+                            })
+                            .addTemporalMarker(setMotorTime + setMotorWait, () -> {
+                                robot.intake.setPower(0);
+                            })
+                            .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
+                            .splineTo(new Vector2d(40, 36), Math.toRadians(180))
+                            .splineToConstantHeading(new Vector2d(48, 36), Math.toRadians(180))
                             .build();
-                    robot.followTrajectorySequence(trajsec);
+
+
+                    robot.followTrajectorySequence(left_trajOne);
                 }
             }
         }
