@@ -75,6 +75,7 @@ public class AprilTagScanningTest extends LinearOpMode {
                 TrajectorySequence newTraj = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                         .turn(Math.toRadians(detection.ftcPose.bearing))
                         .forward(calculatedDist)
+                        .turn(Math.toRadians(-detection.ftcPose.bearing))
                         .build();
 
                 if (gamepad1.a) {
@@ -86,29 +87,47 @@ public class AprilTagScanningTest extends LinearOpMode {
                             .build();
                     robot.followTrajectorySequence(trajsec);
                 }
-                if (gamepad1.x) {
-                    double setMotorTime = 2; // What time we set the motor power
-                    double setMotorWait = 1.3; // How long we wait until we turn off the motor
-                    Pose2d startPos =new Pose2d(14, 60, Math.toRadians(270));
+            }
+            if (gamepad1.x) {
+                double setMotorTime = 2; // What time we set the motor power
+                double setMotorWait = 1.2; // How long we wait until we turn off the motor
+                Pose2d startPos =new Pose2d(14, 60, Math.toRadians(270));
 
-                    // This is a test!
-                    TrajectorySequence left_trajOne =robot.trajectorySequenceBuilder(startPos)
-                            .lineTo(new Vector2d(25, 61))
-                            .lineTo(new Vector2d(25, 40))
-                            .addTemporalMarker(setMotorTime, () -> {
-                                robot.intake.setPower(0.75);
-                            })
-                            .addTemporalMarker(setMotorTime + setMotorWait, () -> {
-                                robot.intake.setPower(0);
-                            })
-                            .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
-                            .splineTo(new Vector2d(40, 36), Math.toRadians(180))
-                            .splineToConstantHeading(new Vector2d(48, 36), Math.toRadians(180))
-                            .build();
+                robot.setPoseEstimate(startPos);
+                // This is a test!
+                TrajectorySequence left_trajOne =robot.trajectorySequenceBuilder(startPos)
+                        .lineTo(new Vector2d(25, 61))
+                        .lineTo(new Vector2d(25, 40))
+                        .addTemporalMarker(setMotorTime, () -> {
+                            robot.intake.setPower(0.75);
+                        })
+                        .addTemporalMarker(setMotorTime + setMotorWait, () -> {
+                            robot.intake.setPower(0);
+                        })
+                        .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(0)))
+                        .build();
 
 
-                    robot.followTrajectorySequence(left_trajOne);
+                robot.followTrajectorySequence(left_trajOne);
+                AprilTagDetection apr = null;
+                while(apr == null) {
+                    List<AprilTagDetection> currentDetectionsGT = aprilTags.getDetections();
+                    for (AprilTagDetection currDet : currentDetectionsGT) {
+                        telemetry.addData("FOUND", currDet.id);
+                        if(currDet.id != WANTED_ID) {
+
+                        } else {
+                            apr = currDet;
+                        }
+                        // Look to see if we have a tag.
+                    }
                 }
+                TrajectorySequence newTraj = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                        .turn(Math.toRadians(apr.ftcPose.bearing))
+                        .forward(calculatedDist)
+                        .turn(Math.toRadians(apr.ftcPose.bearing))
+                        .build();
+                robot.followTrajectorySequence(newTraj);
             }
         }
     }
