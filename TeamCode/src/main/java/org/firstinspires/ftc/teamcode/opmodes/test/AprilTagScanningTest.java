@@ -90,7 +90,7 @@ public class AprilTagScanningTest extends LinearOpMode {
             }
             if (gamepad1.x) {
                 double setMotorTime = 2; // What time we set the motor power
-                double setMotorWait = 1.2; // How long we wait until we turn off the motor
+                double setMotorWait = 0.75; // How long we wait until we turn off the motor
                 Pose2d startPos =new Pose2d(14, 60, Math.toRadians(270));
 
                 robot.setPoseEstimate(startPos);
@@ -110,7 +110,7 @@ public class AprilTagScanningTest extends LinearOpMode {
 
                 robot.followTrajectorySequence(left_trajOne);
                 AprilTagDetection apr = null;
-                while(apr == null) {
+                do {
                     List<AprilTagDetection> currentDetectionsGT = aprilTags.getDetections();
                     for (AprilTagDetection currDet : currentDetectionsGT) {
                         telemetry.addData("FOUND", currDet.id);
@@ -122,10 +122,41 @@ public class AprilTagScanningTest extends LinearOpMode {
                         // Look to see if we have a tag.
                     }
                 }
+                while(apr == null);
+                calculatedDist = apr.ftcPose.range - INCHES_AWAY;
+                double doSUP = 2.5;
+                double doSUPW = 2.0;
+                double doSUPWE = 1.75;
                 TrajectorySequence newTraj = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                         .turn(Math.toRadians(apr.ftcPose.bearing))
                         .forward(calculatedDist)
-                        .turn(Math.toRadians(apr.ftcPose.bearing))
+                        .turn(-Math.toRadians(apr.ftcPose.bearing))
+                        .turn(Math.toRadians(180))
+                        .back(4)
+                        .addTemporalMarker(doSUP, () -> {
+                            robot.slideLeft.setPower(-0.75);
+                            robot.slideRight.setPower(0.75);
+                            robot.clawLeft.setPower(1);
+                            robot.clawRight.setPower(-1);
+                        })
+                        .addTemporalMarker(doSUP+ doSUPW, () -> {
+                            robot.slideLeft.setPower(0);
+                            robot.slideRight.setPower(0);
+                            robot.clawLeft.setPower(0);
+                            robot.clawRight.setPower(0);
+                        })
+                        .addTemporalMarker(doSUP+doSUPW+doSUPWE, () -> {
+                            robot.slideLeft.setPower(0.75);
+                            robot.slideRight.setPower(-0.75);
+                            robot.clawLeft.setPower(-1);
+                            robot.clawRight.setPower(1);
+                        })
+                        .addTemporalMarker(doSUP+ doSUPW+doSUPWE+doSUPW, () -> {
+                            robot.slideLeft.setPower(0);
+                            robot.slideRight.setPower(0);
+                            robot.clawLeft.setPower(0);
+                            robot.clawRight.setPower(0);
+                        })
                         .build();
                 robot.followTrajectorySequence(newTraj);
             }
