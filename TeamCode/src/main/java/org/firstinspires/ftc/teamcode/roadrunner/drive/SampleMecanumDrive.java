@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.helpers.PosCRServo;
+import org.firstinspires.ftc.teamcode.helpers.ServoToo;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
@@ -78,9 +79,12 @@ public class SampleMecanumDrive extends MecanumDrive {
     public DcMotorEx frontLeft, frontRight, backLeft, backRight; /* FALLBACK INCASE I FORGET TO REFACTOR */
     public DcMotorEx slideLeft, slideRight, intake;
     public Servo plane;
-    public CRServo clawLeft, clawRight;
+//    public CRServo clawLeft, clawRight;
+    public Servo clwLeft, clwRight;
+    public ServoToo clawLeft, clawRight;
 //    public PosCRServo clwLeft, clwRight;
-    public PosCRServo testServo;
+//    public PosCRServo testServo;
+    public ServoToo testServo;
     public Servo tstServo;
     public List<Servo> servos;
     public List<Servo> claw;
@@ -125,12 +129,18 @@ public class SampleMecanumDrive extends MecanumDrive {
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
 
-        clawLeft = hardwareMap.get(CRServo.class, "clawLeft");
-        clawRight = hardwareMap.get(CRServo.class, "clawRight");
+        clwLeft = hardwareMap.get(Servo.class, "clawLeft");
+        clwRight = hardwareMap.get(Servo.class, "clawRight");
         tstServo = hardwareMap.get(Servo.class, "servoTest");
 //        clwLeft = new PosCRServo(clawLeft);
 //        clwRight = new PosCRServo(clawRight);
-        testServo = new PosCRServo(tstServo);
+//        testServo = new PosCRServo(tstServo);
+        testServo = new ServoToo(tstServo, 0, 300, AngleUnit.DEGREES);
+        // ^^^^^^^ THIS IS FOR THE GOBILDA 2000-0025-0003
+        // OUR USUAL SMART ROBOT SERVOS (THE REV CLAW ONES GO 0-270)
+        clawLeft = new ServoToo(clwLeft, 0, 270, AngleUnit.DEGREES);
+        clawRight = new ServoToo(clwRight, 0, 270, AngleUnit.DEGREES);
+        clawRight.setInverted(true);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
         slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");

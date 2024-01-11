@@ -134,8 +134,8 @@ public class BackstageBlue extends ColorVisionAutoBase {
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
                     sleep(250);
-                    robot.clawLeft.setPower(clawSpeed);
-                    robot.clawRight.setPower(-clawSpeed);
+                    robot.clawLeft.turnToAngle(270);
+                    robot.clawRight.turnToAngle(270);
                     sleep(750);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                     sleep(350);

@@ -17,8 +17,8 @@ public class SharedAuto {
         opMode.sleep(250);
         ElapsedTime a = new ElapsedTime();
         while (a.seconds() != 1) {
-            robot.clawLeft.setPower(clawSpeed);
-            robot.clawRight.setPower(-clawSpeed);
+            robot.clawLeft.turnToAngle(robot.clawLeft.max);
+            robot.clawRight.turnToAngle(robot.clawRight.max);
         }
     }
 }

@@ -75,7 +75,7 @@ public class Teleop extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //runtime.reset();
-
+        double turnAngle = 0;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive() && !isStopRequested()) {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -135,8 +135,17 @@ public class Teleop extends LinearOpMode {
                 robot.plane.setPosition(0.7);
             }
 
-            robot.clawLeft.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
-            robot.clawRight.setPower(-numFlip  -MAX_SPEED + MAX_SPEED);
+//            robot.clawLeft.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
+//            robot.clawRight.setPower(-numFlip  -MAX_SPEED + MAX_SPEED);
+            robot.clawLeft.turnToAngle(turnAngle);
+            robot.clawRight.turnToAngle(turnAngle);
+
+            if (gamepad2.left_stick_y > 0.2) {
+                turnAngle += gamepad2.left_stick_y;
+            } else {
+                turnAngle -= gamepad2.left_stick_y;
+            }
+
             robot.slideLeft.setPower(-numUp - MAX_SPEED + MAX_SPEED);
             robot.slideRight.setPower(numUp - MAX_SPEED + MAX_SPEED);
 
@@ -199,8 +208,8 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Intake", robot.intake.getCurrentPosition());
             telemetry.addLine("Servos");
             telemetry.addData("Plane", robot.plane.getPosition());
-            telemetry.addData("clwL", robot.clawLeft.getPower());
-            telemetry.addData("clwR", robot.clawRight.getPower());
+            telemetry.addData("clwL", robot.clawLeft.getAngle());
+            telemetry.addData("clwR", robot.clawRight.getAngle());
 
             telemetry.update();
         }

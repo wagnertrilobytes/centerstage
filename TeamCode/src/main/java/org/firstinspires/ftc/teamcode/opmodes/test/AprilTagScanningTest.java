@@ -90,7 +90,7 @@ public class AprilTagScanningTest extends LinearOpMode {
             }
             if (gamepad1.x) {
                 double setMotorTime = 2; // What time we set the motor power
-                double setMotorWait = 0.75; // How long we wait until we turn off the motor
+                double setMotorWait = 0.35; // How long we wait until we turn off the motor
                 Pose2d startPos =new Pose2d(14, 60, Math.toRadians(270));
 
                 robot.setPoseEstimate(startPos);
@@ -136,26 +136,26 @@ public class AprilTagScanningTest extends LinearOpMode {
                         .addTemporalMarker(doSUP, () -> {
                             robot.slideLeft.setPower(-0.75);
                             robot.slideRight.setPower(0.75);
-                            robot.clawLeft.setPower(1);
-                            robot.clawRight.setPower(-1);
+                            robot.clawLeft.turnToAngle(270);
+                            robot.clawRight.turnToAngle(270);
                         })
                         .addTemporalMarker(doSUP+ doSUPW, () -> {
                             robot.slideLeft.setPower(0);
                             robot.slideRight.setPower(0);
-                            robot.clawLeft.setPower(0);
-                            robot.clawRight.setPower(0);
+                            robot.clawLeft.turnToAngle(0);
+                            robot.clawRight.turnToAngle(0);
                         })
                         .addTemporalMarker(doSUP+doSUPW+doSUPWE, () -> {
                             robot.slideLeft.setPower(0.75);
                             robot.slideRight.setPower(-0.75);
-                            robot.clawLeft.setPower(-1);
-                            robot.clawRight.setPower(1);
+                            robot.clawLeft.turnToAngle(270);
+                            robot.clawRight.turnToAngle(270);
                         })
                         .addTemporalMarker(doSUP+ doSUPW+doSUPWE+doSUPW, () -> {
                             robot.slideLeft.setPower(0);
                             robot.slideRight.setPower(0);
-                            robot.clawLeft.setPower(0);
-                            robot.clawRight.setPower(0);
+                            robot.clawLeft.turnToAngle(0);
+                            robot.clawRight.turnToAngle(0);
                         })
                         .build();
                 robot.followTrajectorySequence(newTraj);
