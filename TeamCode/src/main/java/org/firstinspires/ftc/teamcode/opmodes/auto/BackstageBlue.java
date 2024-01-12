@@ -60,11 +60,12 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToLinearHeading(new Pose2d(9.74, 28.57, Math.toRadians(270)))
+                .lineToConstantHeading(new Vector2d(11.72, 32.86))
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
+                .lineToConstantHeading(new Vector2d(11.89, 44.09))
+                .lineTo(new Vector2d(36.00, 36.00))
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)

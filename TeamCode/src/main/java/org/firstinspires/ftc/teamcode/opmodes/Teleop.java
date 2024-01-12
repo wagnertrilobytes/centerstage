@@ -75,7 +75,7 @@ public class Teleop extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //runtime.reset();
-        double turnAngle = 0;
+        double turnAngle = robot.clawLeft.min;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive() && !isStopRequested()) {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
