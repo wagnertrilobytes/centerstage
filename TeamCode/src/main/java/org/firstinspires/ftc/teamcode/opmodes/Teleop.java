@@ -125,8 +125,8 @@ public class Teleop extends LinearOpMode {
             //slides
 //            robot.intake.setPower(gamepad2.right_stick_x - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
 
-            if (gamepad2.left_trigger > 0.3) robot.intake.setPower(gamepad2.left_trigger);
-            if (gamepad2.right_trigger > 0.3) robot.intake.setPower(-gamepad2.right_trigger);
+            if (gamepad2.left_trigger > 0.3) robot.intake.setPower(-gamepad2.left_trigger);
+            if (gamepad2.right_trigger > 0.3) robot.intake.setPower(gamepad2.right_trigger);
             if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
 
             if (gamepad2.b){
@@ -135,17 +135,12 @@ public class Teleop extends LinearOpMode {
                 robot.plane.setPosition(0.7);
             }
 
-//            robot.clawLeft.setPower(numFlip - MAX_SPEED  + MAX_SPEED);
-//            robot.clawRight.setPower(-numFlip  -MAX_SPEED + MAX_SPEED);
+            if (turnAngle > robot.clawLeft.max) turnAngle = robot.clawLeft.max;
+            if (turnAngle < robot.clawLeft.min) turnAngle = robot.clawLeft.min;
+            turnAngle += -gamepad2.left_stick_y * 4;
+//            telemetry.addData("dont forgor", "uncomment the slide code!!!");
             robot.clawLeft.turnToAngle(turnAngle);
             robot.clawRight.turnToAngle(turnAngle);
-
-            if (gamepad2.left_stick_y > 0.2) {
-                turnAngle += gamepad2.left_stick_y;
-            } else {
-                turnAngle -= gamepad2.left_stick_y;
-            }
-
             robot.slideLeft.setPower(-numUp - MAX_SPEED + MAX_SPEED);
             robot.slideRight.setPower(numUp - MAX_SPEED + MAX_SPEED);
 

@@ -3,16 +3,14 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "Audience Blue", group="Audience")
-public class AudienceBlue extends ColorVisionAutoBase {
+@Autonomous(name = "Audience Red", group="Audience")
+public class AudienceRed extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
     TrajectorySequence left_trajOne;
@@ -48,19 +46,20 @@ public class AudienceBlue extends ColorVisionAutoBase {
 
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
                 .lineTo(new Vector2d(-56.26, 41.58))
-                .splineTo(ENDPOS, Math.toRadians(0))
+                .splineTo(ENDPOS, Math.toRadians(270))
                 .build();
 
 
         middle_trajOne  = robot.trajectorySequenceBuilder(startPos)
                 .splineTo(new Vector2d(-37.66, 55.48), Math.toRadians(270))
                 .splineTo(new Vector2d(-38.52, 35.52), Math.toRadians(270))
-                .splineTo(new Vector2d(-53.33, 28.01), Math.toRadians(270))
                 .build();
 
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .splineTo(ENDPOS, Math.toRadians(0))
+                .lineToLinearHeading(new Pose2d(-37.66, 55.48, Math.toRadians(180)))
+                .splineTo(new Vector2d(-53.33, 28.01), Math.toRadians(-90))
+                .splineTo(ENDPOS, Math.toRadians(270))
                 .build();
 
 
@@ -70,16 +69,16 @@ public class AudienceBlue extends ColorVisionAutoBase {
                 .build();
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
                 .lineTo(new Vector2d(-54.33, 37.49))
-                .splineTo(ENDPOS, Math.toRadians(0))
+                .splineTo(ENDPOS, Math.toRadians(270))
                 .build();
 
         stylePoints_traj = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                .splineTo(new Vector2d(59.12, 3.54), Math.toRadians(0))
+                .splineTo(new Vector2d(59.12, 3.54), Math.toRadians(1.35))
                 .build();
 
     }
 
-    Pose2d startPos = new Pose2d(-37, 66, Math.toRadians(270.00));
+    Pose2d startPos = new Pose2d(-37, -60, Math.toRadians(90));
     double INTAKE_POWER = -0.4;
 
     enum State {
@@ -120,8 +119,6 @@ public class AudienceBlue extends ColorVisionAutoBase {
 
     @Override
     public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {;
-        robot.clawLeft.turnToAngle(7);
-        robot.clawRight.turnToAngle(7);
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         switch (currentStep) {
             case FINISH:

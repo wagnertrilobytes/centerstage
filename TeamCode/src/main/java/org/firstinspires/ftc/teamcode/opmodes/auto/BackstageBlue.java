@@ -11,13 +11,19 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Scalar;
 
 import java.lang.annotation.Target;
+import java.util.List;
 import java.util.Timer;
 
 @Autonomous(name = "Backstage Blue", group="Backstage")
 public class BackstageBlue extends ColorVisionAutoBase {
+    double INCHES_AWAY = 7;
+    double WANTED_ID = 1;
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
     TrajectorySequence left_trajOne;
@@ -54,7 +60,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToLinearHeading(new Pose2d(14, 35, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(9.74, 28.57, Math.toRadians(270)))
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
@@ -70,9 +76,8 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
                 .build();
 
-        drop_trajOne = robot.trajectorySequenceBuilder(new Pose2d(36, 36, Math.toRadians(90)))
-                .splineTo(new Vector2d(40, 36), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(48, 36), Math.toRadians(180))
+        drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                .splineTo(new Vector2d(40, 36), Math.toRadians(0))
                 .build();
 
     }
@@ -103,12 +108,15 @@ public class BackstageBlue extends ColorVisionAutoBase {
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
+            WANTED_ID = 1;
             robot.followTrajectorySequenceAsync(left_trajOne);
         } else if(detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.RIGHT) {
             currentState = State.RIGHT;
+            WANTED_ID = 3;
             robot.followTrajectorySequenceAsync(right_trajOne);
         } else if(detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.MIDDLE) {
             currentState = State.MIDDLE;
+            WANTED_ID = 2;
             robot.followTrajectorySequenceAsync(middle_trajOne);
         } else {
             currentState = State.DEFAULT;
@@ -121,29 +129,78 @@ public class BackstageBlue extends ColorVisionAutoBase {
         switch (currentStep) {
             case FINISH:
                 if (!robot.isBusy()) {
-                    stop();
+//                    stop();
                 }
                 break;
             case DROP:
                 if (!robot.isBusy()) {
                     currentStep = Step.FINISH;
-                    double clawSpeed = 0.75;
-                    robot.slideLeft.setPower(-0.75);
-                    robot.slideRight.setPower(0.75);
-                    sleep(750);
-                    robot.slideLeft.setPower(0);
-                    robot.slideRight.setPower(0);
-                    sleep(250);
-                    robot.clawLeft.turnToAngle(270);
-                    robot.clawRight.turnToAngle(270);
-                    sleep(750);
-//                    robot.followTrajectorySequenceAsync(drop_trajTwo);
-                    sleep(350);
-                    robot.slideLeft.setPower(0.75);
-                    robot.slideRight.setPower(-0.75);
-                    sleep(750);
-                    robot.slideLeft.setPower(0);
-                    robot.slideRight.setPower(0);
+                    AprilTagProcessor aprilTags = new AprilTagProcessor.Builder().build();
+                    VisionPortal vp = new VisionPortal.Builder()
+                            .setCamera(robot.cameraLeft)
+                            .addProcessor(aprilTags)
+                            .build();
+                    // Make sure camera is streaming before we try to set the exposure controls
+                    while (vp.getCameraState() != VisionPortal.CameraState.STREAMING) {
+                        telemetry.addData("Camera", "WAITING FOR CAMERA TO BE READY");
+                        while (!isStopRequested() && (vp.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                            sleep(20);
+                        }
+                        telemetry.addData("Camera", "yippee! here we go!");
+                        telemetry.update();
+                    }
+
+                    AprilTagDetection apr = null;
+                    do {
+                        List<AprilTagDetection> currentDetectionsGT = aprilTags.getDetections();
+                        for (AprilTagDetection currDet : currentDetectionsGT) {
+                            telemetry.addData("FOUND", currDet.id);
+                            if(currDet.id != WANTED_ID) {
+
+                            } else {
+                                apr = currDet;
+                            }
+                            // Look to see if we have a tag.
+                        }
+                    }
+                    while(apr == null);
+                    double calculatedDist = apr.ftcPose.range - INCHES_AWAY;
+                    double doSUP = 3.25;
+                    double doSUPW = 2.0;
+                    double doSUPWE = 2.2;
+                    double lastTimer = 0.75;
+                    TrajectorySequence newTraj = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .turn(Math.toRadians(apr.ftcPose.bearing))
+                            .forward(calculatedDist)
+                            .turn(-Math.toRadians(apr.ftcPose.bearing))
+                            .turn(Math.toRadians(180))
+                            .back(6)
+                            .addTemporalMarker(doSUP, () -> {
+                                robot.slideLeft.setPower(-0.75);
+                                robot.slideRight.setPower(0.75);
+                                robot.clawLeft.turnToAngle(robot.clawLeft.max - 1);
+                                robot.clawRight.turnToAngle(robot.clawLeft.max - 1);
+                            })
+                            .addTemporalMarker(doSUP+ doSUPW, () -> {
+                                robot.slideLeft.setPower(0);
+                                robot.slideRight.setPower(0);
+                                robot.clawLeft.turnToAngle(0);
+                                robot.clawRight.turnToAngle(0);
+                            })
+                            .addTemporalMarker(doSUP+doSUPW+doSUPWE, () -> {
+                                robot.slideLeft.setPower(0.75);
+                                robot.slideRight.setPower(-0.75);
+                                robot.clawLeft.turnToAngle(robot.clawLeft.max - 1);
+                                robot.clawRight.turnToAngle(robot.clawLeft.max - 1);
+                            })
+                            .addTemporalMarker(doSUP+ doSUPW+doSUPWE+doSUPW+lastTimer, () -> {
+                                robot.slideLeft.setPower(0);
+                                robot.slideRight.setPower(0);
+                                robot.clawLeft.turnToAngle(6);
+                                robot.clawRight.turnToAngle(6);
+                            })
+                            .build();
+                    robot.followTrajectorySequence(newTraj);
                 }
                 break;
             case TWO:
@@ -175,7 +232,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
     }
 
     public void doIntakeSpin() {
-        robot.intake.setPower(INTAKE_POWER);
+        robot.intake.setPower(-INTAKE_POWER);
         sleep(300);
         robot.intake.setPower(0);
     }

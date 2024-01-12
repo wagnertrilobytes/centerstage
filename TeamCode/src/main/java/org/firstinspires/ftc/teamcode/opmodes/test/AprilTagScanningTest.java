@@ -36,6 +36,38 @@ public class AprilTagScanningTest extends LinearOpMode {
                 sleep(20);
             }
             telemetry.addData("Camera", "Ready");
+        }
+
+        while (!opModeIsActive() && opModeInInit()) {
+            boolean vroom2 = true;
+            if(vroom2 == true)
+            {
+                while(gamepad1.dpad_left)
+                {
+                    vroom2 = false;
+                }
+                if(vroom2 == false)
+                {
+                    WANTED_ID--;
+                }
+            }
+            boolean vroom32 = true;
+            if(vroom32 == true)
+            {
+                while(gamepad1.dpad_right)
+                {
+                    vroom32 = false;
+                }
+                if(vroom32 == false)
+                {
+                    WANTED_ID++;
+                }
+            }
+            if (WANTED_ID > 6) WANTED_ID = 6;
+            if (WANTED_ID <= 0) WANTED_ID = 1;
+            String[] wants = {"Tbh idk how youre seeing this", "Blue Alliance Left", "Blue Alliance Middle", "Blue Alliance Right", "Red Alliance Left", "Red Alliance Middle", "Red Alliance Right"};
+            telemetry.addData("WANTED ID", WANTED_ID);
+            telemetry.addData("WANTED", wants[WANTED_ID]);
             telemetry.update();
         }
         waitForStart();
@@ -55,6 +87,9 @@ public class AprilTagScanningTest extends LinearOpMode {
             String msg = "Thumbs up";
             if (currentDetections.size() == 0) msg = "Not currently seeing any tag. Using last known position.";
             telemetry.addData("Status", msg);
+
+            robot.clawLeft.turnToAngle(7);
+            robot.clawRight.turnToAngle(7);
 
             if (detection != null) {
                 calculatedDist = detection.ftcPose.range - INCHES_AWAY;
@@ -109,56 +144,6 @@ public class AprilTagScanningTest extends LinearOpMode {
 
 
                 robot.followTrajectorySequence(left_trajOne);
-                AprilTagDetection apr = null;
-                do {
-                    List<AprilTagDetection> currentDetectionsGT = aprilTags.getDetections();
-                    for (AprilTagDetection currDet : currentDetectionsGT) {
-                        telemetry.addData("FOUND", currDet.id);
-                        if(currDet.id != WANTED_ID) {
-
-                        } else {
-                            apr = currDet;
-                        }
-                        // Look to see if we have a tag.
-                    }
-                }
-                while(apr == null);
-                calculatedDist = apr.ftcPose.range - INCHES_AWAY;
-                double doSUP = 2.5;
-                double doSUPW = 2.0;
-                double doSUPWE = 1.75;
-                TrajectorySequence newTraj = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                        .turn(Math.toRadians(apr.ftcPose.bearing))
-                        .forward(calculatedDist)
-                        .turn(-Math.toRadians(apr.ftcPose.bearing))
-                        .turn(Math.toRadians(180))
-                        .back(4)
-                        .addTemporalMarker(doSUP, () -> {
-                            robot.slideLeft.setPower(-0.75);
-                            robot.slideRight.setPower(0.75);
-                            robot.clawLeft.turnToAngle(270);
-                            robot.clawRight.turnToAngle(270);
-                        })
-                        .addTemporalMarker(doSUP+ doSUPW, () -> {
-                            robot.slideLeft.setPower(0);
-                            robot.slideRight.setPower(0);
-                            robot.clawLeft.turnToAngle(0);
-                            robot.clawRight.turnToAngle(0);
-                        })
-                        .addTemporalMarker(doSUP+doSUPW+doSUPWE, () -> {
-                            robot.slideLeft.setPower(0.75);
-                            robot.slideRight.setPower(-0.75);
-                            robot.clawLeft.turnToAngle(270);
-                            robot.clawRight.turnToAngle(270);
-                        })
-                        .addTemporalMarker(doSUP+ doSUPW+doSUPWE+doSUPW, () -> {
-                            robot.slideLeft.setPower(0);
-                            robot.slideRight.setPower(0);
-                            robot.clawLeft.turnToAngle(0);
-                            robot.clawRight.turnToAngle(0);
-                        })
-                        .build();
-                robot.followTrajectorySequence(newTraj);
             }
         }
     }
