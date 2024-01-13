@@ -61,6 +61,7 @@ public class Teleop extends LinearOpMode {
 
 
     //@Override
+    double lastTA = 1;
     public void runOpMode() {
         SampleMecanumDrive robot = new SampleMecanumDrive(hardwareMap);
 
@@ -138,9 +139,19 @@ public class Teleop extends LinearOpMode {
             if (turnAngle > robot.clawLeft.max) turnAngle = robot.clawLeft.max;
             if (turnAngle < robot.clawLeft.min) turnAngle = robot.clawLeft.min;
             turnAngle += -gamepad2.left_stick_y * 4;
+            if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
+                    Math.abs(gamepad1.left_stick_y) > 0.1 ||
+                    Math.abs(gamepad1.right_stick_x) > 0.1 ||
+                    Math.abs(gamepad1.right_stick_y) > 0.1 &&
+                   !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
+            ) {
+                if(turnAngle <= 6) robot.clawLeft.turnToAngle(13);
+                if(turnAngle <= 6) robot.clawRight.turnToAngle(13);
+            } else {
+                robot.clawLeft.turnToAngle(turnAngle);
+                robot.clawRight.turnToAngle(turnAngle);
+            }
 //            telemetry.addData("dont forgor", "uncomment the slide code!!!");
-            robot.clawLeft.turnToAngle(turnAngle);
-            robot.clawRight.turnToAngle(turnAngle);
             robot.slideLeft.setPower(-numUp - MAX_SPEED + MAX_SPEED);
             robot.slideRight.setPower(numUp - MAX_SPEED + MAX_SPEED);
 

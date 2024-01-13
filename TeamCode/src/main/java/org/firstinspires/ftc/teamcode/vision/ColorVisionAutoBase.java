@@ -57,10 +57,13 @@ public class ColorVisionAutoBase extends LinearOpMode {
         onStarted(new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name));
 
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
+        onceStartedColor(new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name));
         while(opModeIsActive() && !isStopRequested()) {
             onStartedColor(new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name));
 
             this.robot.update();
+            robot.clawLeft.turnToAngle(13);
+            robot.clawRight.turnToAngle(13);
             Pose2d poseEstimate = this.robot.getPoseEstimate();
             Storage.currentPose = poseEstimate;
 
@@ -76,4 +79,5 @@ public class ColorVisionAutoBase extends LinearOpMode {
     public void setupLoop() {}
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {}
     public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {} // TO BE OVERRIDDEN IN ANY EXTENDED CLASSES
+    public void onceStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {} // TO BE OVERRIDDEN IN ANY EXTENDED CLASSES
 }

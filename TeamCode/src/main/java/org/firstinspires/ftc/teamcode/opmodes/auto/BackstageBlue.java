@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -20,6 +21,7 @@ import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Timer;
 
+@Disabled()
 @Autonomous(name = "Backstage Blue", group="Backstage")
 public class BackstageBlue extends ColorVisionAutoBase {
     double INCHES_AWAY = 7;
@@ -34,6 +36,8 @@ public class BackstageBlue extends ColorVisionAutoBase {
 
     TrajectorySequence drop_trajOne;
     TrajectorySequence drop_trajTwo;
+    VisionPortal vp;
+    AprilTagProcessor aprilTags;
 
     @Override
     public void setup() {
@@ -56,11 +60,11 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 .build();
 
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(9)))
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(11.72, 32.86))
+                .lineToConstantHeading(new Vector2d(14, 32.86))
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
@@ -74,11 +78,11 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 .lineToLinearHeading(new Pose2d(10, 36, Math.toRadians(180)))
                 .build();
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(9)))
                 .build();
 
         drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                .splineTo(new Vector2d(40, 36), Math.toRadians(0))
+                .splineTo(new Vector2d(35, 36), Math.toRadians(0))
                 .build();
 
     }
@@ -106,6 +110,11 @@ public class BackstageBlue extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
+        aprilTags = new AprilTagProcessor.Builder().build();
+        vp = new VisionPortal.Builder()
+                .setCamera(robot.cameraLeft)
+                .addProcessor(aprilTags)
+                .build();
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
@@ -136,20 +145,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
             case DROP:
                 if (!robot.isBusy()) {
                     currentStep = Step.FINISH;
-                    AprilTagProcessor aprilTags = new AprilTagProcessor.Builder().build();
-                    VisionPortal vp = new VisionPortal.Builder()
-                            .setCamera(robot.cameraLeft)
-                            .addProcessor(aprilTags)
-                            .build();
                     // Make sure camera is streaming before we try to set the exposure controls
-                    while (vp.getCameraState() != VisionPortal.CameraState.STREAMING) {
-                        telemetry.addData("Camera", "WAITING FOR CAMERA TO BE READY");
-                        while (!isStopRequested() && (vp.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                            sleep(20);
-                        }
-                        telemetry.addData("Camera", "yippee! here we go!");
-                        telemetry.update();
-                    }
 
                     AprilTagDetection apr = null;
                     do {
@@ -201,7 +197,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
                                 robot.clawRight.turnToAngle(6);
                             })
                             .build();
-                    robot.followTrajectorySequence(newTraj);
+                    robot.followTrajectorySequenceAsync(newTraj);
                 }
                 break;
             case TWO:

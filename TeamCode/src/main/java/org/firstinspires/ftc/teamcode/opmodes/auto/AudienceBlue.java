@@ -32,54 +32,47 @@ public class AudienceBlue extends ColorVisionAutoBase {
         this.left = () -> 213;
         this.right = () -> 426;
         this.name = "Blue";
+        Pose2d startPos = new Pose2d(-37, 66, Math.toRadians(270.00));
+        Vector2d ENDPOS = new Vector2d(-57.32, 0.11);
+        Pose2d ENDPOSE = new Pose2d(-57.32, 0.11, 0);
+
         robot.setPoseEstimate(startPos);
-
-//        left_trajOne = robot.trajectorySequenceBuilder(startPos)
-//                .splineTo(new Vector2d(32, 30), Math.toRadians(180))
-//                .splineTo(new Vector2d(14, 32), Math.toRadians(180))
-//                .build();
-
+/** GOOD */
         right_trajOne =robot.trajectorySequenceBuilder(startPos)
                 .lineTo(new Vector2d(-46.26, 62.00))
-                .splineTo(new Vector2d(-38.52, 35.52), Math.toRadians(270))
+                .lineTo(new Vector2d(-46.52, 35.52))
                 .build();
 
-        Vector2d ENDPOS = new Vector2d(-57.32, 0.11);
 
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
+                .lineTo(new Vector2d(-46.26, 45))
                 .lineTo(new Vector2d(-56.26, 41.58))
-                .splineTo(ENDPOS, Math.toRadians(0))
+                .lineToConstantHeading(ENDPOS)
                 .build();
-
-
         middle_trajOne  = robot.trajectorySequenceBuilder(startPos)
-                .splineTo(new Vector2d(-37.66, 55.48), Math.toRadians(270))
-                .splineTo(new Vector2d(-38.52, 35.52), Math.toRadians(270))
-                .splineTo(new Vector2d(-53.33, 28.01), Math.toRadians(270))
+                .splineTo(new Vector2d(-35.95, 33.56), Math.toRadians(270.00))
                 .build();
 
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
+                .lineToConstantHeading(new Vector2d(-50.73, 58.17))
                 .splineTo(ENDPOS, Math.toRadians(0))
                 .build();
 
-
         left_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .splineTo(new Vector2d(-40.13, 33.36), Math.toRadians(270.00))
-                .splineTo(new Vector2d(-32.20, 36.66), Math.toRadians(1.71))
+                .splineTo(new Vector2d(-40.13, 45.36), Math.toRadians(270.00))
+                .splineTo(new Vector2d(-34.50, 36.66), Math.toRadians(1.71))
                 .build();
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
                 .lineTo(new Vector2d(-54.33, 37.49))
-                .splineTo(ENDPOS, Math.toRadians(0))
+                .lineToLinearHeading(ENDPOSE)
                 .build();
-
+/** END GOOD*/
         stylePoints_traj = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                 .splineTo(new Vector2d(59.12, 3.54), Math.toRadians(0))
                 .build();
 
     }
-
-    Pose2d startPos = new Pose2d(-37, 66, Math.toRadians(270.00));
     double INTAKE_POWER = -0.4;
 
     enum State {
@@ -155,7 +148,7 @@ public class AudienceBlue extends ColorVisionAutoBase {
     }
 
     public void doIntakeSpin() {
-        robot.intake.setPower(INTAKE_POWER);
+        robot.intake.setPower(-INTAKE_POWER);
         sleep(300);
         robot.intake.setPower(0);
     }
