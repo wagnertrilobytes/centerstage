@@ -41,11 +41,6 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
         this.name = "Blue";
         robot.setPoseEstimate(startPos);
 
-//        left_trajOne = robot.trajectorySequenceBuilder(startPos)
-//                .splineTo(new Vector2d(32, 30), Math.toRadians(180))
-//                .splineTo(new Vector2d(14, 32), Math.toRadians(180))
-//                .build();
-
         left_trajOne =robot.trajectorySequenceBuilder(startPos)
                 .lineTo(new Vector2d(25, 61))
                 .lineTo(new Vector2d(23, 39))
@@ -56,7 +51,7 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(14, 32.86))
+                .lineToConstantHeading(new Vector2d(14, 33))
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
@@ -71,6 +66,7 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
 
         drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                 .splineTo(new Vector2d(35, 36), Math.toRadians(180))
+                .back(7)
                 .back(7)
                 .back(7)
                 .build();
@@ -100,6 +96,8 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
+        robot.clawLeft.turnToAngle(7);
+        robot.clawRight.turnToAngle(7);
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
@@ -135,26 +133,20 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                     double clawSpeed = 0.75;
                     robot.slideLeft.setPower(-0.75);
                     robot.slideRight.setPower(0.75);
-                    sleep(850);
+                    sleep(1000);
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
                     sleep(250);
-                    robot.clawLeft.turnToAngle(robot.clawLeft.max);
-                    robot.clawRight.turnToAngle(robot.clawRight.max);
-                    sleep(1500);
-                    robot.clawLeft.turnToAngle(7);
-                    robot.clawRight.turnToAngle(7);
-                    robot.slideLeft.setPower(0.35);
-                    robot.slideRight.setPower(-0.35);
-                    sleep(1550);
-                    robot.slideLeft.setPower(0);
-                    robot.slideRight.setPower(0);
+                    robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
+                    robot.clawRight.turnToAngle(robot.clawRight.max - 15);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                 }
                 break;
             case TWO:
                 if (!robot.isBusy()) {
                     currentStep = Step.DROP;
+                    robot.clawLeft.turnToAngle(13);
+                    robot.clawRight.turnToAngle(13);
                     robot.followTrajectorySequenceAsync(drop_trajOne);
                 }
                 break;

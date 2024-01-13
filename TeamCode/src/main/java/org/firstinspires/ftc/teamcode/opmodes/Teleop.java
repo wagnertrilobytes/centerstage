@@ -33,7 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.helpers.PosCRServo;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 
@@ -145,8 +144,8 @@ public class Teleop extends LinearOpMode {
                     Math.abs(gamepad1.right_stick_y) > 0.1 &&
                    !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
             ) {
-                if(turnAngle <= 6) robot.clawLeft.turnToAngle(13);
-                if(turnAngle <= 6) robot.clawRight.turnToAngle(13);
+                if(turnAngle <= 6 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawLeft.turnToAngle(13);
+                if(turnAngle <= 6 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawRight.turnToAngle(13);
             } else {
                 robot.clawLeft.turnToAngle(turnAngle);
                 robot.clawRight.turnToAngle(turnAngle);

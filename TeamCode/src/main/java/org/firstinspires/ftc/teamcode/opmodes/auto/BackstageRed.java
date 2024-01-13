@@ -26,7 +26,8 @@ public class BackstageRed extends ColorVisionAutoBase {
 
     TrajectorySequence drop_trajOne;
     TrajectorySequence drop_trajTwo;
-
+    Pose2d startPos = new Pose2d(14, -60, Math.toRadians(90));
+    double INTAKE_POWER = -0.4;
     @Override
     public void setup() {
         this.lower = new Scalar(0, 100, 100); // the lower hsv threshold for your detection
@@ -39,7 +40,7 @@ public class BackstageRed extends ColorVisionAutoBase {
 
         left_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .splineTo(new Vector2d(32, -30), Math.toRadians(180))
-                .splineTo(new Vector2d(14, -32), Math.toRadians(180))
+                .splineTo(new Vector2d(10, -32), Math.toRadians(180))
                 .build();
 
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
@@ -47,30 +48,27 @@ public class BackstageRed extends ColorVisionAutoBase {
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToLinearHeading(new Pose2d(14, -35, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(14, -31.75, Math.toRadians(90)))
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(14, -45, Math.toRadians(90)))
                 .build();
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .lineTo(new Vector2d(25, -61))
                 .lineTo(new Vector2d(25, -40))
                 .build();
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineTo(new Vector2d(25, -61))
+                .lineTo(new Vector2d(25, -55))
                 .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
                 .build();
 
         drop_trajOne = robot.trajectorySequenceBuilder(new Pose2d(36, -36, Math.toRadians(270)))
                 .splineTo(new Vector2d(40, -36), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(48, -36), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(49.5, -36), Math.toRadians(180))
                 .build();
 
     }
-
-    Pose2d startPos = new Pose2d(14, -60, Math.toRadians(90));
-    double INTAKE_POWER = -0.4;
 
     enum State {
         LEFT,
@@ -92,6 +90,8 @@ public class BackstageRed extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
+        robot.clawLeft.turnToAngle(6);
+        robot.clawRight.turnToAngle(6);
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
@@ -117,13 +117,12 @@ public class BackstageRed extends ColorVisionAutoBase {
                     double clawSpeed = 0.75;
                     robot.slideLeft.setPower(-0.75);
                     robot.slideRight.setPower(0.75);
-                    sleep(750);
+                    sleep(850);
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
                     sleep(250);
-                    robot.clawLeft.turnToAngle(robot.clawLeft.max);
-                    robot.clawRight.turnToAngle(robot.clawRight.max);
-                    sleep(750);
+                    robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
+                    robot.clawRight.turnToAngle(robot.clawRight.max - 15);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                 }
                 break;
@@ -156,7 +155,7 @@ public class BackstageRed extends ColorVisionAutoBase {
     }
 
     public void doIntakeSpin() {
-        robot.intake.setPower(INTAKE_POWER);
+        robot.intake.setPower(-INTAKE_POWER);
         sleep(300);
         robot.intake.setPower(0);
     }

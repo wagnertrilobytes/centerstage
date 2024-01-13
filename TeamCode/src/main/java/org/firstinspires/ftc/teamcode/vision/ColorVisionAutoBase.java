@@ -62,8 +62,6 @@ public class ColorVisionAutoBase extends LinearOpMode {
             onStartedColor(new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name));
 
             this.robot.update();
-            robot.clawLeft.turnToAngle(13);
-            robot.clawRight.turnToAngle(13);
             Pose2d poseEstimate = this.robot.getPoseEstimate();
             Storage.currentPose = poseEstimate;
 

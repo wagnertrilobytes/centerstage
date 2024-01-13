@@ -24,12 +24,11 @@ public class AudienceRed extends ColorVisionAutoBase {
 
     @Override
     public void setup() {
-        this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
-        this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
+        this.lower = new Scalar(0, 100, 100); // the lower hsv threshold for your detection
+        this.upper = new Scalar(255, 255, 255); // the upper hsv threshold for your detection
         this.minArea = () -> 2000; // the minimum area for the detection to consider for your prop
         this.left = () -> 213;
         this.right = () -> 426;
-        this.name = "Blue";
         robot.setPoseEstimate(startPos);
 
 //        left_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -38,28 +37,28 @@ public class AudienceRed extends ColorVisionAutoBase {
 //                .build();
 
         right_trajOne =robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(-46.26, 62.00))
-                .splineTo(new Vector2d(-38.52, 35.52), Math.toRadians(270))
+                .lineTo(new Vector2d(-46.26, -62.00))
+                .splineTo(new Vector2d(-38.52, -35.52), Math.toRadians(270))
                 .build();
 
         Vector2d ENDPOS = new Vector2d(-57.32, 0.11);
 
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
                 .lineTo(new Vector2d(-56.26, 41.58))
-                .splineTo(ENDPOS, Math.toRadians(270))
+//                .splineTo(ENDPOS, Math.toRadians(270))
                 .build();
 
 
         middle_trajOne  = robot.trajectorySequenceBuilder(startPos)
-                .splineTo(new Vector2d(-37.66, 55.48), Math.toRadians(270))
-                .splineTo(new Vector2d(-38.52, 35.52), Math.toRadians(270))
+                    .splineTo(new Vector2d(-37.66, -55.48), Math.toRadians(270))
+                    .splineTo(new Vector2d(-38.52, -35.52), Math.toRadians(270))
                 .build();
 
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
                 .lineToLinearHeading(new Pose2d(-37.66, 55.48, Math.toRadians(180)))
                 .splineTo(new Vector2d(-53.33, 28.01), Math.toRadians(-90))
-                .splineTo(ENDPOS, Math.toRadians(270))
+//                .splineTo(ENDPOS, Math.toRadians(270))
                 .build();
 
 
@@ -69,7 +68,7 @@ public class AudienceRed extends ColorVisionAutoBase {
                 .build();
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
                 .lineTo(new Vector2d(-54.33, 37.49))
-                .splineTo(ENDPOS, Math.toRadians(270))
+//                .splineTo(ENDPOS, Math.toRadians(270))
                 .build();
 
         stylePoints_traj = robot.trajectorySequenceBuilder(robot.getPoseEstimate())

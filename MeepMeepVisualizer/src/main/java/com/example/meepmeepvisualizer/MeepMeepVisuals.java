@@ -11,29 +11,22 @@ public class MeepMeepVisuals {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        Pose2d startPos;
-        TrajectorySequence right_trajOne;
-        TrajectorySequence right_trajTwo;
-        TrajectorySequence left_trajOne;
-        TrajectorySequence left_trajTwo;
-
-        TrajectorySequence middle_trajOne;
-        TrajectorySequence middle_trajTwo;
-
-        TrajectorySequence stylePoints_traj;
-        TrajectorySequence drop_trajTwo;
         Vector2d ENDPOS = new Vector2d(-57.32, 0.11);
         Pose2d ENDPOSE = new Pose2d(-57.32, 0.11, 0);
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(49.06530693660696, 51.78291908330528, Math.toRadians(167.05832), Math.toRadians(167.05832), -9)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder( new Pose2d(14, 60, Math.toRadians(270)))
-                                .lineToConstantHeading(new Vector2d(14, 32.86))
+                        drive.trajectorySequenceBuilder(new Pose2d(14, -60, Math.toRadians(90)))
+                                .splineTo(new Vector2d(32, -30), Math.toRadians(180))
+                                .splineTo(new Vector2d(10, -32), Math.toRadians(180))
 
                                 .waitSeconds(2)
-                                .lineToConstantHeading(new Vector2d(11.89, 44.09))
-                                .lineTo(new Vector2d(36.00, 36.00))
+                                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
+
+                                .waitSeconds(1)
+                                .splineTo(new Vector2d(40, -36), Math.toRadians(180))
+                                .splineToConstantHeading(new Vector2d(48, -36), Math.toRadians(180))
                                 .build()
                 );
 
