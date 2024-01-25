@@ -124,7 +124,6 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
 //    }
     @Override
     public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {
-        ;
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         switch (currentStep) {
             case DROP:
@@ -139,6 +138,8 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                     sleep(250);
                     robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
                     robot.clawRight.turnToAngle(robot.clawRight.max - 15);
+                    sleep(250);
+                    SharedAuto.MakeSlideGoDown(robot, this);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                 }
                 break;
