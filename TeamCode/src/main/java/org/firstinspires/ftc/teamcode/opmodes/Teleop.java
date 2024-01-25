@@ -29,6 +29,9 @@
 
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -63,10 +66,9 @@ public class Teleop extends LinearOpMode {
     double lastTA = 1;
     public void runOpMode() {
         SampleMecanumDrive robot = new SampleMecanumDrive(hardwareMap);
-
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
 
 
 
@@ -80,9 +82,9 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            double Speed = gamepad1.left_stick_y;
-            double Turn = gamepad1.left_stick_x;
-            double Strafe = gamepad1.right_stick_x;
+            double Speed = -gamepad1.left_stick_y;
+            double Turn = -gamepad1.left_stick_x;
+            double Strafe = -gamepad1.right_stick_x;
             double Slide = -gamepad2.right_stick_y;
             double flip = -gamepad2.left_stick_y;
             double MAX_SPEED = 1.0;
@@ -118,10 +120,13 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("lt", gamepad2.left_trigger);
             telemetry.addData("rt", gamepad2.right_trigger);
 
-            robot.frontLeft.setPower(numFl - MAX_SPEED + MAX_SPEED);
-            robot.frontRight.setPower(numFr - MAX_SPEED + MAX_SPEED);
-            robot.backLeft.setPower(numBl - MAX_SPEED + MAX_SPEED);
-            robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
+            robot.setWeightedDrivePower(
+                    new Pose2d(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x
+                    )
+            );
             //slides
 //            robot.intake.setPower(gamepad2.right_stick_x - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
 

@@ -8,14 +8,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Scalar;
 
-import java.util.List;
-
-@Autonomous(name = "Backstage Blue for Comp 3", group="Backstage")
-public class BackstageBlueToo extends ColorVisionAutoBase {
+@Autonomous(name = "Backstage Blue: INSANITY edition", group="Backstage")
+public class BackstageBlueInsanity extends ColorVisionAutoBase {
     double INCHES_AWAY = 7;
     double WANTED_ID = 1;
     TrajectorySequence right_trajOne;

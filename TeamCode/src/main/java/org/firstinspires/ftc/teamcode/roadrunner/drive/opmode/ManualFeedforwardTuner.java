@@ -98,6 +98,8 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
 
         while (!isStopRequested()) {
+            drive.clawRight.turnToAngle(8);
+            drive.clawLeft.turnToAngle(8);
             telemetry.addData("mode", mode);
 
             switch (mode) {
