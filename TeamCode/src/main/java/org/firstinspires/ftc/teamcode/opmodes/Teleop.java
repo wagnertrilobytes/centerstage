@@ -80,8 +80,8 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            double Speed = -gamepad1.left_stick_y;
-            double Turn = -gamepad1.left_stick_x;
+            double Speed = gamepad1.left_stick_y;
+            double Turn = gamepad1.left_stick_x;
             double Strafe = gamepad1.right_stick_x;
             double Slide = -gamepad2.right_stick_y;
             double flip = -gamepad2.left_stick_y;
@@ -125,8 +125,9 @@ public class Teleop extends LinearOpMode {
             //slides
 //            robot.intake.setPower(gamepad2.right_stick_x - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
 
-            if (gamepad2.left_trigger > 0.3) robot.intake.setPower(-gamepad2.left_trigger);
-            if (gamepad2.right_trigger > 0.3) robot.intake.setPower(gamepad2.right_trigger);
+            double iSM = 1;
+            if (gamepad2.left_trigger > 0.3) robot.intake.setPower((-gamepad2.left_trigger) * iSM);
+            if (gamepad2.right_trigger > 0.3) robot.intake.setPower((gamepad2.right_trigger) * iSM);
             if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
 
             if (gamepad2.b){
