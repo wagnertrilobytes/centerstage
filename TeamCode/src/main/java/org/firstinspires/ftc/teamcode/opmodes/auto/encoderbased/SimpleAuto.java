@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SimpleHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 /*
@@ -75,7 +76,7 @@ public class SimpleAuto extends LinearOpMode {
     private DcMotor         rightDrive  = null;
 
     private ElapsedTime     runtime = new ElapsedTime();
-    SampleMecanumDrive robot;
+    SimpleHardware robot = new SimpleHardware();
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -93,7 +94,7 @@ public class SimpleAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot = new SampleMecanumDrive(hardwareMap);
+        robot.init(hardwareMap);
         // Initialize the drive system variables.
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
