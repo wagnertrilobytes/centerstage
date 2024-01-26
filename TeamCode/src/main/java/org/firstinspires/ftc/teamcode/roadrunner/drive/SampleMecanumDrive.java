@@ -19,7 +19,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -32,7 +31,6 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.helpers.PosCRServo;
 import org.firstinspires.ftc.teamcode.helpers.ServoToo;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
@@ -65,7 +63,6 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
-    public static int TILE_LEN = 24;
     public ColourMassDetectionProcessor.PropPositions lastPropPos;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
@@ -75,8 +72,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
-    public DcMotorEx frontLeft, frontRight, backLeft, backRight; /* FALLBACK INCASE I FORGET TO REFACTOR */
+//    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    public DcMotorEx frontLeft, frontRight, backLeft, backRight; /* FALLBACK IN CASE I FORGET TO REFACTOR */
     public DcMotorEx slideLeft, slideRight, intake;
     public Servo plane;
 //    public CRServo clawLeft, clawRight;
@@ -87,7 +84,6 @@ public class SampleMecanumDrive extends MecanumDrive {
     public ServoToo testServo;
     public Servo tstServo;
     public List<Servo> servos;
-    public List<Servo> claw;
     public List<DcMotorEx> slide;
     public List<DcMotorEx> motors;
     public WebcamName cameraLeft;
@@ -119,10 +115,10 @@ public class SampleMecanumDrive extends MecanumDrive {
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
-        rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
-        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+//        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
+//        leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
+//        rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
+//        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
 
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
@@ -151,7 +147,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         plane = hardwareMap.get(Servo.class, "plane");
 
         motors = Arrays.asList(
-                leftFront, leftRear, rightRear, rightFront,
+                frontLeft, frontRight, backLeft, backRight,
                 slideLeft, slideRight,
                 intake
         );
@@ -180,10 +176,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-//        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-//        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
@@ -343,10 +339,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        frontLeft.setPower(v1);
+        frontRight.setPower(v);
+        backLeft.setPower(v3);
+        backRight.setPower(v2);
     }
 
     @Override

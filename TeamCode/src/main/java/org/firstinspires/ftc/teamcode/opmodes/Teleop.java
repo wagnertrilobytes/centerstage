@@ -120,13 +120,17 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("lt", gamepad2.left_trigger);
             telemetry.addData("rt", gamepad2.right_trigger);
 
-            robot.setWeightedDrivePower(
-                    new Pose2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
-                    )
-            );
+            robot.frontLeft.setPower(frontLeftPower);
+            robot.frontRight.setPower(frontRightPower);
+            robot.backLeft.setPower(backLeftPower);
+            robot.backRight.setPower(backRightPower);
+//            robot.setWeightedDrivePower(
+//                    new Pose2d(
+//                            -gamepad1.left_stick_y,
+//                            -gamepad1.left_stick_x,
+//                            -gamepad1.right_stick_x
+//                    )
+//            );
             //slides
 //            robot.intake.setPower(gamepad2.right_stick_x - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
 
@@ -135,7 +139,7 @@ public class Teleop extends LinearOpMode {
             if (gamepad2.right_trigger > 0.3) robot.intake.setPower((gamepad2.right_trigger) * iSM);
             if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
 
-            if (gamepad2.b){
+            if (gamepad2.y){
                 robot.plane.setPosition(-0.7);
             } else {
                 robot.plane.setPosition(0.7);

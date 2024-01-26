@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.auto.encoderbased;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -36,6 +37,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -72,7 +75,7 @@ public class SimpleAuto extends LinearOpMode {
     private DcMotor         rightDrive  = null;
 
     private ElapsedTime     runtime = new ElapsedTime();
-    RobotHardware robot = new RobotHardware();
+    SampleMecanumDrive robot;
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -90,10 +93,8 @@ public class SimpleAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
+        robot = new SampleMecanumDrive(hardwareMap);
         // Initialize the drive system variables.
-        robot.init(hardwareMap); // initializing hardware map
-
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -123,6 +124,11 @@ public class SimpleAuto extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  -55,  -55, -55,-55,7.0);  // S1: Forward 47 Inches with 5 Sec timeout
+//        robot.followTrajectorySequence(
+//                robot.trajectorySequenceBuilder(new Pose2d())
+//                        .forward(40)
+//                        .build()
+//        );
         sleep(500);
         robot.intake.setPower(0.2);
         sleep(7000);
