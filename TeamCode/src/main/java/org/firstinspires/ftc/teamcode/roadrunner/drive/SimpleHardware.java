@@ -50,6 +50,7 @@ public class SimpleHardware {
         backLeft = hwMap.get(DcMotor.class, "backLeft");
         backRight = hwMap.get(DcMotor.class, "backRight");
         slideLeft = hwMap.get(DcMotor.class, "slideLeft");
+        intake = hwMap.get(DcMotor.class, "intake");
         slideRight = hwMap.get(DcMotorEx.class, "slideRight");
 
         cameraLeft = hwMap.get(WebcamName.class, "Webcam 1");

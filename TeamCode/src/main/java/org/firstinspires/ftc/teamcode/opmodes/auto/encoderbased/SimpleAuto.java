@@ -131,7 +131,7 @@ public class SimpleAuto extends LinearOpMode {
 //                        .build()
 //        );
         sleep(500);
-        robot.intake.setPower(0.2);
+        robot.intake.setPower(0.6);
         sleep(7000);
         robot.intake.setPower(0);
         sleep(1000);
