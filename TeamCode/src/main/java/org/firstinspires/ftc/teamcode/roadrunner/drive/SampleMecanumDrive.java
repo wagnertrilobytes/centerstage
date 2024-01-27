@@ -134,8 +134,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         testServo = new ServoToo(tstServo, 0, 360, AngleUnit.DEGREES);
         // ^^^^^^^ THIS IS FOR THE GOBILDA 2000-0025-0003
         // OUR USUAL SMART ROBOT SERVOS (THE REV CLAW ONES GO 0-270)
-        clawLeft = new ServoToo(clwLeft, 0, 270, AngleUnit.DEGREES);
-        clawRight = new ServoToo(clwRight, 0, 270, AngleUnit.DEGREES);
+        clawLeft = new ServoToo(clwLeft, 270, 0, AngleUnit.DEGREES);
+        clawRight = new ServoToo(clwRight, 270, 0, AngleUnit.DEGREES);
         clawRight.setInverted(true);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
