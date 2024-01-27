@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.helpers.Storage;
@@ -17,6 +18,7 @@ import org.opencv.core.Scalar;
 import java.util.function.DoubleSupplier;
 
 @Autonomous(name = "Hooligan Activity", group = "Its so sad that steve jobs died of ligma")
+@Disabled
 public class SteveJobsWasHere extends LinearOpMode {
     private VisionPortal visionPortal;
     public ColourMassDetectionProcessor colourMassDetectionProcessor;

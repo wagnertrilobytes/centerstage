@@ -19,27 +19,32 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
  */
 @Config
 public class DriveConstants {
-    public static final double TICKS_PER_REV = 537.6;
-    public static final double MAX_RPM = 312;
+    public static final double TICKS_PER_REV = 1425.2;
+    public static final double MAX_RPM = 117;
 
+    /*
+     * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
+     * Set this flag to false if drive encoders are not present and an alternative localization
+     * method is in use (e.g., tracking wheels).
+     *
+     * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
+     * from DriveVelocityPIDTuner.
+     */
     public static final boolean RUN_USING_ENCODER = true;
-
-
-    public static final RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-    public static final RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
-
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(14, 0,10,
-            12.8015);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(20, 0, 8,
+            13.378632367819122);
     public static double WHEEL_RADIUS = 1.8898; // in
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = -9.32; // in
-    public static double kV = 0.017;
-    public static double kA = 0.001;
-    public static double kStatic = 0;
-    public static double MAX_VEL = 49.06530693660696;
-    public static double MAX_ACCEL = 51.78291908330528;
-    public static double MAX_ANG_VEL = 3.132823944091797; // this is in radians
-    public static double MAX_ANG_ACCEL = Math.toRadians(167.05832);
+    public static double GEAR_RATIO = 2.76470588; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 16.13; // in
+    public static double kV = 0.01516;
+    public static double kA = 0.002;
+    public static double kStatic = 0.0055;
+    public static double MAX_VEL = 45.14696128158258;
+    public static double MAX_ACCEL = 19.68109465623948;
+    public static double MAX_ANG_VEL = 2.47487735748291;
+    public static double MAX_ANG_ACCEL = 2.47487735748291;
+    public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+    public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;

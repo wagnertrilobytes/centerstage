@@ -14,7 +14,7 @@ import org.opencv.core.Scalar;
 
 import java.util.List;
 
-@Autonomous(name = "Backstage Blue for Comp 3", group="Backstage")
+@Autonomous(name = "Backstage Blue", group="Backstage")
 public class BackstageBlueToo extends ColorVisionAutoBase {
     double INCHES_AWAY = 7;
     double WANTED_ID = 1;
@@ -55,7 +55,7 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToConstantHeading(new Vector2d(11.89, 44.09))
+                .lineToConstantHeading(new Vector2d(14, 44.09))
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -96,32 +96,26 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-        robot.clawLeft.turnToAngle(7);
-        robot.clawRight.turnToAngle(7);
+        robot.clawLeft.turnToAngle(2);
+        robot.clawRight.turnToAngle(2);
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
             WANTED_ID = 1;
-            robot.followTrajectorySequence(left_trajOne);
+            robot.followTrajectorySequenceAsync(left_trajOne);
         } else if(detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.RIGHT) {
             currentState = State.RIGHT;
             WANTED_ID = 3;
-            robot.followTrajectorySequence(right_trajOne);
+            robot.followTrajectorySequenceAsync(right_trajOne);
         } else if(detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.MIDDLE) {
             currentState = State.MIDDLE;
             WANTED_ID = 2;
-            robot.followTrajectorySequence(middle_trajOne);
+            robot.followTrajectorySequenceAsync(middle_trajOne);
         } else {
             currentState = State.DEFAULT;
         }
     }
 
-
-//    @Override
-//    public void onStartedColor(ColourMassDetectionProcessor.Prop det) {
-//        telemetry.addData("vps", vp.getCameraState() != null ? vp.getCameraState() : "a");
-//        telemetry.update();
-//    }
     @Override
     public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
@@ -131,7 +125,6 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
             case DROP:
                 if (!robot.isBusy()) {
                     currentStep = Step.FINISH;
-                    double clawSpeed = 0.75;
                     robot.slideLeft.setPower(-0.75);
                     robot.slideRight.setPower(0.75);
                     sleep(1000);
@@ -140,15 +133,15 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                     sleep(250);
                     robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
                     robot.clawRight.turnToAngle(robot.clawRight.max - 15);
-                    sleep(250);
+                    sleep(500);
+                    robot.clawLeft.turnToAngle(0);
+                    robot.clawRight.turnToAngle(0);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                 }
                 break;
             case TWO:
                 if (!robot.isBusy()) {
                     currentStep = Step.DROP;
-                    robot.clawLeft.turnToAngle(13);
-                    robot.clawRight.turnToAngle(13);
                     robot.followTrajectorySequenceAsync(drop_trajOne);
                 }
                 break;

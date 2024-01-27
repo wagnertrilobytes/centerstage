@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.test;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.apache.commons.math3.util.IntegerSequence;
@@ -11,6 +12,7 @@ import java.time.temporal.ValueRange;
 
 @Config
 @Autonomous(name = "Testing: servo as CR")
+@Disabled
 public class TestServoAsCR extends LinearOpMode {
     public static double powerPos = 1.01;
     public static double powerNeg = 0.01;

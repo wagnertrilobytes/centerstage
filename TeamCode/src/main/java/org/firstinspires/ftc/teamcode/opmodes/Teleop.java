@@ -34,6 +34,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -83,18 +84,16 @@ public class Teleop extends LinearOpMode {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             double Speed = -gamepad1.left_stick_y;
-            double Turn = -gamepad1.left_stick_x;
-            double Strafe = -gamepad1.right_stick_x;
+            double Turn = gamepad1.right_stick_x;
+            double Strafe = gamepad1.left_stick_x;
             double Slide = -gamepad2.right_stick_y;
-            double flip = -gamepad2.left_stick_y;
             double MAX_SPEED = 1.0;
 
-            double numFl = 0.75*Range.clip((+Speed - Turn - Strafe), -1, +1);
+            double numFl = 0.75*Range.clip((+Speed + Turn - Strafe), -1, +1);
             double numFr = 0.75*Range.clip((+Speed + Turn + Strafe), -1, +1);
-            double numBl = 0.75*Range.clip((+Speed + Turn - Strafe), -1, +1);
+            double numBl = 0.75*Range.clip((+Speed - Turn - Strafe), -1, +1);
             double numBr = 0.75*Range.clip((+Speed - Turn + Strafe), -1, +1);
             double numUp = 0.5*Range.clip((Slide), -1, +1);
-            double numFlip = 0.8*Range.clip((flip), -1, +1);
             //Fabian Bafoonery
 
             //rotation values for height
@@ -116,9 +115,6 @@ public class Teleop extends LinearOpMode {
             double slideLeftPower  = robot.slideLeft.getPower();
             double slideRightPower = robot.slideRight.getPower();
             //telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
-            telemetry.addData("Motors Power", "frontLeft (%.2f), frontRight (%.2f), backLeft (%.2f), backRight (%.2f), slideLeft (%.2f), slideRight (%.2f)", frontLeftPower, frontRightPower, backLeftPower,backRightPower, slideLeftPower, slideRightPower);
-            telemetry.addData("lt", gamepad2.left_trigger);
-            telemetry.addData("rt", gamepad2.right_trigger);
 
             robot.frontLeft.setPower(frontLeftPower);
             robot.frontRight.setPower(frontRightPower);
@@ -147,7 +143,7 @@ public class Teleop extends LinearOpMode {
 
             if (turnAngle > robot.clawLeft.max) turnAngle = robot.clawLeft.max;
             if (turnAngle < robot.clawLeft.min) turnAngle = robot.clawLeft.min;
-            turnAngle += -gamepad2.left_stick_y * 4;
+            turnAngle += gamepad2.left_stick_y * 4;
             if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
                     Math.abs(gamepad1.left_stick_y) > 0.1 ||
                     Math.abs(gamepad1.right_stick_x) > 0.1 ||
@@ -212,21 +208,21 @@ public class Teleop extends LinearOpMode {
                 robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
             }
 
-            telemetry.addLine("Motors: Drive");
-            telemetry.addData("Front Left", robot.frontLeft.getCurrentPosition());
-            telemetry.addData("Front Right", robot.frontRight.getCurrentPosition());
-            telemetry.addData("Back Left", robot.backLeft.getCurrentPosition());
-            telemetry.addData("Back Right", robot.backRight.getCurrentPosition());
-            telemetry.addLine("Motors: Other");
-            telemetry.addData("Slide Left", robot.slideLeft.getCurrentPosition());
-            telemetry.addData("Slide Right", robot.slideRight.getCurrentPosition());
+            telemetry.addData("Front Left", fmt(robot.frontLeft));
+            telemetry.addData("Front Right", fmt(robot.frontRight));
+            telemetry.addData("Back Left", fmt(robot.backLeft));
+            telemetry.addData("Back Right", fmt(robot.backRight));
+            telemetry.addData("Slide Left", fmt(robot.slideLeft));
+            telemetry.addData("Slide Right", fmt(robot.slideRight));
             telemetry.addData("Intake", robot.intake.getCurrentPosition());
-            telemetry.addLine("Servos");
             telemetry.addData("Plane", robot.plane.getPosition());
             telemetry.addData("clwL", robot.clawLeft.getAngle());
             telemetry.addData("clwR", robot.clawRight.getAngle());
 
             telemetry.update();
         }
+    }
+    public String fmt(DcMotor mot) {
+        return mot.getCurrentPosition() + "@" + mot.getPower() + "," + mot.getPortNumber();
     }
 }

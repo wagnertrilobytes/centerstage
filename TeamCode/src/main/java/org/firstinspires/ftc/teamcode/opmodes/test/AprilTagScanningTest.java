@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 @TeleOp(name="April tag test!!!", group = "Tests")
 @Config
+@Disabled
 public class AprilTagScanningTest extends LinearOpMode {
     public static int WANTED_ID = 1;
     public static double INCHES_AWAY = 8.5;

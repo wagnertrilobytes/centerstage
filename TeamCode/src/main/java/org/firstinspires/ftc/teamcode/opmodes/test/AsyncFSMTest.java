@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.opmodes.test;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 @Autonomous(name = "Async FiniteStateMachine")
+@Disabled
 public class AsyncFSMTest extends LinearOpMode {
     enum State {
         HELLO_WORLD,

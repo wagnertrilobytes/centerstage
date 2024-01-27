@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.auto.old;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,7 +53,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "this should NOT work", group = "Robot")
-
+@Disabled
 public class Cooking extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     static final double     FORWARD_SPEED = 0.5;

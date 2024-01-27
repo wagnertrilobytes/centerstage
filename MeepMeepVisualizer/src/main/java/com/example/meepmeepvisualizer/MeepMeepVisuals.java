@@ -15,11 +15,19 @@ public class MeepMeepVisuals {
         Pose2d ENDPOSE = new Pose2d(-57.32, 0.11, 0);
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(49.06530693660696, 51.78291908330528, Math.toRadians(167.05832), Math.toRadians(167.05832), -9)
+                .setConstraints( 60.34900677139974, 19.68109465623948, 3.0706892013549805, 3.0706892013549805, 16.13)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder( new Pose2d(14, 60, Math.toRadians(270)))
                                 .lineTo(new Vector2d(25, 61))
-                                .lineTo(new Vector2d(23, 39))
+                                .lineTo(new Vector2d(25, 40))
+                                .lineToLinearHeading(new Pose2d(10, 36, Math.toRadians(180)))
+                                .waitSeconds(1)
+                                // none
+                                .waitSeconds(1)
+                                .splineTo(new Vector2d(35, 36), Math.toRadians(180))
+                                .back(7)
+                                .back(7)
+                                .back(7)
                                 .build()
                 );
 

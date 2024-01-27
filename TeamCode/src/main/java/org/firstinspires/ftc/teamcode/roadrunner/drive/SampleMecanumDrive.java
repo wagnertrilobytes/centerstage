@@ -55,10 +55,10 @@ import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.enc
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7.5, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1.25;
+    public static double LATERAL_MULTIPLIER = 1;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -120,10 +120,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 //        rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
 //        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
 
-        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
-        backRight = hardwareMap.get(DcMotorEx.class, "backRight");
-        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
+        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft"); // 1
+        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight"); // 2
+        backLeft = hardwareMap.get(DcMotorEx.class, "backLeft"); // 0
+        backRight = hardwareMap.get(DcMotorEx.class, "backRight"); // 3
 
         clwLeft = hardwareMap.get(Servo.class, "clawLeft");
         clwRight = hardwareMap.get(Servo.class, "clawRight");
@@ -134,8 +134,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         testServo = new ServoToo(tstServo, 0, 360, AngleUnit.DEGREES);
         // ^^^^^^^ THIS IS FOR THE GOBILDA 2000-0025-0003
         // OUR USUAL SMART ROBOT SERVOS (THE REV CLAW ONES GO 0-270)
-        clawLeft = new ServoToo(clwLeft, -2, 290, AngleUnit.DEGREES);
-        clawRight = new ServoToo(clwRight, -2, 290, AngleUnit.DEGREES);
+        clawLeft = new ServoToo(clwLeft, 0, 270, AngleUnit.DEGREES);
+        clawRight = new ServoToo(clwRight, 0, 270, AngleUnit.DEGREES);
         clawRight.setInverted(true);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
@@ -176,10 +176,14 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+//        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+//        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();

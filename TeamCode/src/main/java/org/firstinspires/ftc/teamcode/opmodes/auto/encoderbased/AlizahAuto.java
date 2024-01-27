@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.encoderbased;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -63,7 +64,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
  */
 
 @Autonomous(name="AlizahAuto", group="Fallback")
-//@Disabled
+@Disabled
 public class AlizahAuto extends LinearOpMode {
 
     /* Declare OpMode members. */

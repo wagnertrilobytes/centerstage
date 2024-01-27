@@ -90,8 +90,8 @@ public class BackstageRed extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-        robot.clawLeft.turnToAngle(6);
-        robot.clawRight.turnToAngle(6);
+        robot.clawLeft.turnToAngle(18);
+        robot.clawRight.turnToAngle(18);
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
