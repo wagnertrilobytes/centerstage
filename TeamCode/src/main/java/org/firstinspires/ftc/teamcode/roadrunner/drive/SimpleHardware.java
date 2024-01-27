@@ -74,10 +74,10 @@ public class SimpleHardware {
         imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 */
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
         slideLeft.setDirection(DcMotor.Direction.REVERSE);
         slideRight.setDirection(DcMotor.Direction.REVERSE);
         //armB.setDirection(DcMotor.Direction.REVERSE);

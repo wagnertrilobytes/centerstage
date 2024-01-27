@@ -78,7 +78,7 @@ public class Teleop extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //runtime.reset();
-        double turnAngle = robot.clawLeft.min;
+        double turnAngle = robot.clawLeft.max;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive() && !isStopRequested()) {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -131,8 +131,12 @@ public class Teleop extends LinearOpMode {
 //            robot.intake.setPower(gamepad2.right_stick_x - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
 
             double iSM = 1;
-            if (gamepad2.left_trigger > 0.3) robot.intake.setPower((-gamepad2.left_trigger) * iSM);
-            if (gamepad2.right_trigger > 0.3) robot.intake.setPower((gamepad2.right_trigger) * iSM);
+            if (gamepad2.left_trigger > 0.3) {
+                robot.intake.setPower((-gamepad2.left_trigger) * iSM);
+            }
+            if (gamepad2.right_trigger > 0.3) {
+                robot.intake.setPower((gamepad2.right_trigger) * iSM);
+            }
             if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
 
             if (gamepad2.y){
@@ -141,8 +145,8 @@ public class Teleop extends LinearOpMode {
                 robot.plane.setPosition(0.7);
             }
 
-            if (turnAngle > robot.clawLeft.max) turnAngle = robot.clawLeft.max;
-            if (turnAngle < robot.clawLeft.min) turnAngle = robot.clawLeft.min;
+            if (turnAngle > robot.clawLeft.max) turnAngle = robot.clawLeft.max - 25;
+            if (turnAngle < robot.clawLeft.min) turnAngle = robot.clawLeft.min + 25;
             turnAngle += gamepad2.left_stick_y * 4;
             if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
                     Math.abs(gamepad1.left_stick_y) > 0.1 ||
@@ -150,8 +154,8 @@ public class Teleop extends LinearOpMode {
                     Math.abs(gamepad1.right_stick_y) > 0.1 &&
                    !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
             ) {
-                if(turnAngle <= 6 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawLeft.turnToAngle(13);
-                if(turnAngle <= 6 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawRight.turnToAngle(13);
+                if(turnAngle <= robot.clawLeft.max - 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawLeft.turnToAngle(robot.clawLeft.max - 9);
+                if(turnAngle <= robot.clawLeft.max - 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawRight.turnToAngle(robot.clawRight.max - 9);
             } else {
                 robot.clawLeft.turnToAngle(turnAngle);
                 robot.clawRight.turnToAngle(turnAngle);

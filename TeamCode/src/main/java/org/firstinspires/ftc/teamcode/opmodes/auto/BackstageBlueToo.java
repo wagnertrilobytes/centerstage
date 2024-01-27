@@ -47,15 +47,20 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                 .build();
 
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
-                .lineTo(new Vector2d(25, 61))
+                .lineTo(new Vector2d(24, 60))
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .lineToConstantHeading(new Vector2d(14, 33))
+                .back(3)
+                .strafeLeft(5)
+                .turn(Math.toRadians(-15))
+                .forward(2.5)
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
                 .lineToConstantHeading(new Vector2d(14, 44.09))
+                .lineTo(midbefDropV)
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -64,16 +69,20 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                 .lineToLinearHeading(new Pose2d(10, 36, Math.toRadians(180)))
                 .build();
 
-        drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+        right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
+                .lineTo(new Vector2d(24, 60))
+                .build();
+
+        drop_trajOne = robot.trajectorySequenceBuilder(midbefDrop)
                 .splineTo(new Vector2d(35, 36), Math.toRadians(180))
-                .back(7)
-                .back(7)
-                .back(7)
+                .back(15)
                 .build();
 
     }
 
     Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
+    Pose2d midbefDrop = new Pose2d(14, 44, Math.toRadians(180));
+    Vector2d midbefDropV = new Vector2d(14, 44);
     double INTAKE_POWER = -0.4;
 
     enum State {
@@ -96,8 +105,8 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-        robot.clawLeft.turnToAngle(2);
-        robot.clawRight.turnToAngle(2);
+        robot.clawLeft.turnToAngle(robot.clawLeft.max - 2);
+        robot.clawRight.turnToAngle(robot.clawRight.max - 2);
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
@@ -127,7 +136,7 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                     currentStep = Step.FINISH;
                     robot.slideLeft.setPower(-0.75);
                     robot.slideRight.setPower(0.75);
-                    sleep(1000);
+                    sleep(1250);
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
                     sleep(250);
@@ -136,6 +145,15 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                     sleep(500);
                     robot.clawLeft.turnToAngle(0);
                     robot.clawRight.turnToAngle(0);
+                    sleep(1500);
+                    robot.clawLeft.turnToAngle(robot.clawLeft.max);
+                    robot.clawRight.turnToAngle(robot.clawRight.max);
+                    sleep(250);
+                    robot.slideLeft.setPower(0.75);
+                    robot.slideRight.setPower(-0.75);
+                    sleep(1250);
+                    robot.slideLeft.setPower(0);
+                    robot.slideRight.setPower(0);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                 }
                 break;
@@ -151,6 +169,7 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                         doIntakeSpin();
                     if (currentState == State.MIDDLE) robot.followTrajectorySequenceAsync(middle_trajTwo);
                     if (currentState == State.LEFT) robot.followTrajectorySequenceAsync(left_trajTwo);
+                    if (currentState == State.RIGHT) robot.followTrajectorySequenceAsync(right_trajTwo);
                 }
                 break;
         }

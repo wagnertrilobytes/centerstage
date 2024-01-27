@@ -51,12 +51,12 @@ public class AudienceBlue extends ColorVisionAutoBase {
 //                .lineToConstantHeading(ENDPOS)
                 .build();
         middle_trajOne  = robot.trajectorySequenceBuilder(startPos)
-                .splineTo(new Vector2d(-35.95, 34.18), Math.toRadians(270.00))
+                .lineToConstantHeading(new Vector2d(-35.95, 34.18))
                 .build();
 
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToConstantHeading(new Vector2d(-50.73, 58.17))
+                .lineToConstantHeading(new Vector2d(-35.95, 40.18))
 //                .splineTo(ENDPOS, Math.toRadians(0))
                 .build();
 
@@ -115,8 +115,8 @@ public class AudienceBlue extends ColorVisionAutoBase {
 
     @Override
     public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {
-        robot.clawLeft.turnToAngle(7);
-        robot.clawRight.turnToAngle(7);
+        robot.clawLeft.turnToAngle(robot.clawLeft.max - 2);
+        robot.clawRight.turnToAngle(robot.clawLeft.max - 2);
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         switch (currentStep) {
             case FINISH:
