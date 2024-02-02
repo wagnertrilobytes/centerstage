@@ -78,7 +78,7 @@ public class Teleop extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //runtime.reset();
-        double turnAngle = robot.clawLeft.max;
+        double turnAngle = robot.clawLeft.min;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive() && !isStopRequested()) {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -132,37 +132,40 @@ public class Teleop extends LinearOpMode {
 
             double iSM = 1;
             if (gamepad2.left_trigger > 0.3) {
-                robot.intake.setPower((-gamepad2.left_trigger) * iSM);
+//                robot.intake.setPower((-gamepad2.left_trigger) * iSM);
+                robot.PizzaBox.turnToAngle(-100);
             }
             if (gamepad2.right_trigger > 0.3) {
                 robot.intake.setPower((gamepad2.right_trigger) * iSM);
             }
-            if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
+            if (gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
 
+            if (gamepad2.left_trigger < 0.3) robot.PizzaBox.turnToAngle(0);
             if (gamepad2.y){
                 robot.plane.setPosition(-0.7);
             } else {
                 robot.plane.setPosition(0.7);
             }
 
-            if (turnAngle > robot.clawLeft.max) turnAngle = robot.clawLeft.max - 25;
-            if (turnAngle < robot.clawLeft.min) turnAngle = robot.clawLeft.min + 25;
-            turnAngle += gamepad2.left_stick_y * 4;
+            if (turnAngle > robot.clawLeft.max) turnAngle = robot.clawLeft.max;
+            telemetry.addData("Hooligan", "Activity");
+            if (turnAngle < robot.clawLeft.min) turnAngle = robot.clawLeft.min;
+            turnAngle += -gamepad2.left_stick_y * 4;
             if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
                     Math.abs(gamepad1.left_stick_y) > 0.1 ||
                     Math.abs(gamepad1.right_stick_x) > 0.1 ||
                     Math.abs(gamepad1.right_stick_y) > 0.1 &&
                    !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
             ) {
-                if(turnAngle <= robot.clawLeft.max - 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawLeft.turnToAngle(robot.clawLeft.max - 9);
-                if(turnAngle <= robot.clawLeft.max - 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawRight.turnToAngle(robot.clawRight.max - 9);
+                if(turnAngle <= robot.clawLeft.min - 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawLeft.turnToAngle(9);
+                if(turnAngle <= robot.clawLeft.min - 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawRight.turnToAngle(9);
             } else {
                 robot.clawLeft.turnToAngle(turnAngle);
                 robot.clawRight.turnToAngle(turnAngle);
             }
 //            telemetry.addData("dont forgor", "uncomment the slide code!!!");
-            robot.slideLeft.setPower(-numUp - MAX_SPEED + MAX_SPEED);
-            robot.slideRight.setPower(numUp - MAX_SPEED + MAX_SPEED);
+            robot.slideLeft.setPower(-(numUp / 3) - MAX_SPEED + MAX_SPEED);
+            robot.slideRight.setPower((numUp / 3) - MAX_SPEED + MAX_SPEED);
 
             boolean vroom = true;
             if(vroom == true)
@@ -222,6 +225,7 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Plane", robot.plane.getPosition());
             telemetry.addData("clwL", robot.clawLeft.getAngle());
             telemetry.addData("clwR", robot.clawRight.getAngle());
+            telemetry.addData("PIZZA BOX!!", robot.PizzaBox.getAngle());
 
             telemetry.update();
         }

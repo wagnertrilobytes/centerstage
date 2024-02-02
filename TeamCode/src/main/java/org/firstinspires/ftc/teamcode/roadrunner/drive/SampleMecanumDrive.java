@@ -81,8 +81,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     public ServoToo clawLeft, clawRight;
 //    public PosCRServo clwLeft, clwRight;
 //    public PosCRServo testServo;
-    public ServoToo testServo;
-    public Servo tstServo;
+    public ServoToo testServo, PizzaBox;
+    public Servo tstServo, PizzaBx;
     public List<Servo> servos;
     public List<DcMotorEx> slide;
     public List<DcMotorEx> motors;
@@ -134,12 +134,15 @@ public class SampleMecanumDrive extends MecanumDrive {
         testServo = new ServoToo(tstServo, 0, 360, AngleUnit.DEGREES);
         // ^^^^^^^ THIS IS FOR THE GOBILDA 2000-0025-0003
         // OUR USUAL SMART ROBOT SERVOS (THE REV CLAW ONES GO 0-270)
-        clawLeft = new ServoToo(clwLeft, -2, 290, AngleUnit.DEGREES);
-        clawRight = new ServoToo(clwRight, -2, 290, AngleUnit.DEGREES);
+        clawLeft = new ServoToo(clwLeft, 0, 290, AngleUnit.DEGREES);
+        clawRight = new ServoToo(clwRight, 0, 290, AngleUnit.DEGREES);
         clawRight.setInverted(true);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
         slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
+        PizzaBx = hardwareMap.get(Servo.class, "pizzabox");
+
+        PizzaBox = new ServoToo(PizzaBx, -100, 100, AngleUnit.DEGREES);
 
         cameraLeft = hardwareMap.get(WebcamName.class, "Webcam 1");
 //        cameraRight = hardwareMap.get(WebcamName.class, "Webcam 2");
