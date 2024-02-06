@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
@@ -14,7 +15,8 @@ import org.opencv.core.Scalar;
 
 import java.util.List;
 
-@Autonomous(name = "Backstage Blue", group="Backstage")
+@Autonomous(name = "Backstage Blue Async FSM", group="Backstage")
+@Disabled
 public class BackstageBlueToo extends ColorVisionAutoBase {
     double INCHES_AWAY = 7;
     double WANTED_ID = 1;
@@ -134,11 +136,11 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
             case DROP:
                 if (!robot.isBusy()) {
                     currentStep = Step.FINISH;
-                    robot.slideLeft.setPower(-0.75);
-                    robot.slideRight.setPower(0.75);
+//                    robot.slideLeft.setPower(-0.75);
+//                    robot.slideRight.setPower(0.75);
                     sleep(1250);
-                    robot.slideLeft.setPower(0);
-                    robot.slideRight.setPower(0);
+//                    robot.slideLeft.setPower(0);
+//                    robot.slideRight.setPower(0);
                     sleep(250);
 //                    robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
 //                    robot.clawRight.turnToAngle(robot.clawRight.max - 15);
@@ -149,11 +151,11 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
 //                    robot.clawLeft.turnToAngle(robot.clawLeft.max);
 //                    robot.clawRight.turnToAngle(robot.clawRight.max);
                     sleep(250);
-                    robot.slideLeft.setPower(0.75);
-                    robot.slideRight.setPower(-0.75);
+//                    robot.slideLeft.setPower(0.75);
+//                    robot.slideRight.setPower(-0.75);
                     sleep(1250);
-                    robot.slideLeft.setPower(0);
-                    robot.slideRight.setPower(0);
+//                    robot.slideLeft.setPower(0);
+//                    robot.slideRight.setPower(0);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                 }
                 break;
@@ -176,8 +178,8 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
     }
 
     public void doIntakeSpin() {
-        robot.intake.setPower(-INTAKE_POWER);
+//        robot.intake.setPower(-INTAKE_POWER);
         sleep(450);
-        robot.intake.setPower(0);
+//        robot.intake.setPower(0);
     }
 }

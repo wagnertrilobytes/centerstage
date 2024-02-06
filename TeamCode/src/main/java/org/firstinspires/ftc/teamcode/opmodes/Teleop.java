@@ -38,6 +38,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.PlaneLauncher;
+import org.firstinspires.ftc.teamcode.subsystems.Slides;
+import org.firstinspires.ftc.teamcode.subsystems.SpicyBucket;
 
 
 /**
@@ -57,31 +61,29 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 //@Disabled
 public class Teleop extends LinearOpMode {
     // Declare OpMode mem bers.
-    //private ElapsedTime runtime = new ElapsedTime();
-    //private DcMotor leftDrive = null;
-    //private DcMotor rightDrive = null;
-
-
-
-    //@Override
-    double lastTA = 1;
+    SpicyBucket spicyBucket = new SpicyBucket();
+    Intake intake = new Intake();
+    PlaneLauncher plane = new PlaneLauncher();
+    Slides slides = new Slides();
     public void runOpMode() {
         SampleMecanumDrive robot = new SampleMecanumDrive(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-
-
-       // robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spicyBucket.init(hardwareMap);
+        intake.init(hardwareMap);
+        plane.init(hardwareMap);
+        slides.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        //runtime.reset();
-        double turnAngle = robot.intakeArm.min;
-        // run until the end of the match (driver presses STOP)
+        double turnAngle = spicyBucket.minArmAngle();
         while (opModeIsActive() && !isStopRequested()) {
-           // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            spicyBucket.run(gamepad1, gamepad2, telemetry);
+            intake.run(gamepad1, gamepad2, telemetry);
+            plane.run(gamepad1, gamepad2, telemetry);
+            slides.run(gamepad1, gamepad2, telemetry);
 
             double Speed = -gamepad1.left_stick_y;
             double Turn = gamepad1.right_stick_x;
@@ -89,85 +91,39 @@ public class Teleop extends LinearOpMode {
             double Slide = -gamepad2.right_stick_y;
             double MAX_SPEED = 1.0;
 
-            double numFl = 0.75*Range.clip((+Speed + Turn - Strafe), -1, +1);
-            double numFr = 0.75*Range.clip((+Speed + Turn + Strafe), -1, +1);
-            double numBl = 0.75*Range.clip((+Speed - Turn - Strafe), -1, +1);
-            double numBr = 0.75*Range.clip((+Speed - Turn + Strafe), -1, +1);
+            double numFl = (0.75*Range.clip((+Speed + Turn - Strafe), -1, +1)) - MAX_SPEED + MAX_SPEED;
+            double numFr = (0.75*Range.clip((+Speed + Turn + Strafe), -1, +1)) - MAX_SPEED + MAX_SPEED;
+            double numBl = (0.75*Range.clip((+Speed - Turn - Strafe), -1, +1)) - MAX_SPEED + MAX_SPEED;
+            double numBr = (0.75*Range.clip((+Speed - Turn + Strafe), -1, +1)) - MAX_SPEED + MAX_SPEED;
+
+            robot.setMotorPowers(numFl, numBl, numFr, numBr);
+
             double numUp = 0.5*Range.clip((Slide), -1, +1);
-            //Fabian Bafoonery
-
-            //rotation values for height
-            // small:negative -1875
-            // medium: -3150
-            // tall height: -4200
-
-
-
-
-            // Show the elapsed game time and wheel power.
-            //telemetry.addData("Status", "Run Time: " + runtime.toString());
-
-
-            double frontLeftPower = robot.frontLeft.getPower();
-            double frontRightPower = robot.frontRight.getPower();
-            double backLeftPower = robot.backLeft.getPower();
-            double backRightPower = robot.backRight.getPower();
-            double slideLeftPower  = robot.slideLeft.getPower();
-            double slideRightPower = robot.slideRight.getPower();
-            //telemetry.addData("Arm height:", robot.arm.getCurrentPosition());
-
-            robot.frontLeft.setPower(frontLeftPower);
-            robot.frontRight.setPower(frontRightPower);
-            robot.backLeft.setPower(backLeftPower);
-            robot.backRight.setPower(backRightPower);
-//            robot.setWeightedDrivePower(
-//                    new Pose2d(
-//                            -gamepad1.left_stick_y,
-//                            -gamepad1.left_stick_x,
-//                            -gamepad1.right_stick_x
-//                    )
-//            );
-            //slides
-//            robot.intake.setPower(gamepad2.right_stick_x - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
 
             double iSM = 1;
-            double crSM = 0.3;
             if (gamepad2.left_trigger > 0.3) {
-                robot.intake.setPower(-gamepad2.left_trigger);
+                intake.setPower(-gamepad2.left_trigger, 1);
+                spicyBucket.takeOut();
             }
-            if (gamepad2.left_bumper) robot.PizzaBx.setPosition(1);
-            if (!gamepad2.left_bumper) robot.PizzaBx.setPosition(0);
             if (gamepad2.right_trigger > 0.3) {
-                robot.intake.setPower((gamepad2.right_trigger) * iSM);
-                robot.counterRoller.setPower(((gamepad2.right_trigger) * iSM) * crSM);
+                intake.setPower(gamepad2.right_trigger, iSM);
+                spicyBucket.takeIn();
             }
             if (gamepad2.right_trigger < 0.3 && gamepad2.left_trigger < 0.3) {
-                robot.intake.setPower(0);
-                robot.counterRoller.setPower(0);
+                intake.stop();
+                spicyBucket.stop();
             }
-
             if (gamepad2.y){
-                robot.plane.setPosition(-0.7);
+                plane.sendPlane();
             } else {
-                robot.plane.setPosition(0.7);
+                plane.takePlaneBack();
             }
-            telemetry.addData("Hooligan", "Activity");
+            if (gamepad2.a) spicyBucket.dropOnePixel(this);
 
             turnAngle += -gamepad2.left_stick_y * 4;
-            if (turnAngle > robot.intakeArm.max) turnAngle = robot.intakeArm.max;
-            if (turnAngle < robot.intakeArm.min) turnAngle = robot.intakeArm.min;
-
-            if (gamepad2.x) {
-                robot.intakeWheel.setPower(1);
-            } else if(gamepad2.a) {
-                robot.intakeWheel.setPower(-1);
-            } else {
-                robot.intakeWheel.setPower(0);
-            }
-
-            robot.intakeArm.turnToAngle(turnAngle);
-
-
+            if (turnAngle > spicyBucket.maxArmAngle()) turnAngle = spicyBucket.maxArmAngle();
+            if (turnAngle < spicyBucket.minArmAngle()) turnAngle = spicyBucket.minArmAngle();
+            spicyBucket.setArmAngle(turnAngle);
 
 
 //            if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
@@ -183,71 +139,16 @@ public class Teleop extends LinearOpMode {
 //                robot.clawRight.turnToAngle(turnAngle);
 //            }
 //            telemetry.addData("dont forgor", "uncomment the slide code!!!");
-            robot.slideLeft.setPower(-(numUp / 3) - MAX_SPEED + MAX_SPEED);
-            robot.slideRight.setPower((numUp / 3) - MAX_SPEED + MAX_SPEED);
+            slides.setPower((numUp / 3) - MAX_SPEED + MAX_SPEED);
+            if (gamepad1.dpad_up) robot.setMotorPowers(1, 1, 1, 1);
+            if (gamepad1.dpad_down) robot.setMotorPowers(-1, -1, -1, -1);
 
-            boolean vroom = true;
-            if(vroom == true)
-            {
-                while(gamepad1.dpad_down)
-                {
-                    robot.frontLeft.setPower(-1);
-                    robot.frontRight.setPower(-1);
-                    robot.backLeft.setPower(-1);
-                    robot.backRight.setPower(-1);
-                    vroom = false;
-                }
-                if(vroom == false)
-                {
-                    robot.frontLeft.setPower(0);
-                    robot.frontRight.setPower(0);
-                    robot.backLeft.setPower(0);
-                    robot.backRight.setPower(0);
-                }
-            }
-            boolean vroom2 = true;
-            if(vroom2 == true)
-            {
-                while(gamepad1.dpad_up)
-                {
-                    robot.frontLeft.setPower(1);
-                    robot.frontRight.setPower(1);
-                    robot.backLeft.setPower(1);
-                    robot.backRight.setPower(1);
-                    vroom2 = false;
-                }
-                if(vroom2 == false)
-                {
-                    robot.frontLeft.setPower(0);
-                    robot.frontRight.setPower(0);
-                    robot.backLeft.setPower(0);
-                    robot.backRight.setPower(0);
-                }
-            }
 
-            robot.frontLeft.setPower(numFl - MAX_SPEED + MAX_SPEED);
-            if (robot.backLeft != null) {
-                robot.backLeft.setPower(numBl - MAX_SPEED + MAX_SPEED);
-            }
-            robot.frontRight.setPower(numFr - MAX_SPEED + MAX_SPEED);
-            if (robot.backRight != null) {
-                robot.backRight.setPower(numBr - MAX_SPEED + MAX_SPEED);
-            }
-
+            telemetry.addData("Hooligan", "Activity");
             telemetry.addData("Front Left", fmt(robot.frontLeft));
             telemetry.addData("Front Right", fmt(robot.frontRight));
             telemetry.addData("Back Left", fmt(robot.backLeft));
             telemetry.addData("Back Right", fmt(robot.backRight));
-            telemetry.addData("Slide Left", fmt(robot.slideLeft));
-            telemetry.addData("Slide Right", fmt(robot.slideRight));
-            telemetry.addData("Intake", fmt(robot.intake));
-            telemetry.addData("Plane", robot.plane.getPosition());
-//            telemetry.addData("clwL", robot.clawLeft.getAngle());
-//            telemetry.addData("clwR", robot.clawRight.getAngle());
-            telemetry.addData("PIZZA BOX!!", robot.PizzaBx.getPosition());
-            telemetry.addData("Gp2 TL", gamepad2.left_trigger);
-            telemetry.addData("Gp2 -TL", -gamepad2.left_trigger);
-            telemetry.addData("Gp2 TLx-1", gamepad2.left_trigger * -1);
 
             telemetry.update();
         }

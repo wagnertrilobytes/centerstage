@@ -5,13 +5,16 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Slides;
+import org.firstinspires.ftc.teamcode.subsystems.SpicyBucket;
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "Backstage Blue (NOT ASYNCHRONOUS", group="Backstage")
+@Autonomous(name = "Backstage Blue Latest Test", group="Backstage")
 public class BackstageBlueSync extends ColorVisionAutoBase {
     double INCHES_AWAY = 7;
     double WANTED_ID = 1;
@@ -27,9 +30,16 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
     TrajectorySequence drop_trajTwo;
     VisionPortal vp;
     AprilTagProcessor aprilTags;
+    Intake intake = new Intake();
+    Slides slides = new Slides();
+    SpicyBucket spicyBucket = new SpicyBucket();
 
     @Override
     public void setup() {
+        intake.init(hardwareMap);
+        slides.init(hardwareMap);
+        spicyBucket.init(hardwareMap);
+
         this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
         this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
         this.minArea = () -> 2000; // the minimum area for the detection to consider for your prop
@@ -102,8 +112,6 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-//        robot.clawLeft.turnToAngle(robot.clawLeft.max - 2);
-//        robot.clawRight.turnToAngle(robot.clawRight.max - 2);
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
@@ -135,31 +143,24 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
         currentStep = Step.DROP;
         robot.followTrajectorySequence(drop_trajOne);
         currentStep = Step.FINISH;
-        robot.slideLeft.setPower(-0.75);
-        robot.slideRight.setPower(0.75);
+        slides.setPower(0.75);
         sleep(1250);
-        robot.slideLeft.setPower(0);
-        robot.slideRight.setPower(0);
+        slides.stop();
         sleep(250);
-//        robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
-//        robot.clawRight.turnToAngle(robot.clawRight.max - 15);
+        spicyBucket.setArmAngle(spicyBucket.maxArmAngle() - 15);
         sleep(500);
-//        robot.clawLeft.turnToAngle(0);
-//        robot.clawRight.turnToAngle(0);
+        spicyBucket.dropOnePixel(this);
         sleep(1500);
-//        robot.clawLeft.turnToAngle(robot.clawLeft.max);
-//        robot.clawRight.turnToAngle(robot.clawRight.max);
+        spicyBucket.setArmAngle(spicyBucket.minArmAngle());
         sleep(250);
-        robot.slideLeft.setPower(0.75);
-        robot.slideRight.setPower(-0.75);
+        slides.setPower(-0.75);
         sleep(1250);
-        robot.slideLeft.setPower(0);
-        robot.slideRight.setPower(0);
+        slides.stop();
     }
 
     public void doIntakeSpin() {
-        robot.intake.setPower(-INTAKE_POWER);
+        intake.setPower(INTAKE_POWER, -1);
         sleep(450);
-        robot.intake.setPower(0);
+        intake.stop();
     }
 }

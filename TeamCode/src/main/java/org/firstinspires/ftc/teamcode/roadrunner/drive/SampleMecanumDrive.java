@@ -72,25 +72,9 @@ public class SampleMecanumDrive extends MecanumDrive {
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
     private TrajectoryFollower follower;
-
-//    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
     public DcMotorEx frontLeft, frontRight, backLeft, backRight; /* FALLBACK IN CASE I FORGET TO REFACTOR */
-    public DcMotorEx slideLeft, slideRight, intake;
-    public Servo plane;
-//    public CRServo clawLeft, clawRight;
-    public Servo intakearm;
-    public CRServo intakeWheel;
-    public ServoToo intakeArm;
-//    public PosCRServo clwLeft, clwRight;
-//    public PosCRServo testServo;
-    public ServoToo testServo, PizzaBox;
-    public Servo tstServo, PizzaBx;
-    public List<Servo> servos;
-    public List<DcMotorEx> slide;
-    public DcMotorEx counterRoller;
     public List<DcMotorEx> motors;
     public WebcamName cameraLeft;
-//    public WebcamName cameraRight;
 
     private IMU imu;
     private VoltageSensor batteryVoltageSensor;
@@ -118,57 +102,16 @@ public class SampleMecanumDrive extends MecanumDrive {
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-//        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
-//        leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
-//        rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
-//        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
-
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft"); // 1
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight"); // 2
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft"); // 0
         backRight = hardwareMap.get(DcMotorEx.class, "backRight"); // 3
 
-        intakearm = hardwareMap.get(Servo.class, "clawLeft");
-        intakeArm = new ServoToo(intakearm, 0, 290, AngleUnit.DEGREES);
-        // REPLACE CLAWLEFT WITH INTAKEARM
-        // REPLCE CLAWRIGHT WITH CR INTAKEWHEEL
-        intakeWheel = hardwareMap.get(CRServo.class, "clawRight");
-//        clwRight = hardwareMap.get(Servo.class, "clawRight");
-        tstServo = hardwareMap.get(Servo.class, "servoTest");
-//        clwLeft = new PosCRServo(clawLeft);
-//        clwRight = new PosCRServo(clawRight);
-//        testServo = new PosCRServo(tstServo);
-        testServo = new ServoToo(tstServo, 0, 360, AngleUnit.DEGREES);
-        // ^^^^^^^ THIS IS FOR THE GOBILDA 2000-0025-0003
-        // OUR USUAL SMART ROBOT SERVOS (THE REV CLAW ONES GO 0-270)
-//        clawRight = new ServoToo(clwRight, 0, 290, AngleUnit.DEGREES);
-//        clawRight.setInverted(true);
-        intake = hardwareMap.get(DcMotorEx.class, "intake");
-        slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
-        slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
-        PizzaBx = hardwareMap.get(Servo.class, "pizzabox");
-
-        // On expansion, servo port 5
-        counterRoller = hardwareMap.get(DcMotorEx.class, "counterRoller");
-        counterRoller.setDirection(DcMotorSimple.Direction.REVERSE);
-
-//        PizzaBox = new ServoToo(PizzaBx, 0, 200, AngleUnit.DEGREES);
         cameraLeft = hardwareMap.get(WebcamName.class, "Webcam 1");
-//        cameraRight = hardwareMap.get(WebcamName.class, "Webcam 2");
-
-        plane = hardwareMap.get(Servo.class, "plane");
 
         motors = Arrays.asList(
-                frontLeft, frontRight, backLeft, backRight,
-                slideLeft, slideRight,
-                intake
+                frontLeft, frontRight, backLeft, backRight
         );
-
-//        claw = Arrays.asList(clawLeft, clawRight);
-
-        slide = Arrays.asList(slideLeft, slideRight);
-
-        servos = Arrays.asList(plane);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -188,10 +131,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-//        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-//        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-//        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-//        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);

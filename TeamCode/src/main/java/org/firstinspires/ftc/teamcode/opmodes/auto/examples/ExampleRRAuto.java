@@ -24,16 +24,16 @@ public class ExampleRRAuto extends LinearOpMode {
                 .build();
         robot.followTrajectorySequence(trajSec);
         double clawSpeed = 0.75;
-        robot.slideLeft.setTargetPosition(Storage.MINIMUM_SLIDE_PLACE_L);
-        robot.slideRight.setTargetPosition(Storage.MINIMUM_SLIDE_PLACE_R);
-        robot.slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (robot.slideLeft.getCurrentPosition() != Storage.MINIMUM_SLIDE_PLACE_L ||
-            robot.slideRight.getCurrentPosition() != Storage.MINIMUM_SLIDE_PLACE_R) {}
-        robot.slideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.slideLeft.setTargetPosition(Storage.MINIMUM_SLIDE_PLACE_L);
+//        robot.slideRight.setTargetPosition(Storage.MINIMUM_SLIDE_PLACE_R);
+//        robot.slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        while (robot.slideLeft.getCurrentPosition() != Storage.MINIMUM_SLIDE_PLACE_L ||
+//            robot.slideRight.getCurrentPosition() != Storage.MINIMUM_SLIDE_PLACE_R) {}
+//        robot.slideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ElapsedTime a = new ElapsedTime();
         while (a.seconds() != 1) {
 //            robot.clawLeft.turnToAngle(robot.clawLeft.max);

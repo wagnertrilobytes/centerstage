@@ -115,11 +115,11 @@ public class BackstageRed extends ColorVisionAutoBase {
                 if (!robot.isBusy()) {
                     currentStep = Step.FINISH;
                     double clawSpeed = 0.75;
-                    robot.slideLeft.setPower(-0.75);
-                    robot.slideRight.setPower(0.75);
+//                    robot.slideLeft.setPower(-0.75);
+//                    robot.slideRight.setPower(0.75);
                     sleep(850);
-                    robot.slideLeft.setPower(0);
-                    robot.slideRight.setPower(0);
+//                    robot.slideLeft.setPower(0);
+//                    robot.slideRight.setPower(0);
                     sleep(250);
 //                    robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
 //                    robot.clawRight.turnToAngle(robot.clawRight.max - 15);
@@ -155,8 +155,8 @@ public class BackstageRed extends ColorVisionAutoBase {
     }
 
     public void doIntakeSpin() {
-        robot.intake.setPower(-INTAKE_POWER);
+//        robot.intake.setPower(-INTAKE_POWER);
         sleep(300);
-        robot.intake.setPower(0);
+//        robot.intake.setPower(0);
     }
 }

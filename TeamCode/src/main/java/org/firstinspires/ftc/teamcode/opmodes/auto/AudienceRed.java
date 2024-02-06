@@ -151,8 +151,8 @@ public class AudienceRed extends ColorVisionAutoBase {
     }
 
     public void doIntakeSpin() {
-        robot.intake.setPower(INTAKE_POWER);
+//        robot.intake.setPower(INTAKE_POWER);
         sleep(300);
-        robot.intake.setPower(0);
+//        robot.intake.setPower(0);
     }
 }
