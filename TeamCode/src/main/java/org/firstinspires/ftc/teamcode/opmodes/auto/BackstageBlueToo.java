@@ -105,8 +105,8 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-        robot.clawLeft.turnToAngle(robot.clawLeft.max - 2);
-        robot.clawRight.turnToAngle(robot.clawRight.max - 2);
+//        robot.clawLeft.turnToAngle(robot.clawLeft.max - 2);
+//        robot.clawRight.turnToAngle(robot.clawRight.max - 2);
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
@@ -140,14 +140,14 @@ public class BackstageBlueToo extends ColorVisionAutoBase {
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
                     sleep(250);
-                    robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
-                    robot.clawRight.turnToAngle(robot.clawRight.max - 15);
+//                    robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
+//                    robot.clawRight.turnToAngle(robot.clawRight.max - 15);
                     sleep(500);
-                    robot.clawLeft.turnToAngle(0);
-                    robot.clawRight.turnToAngle(0);
+//                    robot.clawLeft.turnToAngle(0);
+//                    robot.clawRight.turnToAngle(0);
                     sleep(1500);
-                    robot.clawLeft.turnToAngle(robot.clawLeft.max);
-                    robot.clawRight.turnToAngle(robot.clawRight.max);
+//                    robot.clawLeft.turnToAngle(robot.clawLeft.max);
+//                    robot.clawRight.turnToAngle(robot.clawRight.max);
                     sleep(250);
                     robot.slideLeft.setPower(0.75);
                     robot.slideRight.setPower(-0.75);

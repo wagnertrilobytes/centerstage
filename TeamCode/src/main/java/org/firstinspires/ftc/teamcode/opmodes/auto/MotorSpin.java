@@ -19,8 +19,8 @@ public class MotorSpin extends LinearOpMode {
 
         waitForStart();
 
-        robot.clawLeft.turnToAngle(10);
-        robot.clawRight.turnToAngle(10);
+//        robot.clawLeft.turnToAngle(10);
+//        robot.clawRight.turnToAngle(10);
 
         while (opModeIsActive() && !isStopRequested()) {
             setMotor(robot.frontLeft);

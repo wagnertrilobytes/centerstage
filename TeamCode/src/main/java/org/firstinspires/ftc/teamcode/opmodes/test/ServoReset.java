@@ -15,8 +15,8 @@ public class ServoReset extends LinearOpMode {
         waitForStart();
         while(opModeIsActive() && !isStopRequested()) {
             if (gamepad1.a) {
-                drive.clwLeft.setPosition(0);
-                drive.clwRight.setPosition(0);
+//                drive.clwLeft.setPosition(0);
+//                drive.clwRight.setPosition(0);
             }
         }
     }

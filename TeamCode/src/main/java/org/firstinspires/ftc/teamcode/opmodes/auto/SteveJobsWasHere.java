@@ -92,8 +92,8 @@ public class SteveJobsWasHere extends LinearOpMode {
 
         ColourMassDetectionProcessor.Prop detectedProp = new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name);
 
-        robot.clawLeft.turnToAngle(7);
-        robot.clawRight.turnToAngle(7);
+//        robot.clawLeft.turnToAngle(7);
+//        robot.clawRight.turnToAngle(7);
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             WANTED_ID = 1;
             robot.followTrajectorySequence(left_trajOne);
@@ -110,8 +110,8 @@ public class SteveJobsWasHere extends LinearOpMode {
             if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.MIDDLE) robot.followTrajectorySequence(middle_trajTwo);
             if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) robot.followTrajectorySequence(left_trajTwo);
 
-            robot.clawLeft.turnToAngle(13);
-            robot.clawRight.turnToAngle(13);
+//            robot.clawLeft.turnToAngle(13);
+//            robot.clawRight.turnToAngle(13);
 
             robot.followTrajectorySequenceAsync(drop_trajOne);
 
@@ -121,8 +121,8 @@ public class SteveJobsWasHere extends LinearOpMode {
             robot.slideLeft.setPower(0);
             robot.slideRight.setPower(0);
             sleep(250);
-            robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
-            robot.clawRight.turnToAngle(robot.clawRight.max - 15);
+//            robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
+//            robot.clawRight.turnToAngle(robot.clawRight.max - 15);
             sleep(250);
 
             Pose2d poseEstimate = this.robot.getPoseEstimate();

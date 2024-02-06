@@ -175,26 +175,26 @@ public class BackstageBlue extends ColorVisionAutoBase {
                             .addTemporalMarker(doSUP, () -> {
                                 robot.slideLeft.setPower(-0.75);
                                 robot.slideRight.setPower(0.75);
-                                robot.clawLeft.turnToAngle(robot.clawLeft.max - 1);
-                                robot.clawRight.turnToAngle(robot.clawLeft.max - 1);
+//                                robot.clawLeft.turnToAngle(robot.clawLeft.max - 1);
+//                                robot.clawRight.turnToAngle(robot.clawLeft.max - 1);
                             })
                             .addTemporalMarker(doSUP+ doSUPW, () -> {
                                 robot.slideLeft.setPower(0);
                                 robot.slideRight.setPower(0);
-                                robot.clawLeft.turnToAngle(0);
-                                robot.clawRight.turnToAngle(0);
+//                                robot.clawLeft.turnToAngle(0);
+//                                robot.clawRight.turnToAngle(0);
                             })
                             .addTemporalMarker(doSUP+doSUPW+doSUPWE, () -> {
                                 robot.slideLeft.setPower(0.75);
                                 robot.slideRight.setPower(-0.75);
-                                robot.clawLeft.turnToAngle(robot.clawLeft.max - 1);
-                                robot.clawRight.turnToAngle(robot.clawLeft.max - 1);
+//                                robot.clawLeft.turnToAngle(robot.clawLeft.max - 1);
+//                                robot.clawRight.turnToAngle(robot.clawLeft.max - 1);
                             })
                             .addTemporalMarker(doSUP+ doSUPW+doSUPWE+doSUPW+lastTimer, () -> {
                                 robot.slideLeft.setPower(0);
                                 robot.slideRight.setPower(0);
-                                robot.clawLeft.turnToAngle(6);
-                                robot.clawRight.turnToAngle(6);
+//                                robot.clawLeft.turnToAngle(6);
+//                                robot.clawRight.turnToAngle(6);
                             })
                             .build();
                     robot.followTrajectorySequenceAsync(newTraj);

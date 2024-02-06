@@ -102,8 +102,8 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-        robot.clawLeft.turnToAngle(robot.clawLeft.max - 2);
-        robot.clawRight.turnToAngle(robot.clawRight.max - 2);
+//        robot.clawLeft.turnToAngle(robot.clawLeft.max - 2);
+//        robot.clawRight.turnToAngle(robot.clawRight.max - 2);
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
@@ -127,49 +127,34 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         telemetry.addData("Step", currentStep);
         telemetry.addData("State", currentState);
-        switch (currentStep) {
-            case DROP:
-                if (!robot.isBusy()) {
-                    currentStep = Step.FINISH;
-                    robot.slideLeft.setPower(-0.75);
-                    robot.slideRight.setPower(0.75);
-                    sleep(1250);
-                    robot.slideLeft.setPower(0);
-                    robot.slideRight.setPower(0);
-                    sleep(250);
-                    robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
-                    robot.clawRight.turnToAngle(robot.clawRight.max - 15);
-                    sleep(500);
-                    robot.clawLeft.turnToAngle(0);
-                    robot.clawRight.turnToAngle(0);
-                    sleep(1500);
-                    robot.clawLeft.turnToAngle(robot.clawLeft.max);
-                    robot.clawRight.turnToAngle(robot.clawRight.max);
-                    sleep(250);
-                    robot.slideLeft.setPower(0.75);
-                    robot.slideRight.setPower(-0.75);
-                    sleep(1250);
-                    robot.slideLeft.setPower(0);
-                    robot.slideRight.setPower(0);
-//                    robot.followTrajectorySequenceAsync(drop_trajTwo);
-                }
-                break;
-            case TWO:
-                if (!robot.isBusy()) {
-                    currentStep = Step.DROP;
-                    robot.followTrajectorySequenceAsync(drop_trajOne);
-                }
-                break;
-            case ONE:
-                if (!robot.isBusy()) {
-                    currentStep = Step.TWO;
-                        doIntakeSpin();
-                    if (currentState == State.MIDDLE) robot.followTrajectorySequenceAsync(middle_trajTwo);
-                    if (currentState == State.LEFT) robot.followTrajectorySequenceAsync(left_trajTwo);
-                    if (currentState == State.RIGHT) robot.followTrajectorySequenceAsync(right_trajTwo);
-                }
-                break;
-        }
+        currentStep = Step.TWO;
+        doIntakeSpin();
+        if (currentState == State.MIDDLE) robot.followTrajectorySequence(middle_trajTwo);
+        if (currentState == State.LEFT) robot.followTrajectorySequence(left_trajTwo);
+        if (currentState == State.RIGHT) robot.followTrajectorySequence(right_trajTwo);
+        currentStep = Step.DROP;
+        robot.followTrajectorySequence(drop_trajOne);
+        currentStep = Step.FINISH;
+        robot.slideLeft.setPower(-0.75);
+        robot.slideRight.setPower(0.75);
+        sleep(1250);
+        robot.slideLeft.setPower(0);
+        robot.slideRight.setPower(0);
+        sleep(250);
+//        robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
+//        robot.clawRight.turnToAngle(robot.clawRight.max - 15);
+        sleep(500);
+//        robot.clawLeft.turnToAngle(0);
+//        robot.clawRight.turnToAngle(0);
+        sleep(1500);
+//        robot.clawLeft.turnToAngle(robot.clawLeft.max);
+//        robot.clawRight.turnToAngle(robot.clawRight.max);
+        sleep(250);
+        robot.slideLeft.setPower(0.75);
+        robot.slideRight.setPower(-0.75);
+        sleep(1250);
+        robot.slideLeft.setPower(0);
+        robot.slideRight.setPower(0);
     }
 
     public void doIntakeSpin() {

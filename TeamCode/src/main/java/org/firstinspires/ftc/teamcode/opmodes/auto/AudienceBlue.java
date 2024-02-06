@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 @Autonomous(name = "Audience Blue", group="Audience")
+
 public class AudienceBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
@@ -115,8 +117,8 @@ public class AudienceBlue extends ColorVisionAutoBase {
 
     @Override
     public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {
-        robot.clawLeft.turnToAngle(robot.clawLeft.max - 2);
-        robot.clawRight.turnToAngle(robot.clawLeft.max - 2);
+//        robot.clawLeft.turnToAngle(robot.clawLeft.max - 2);
+//        robot.clawRight.turnToAngle(robot.clawLeft.max - 2);
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         switch (currentStep) {
             case FINISH:

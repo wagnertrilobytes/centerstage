@@ -90,8 +90,8 @@ public class AprilTagScanningTest extends LinearOpMode {
             if (currentDetections.size() == 0) msg = "Not currently seeing any tag. Using last known position.";
             telemetry.addData("Status", msg);
 
-            robot.clawLeft.turnToAngle(7);
-            robot.clawRight.turnToAngle(7);
+//            robot.clawLeft.turnToAngle(7);
+//            robot.clawRight.turnToAngle(7);
 
             if (detection != null) {
                 calculatedDist = detection.ftcPose.range - INCHES_AWAY;

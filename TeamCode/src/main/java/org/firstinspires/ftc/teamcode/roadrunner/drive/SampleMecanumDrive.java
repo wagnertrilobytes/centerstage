@@ -19,6 +19,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -77,14 +78,16 @@ public class SampleMecanumDrive extends MecanumDrive {
     public DcMotorEx slideLeft, slideRight, intake;
     public Servo plane;
 //    public CRServo clawLeft, clawRight;
-    public Servo clwLeft, clwRight;
-    public ServoToo clawLeft, clawRight;
+    public Servo intakearm;
+    public CRServo intakeWheel;
+    public ServoToo intakeArm;
 //    public PosCRServo clwLeft, clwRight;
 //    public PosCRServo testServo;
     public ServoToo testServo, PizzaBox;
     public Servo tstServo, PizzaBx;
     public List<Servo> servos;
     public List<DcMotorEx> slide;
+    public DcMotorEx counterRoller;
     public List<DcMotorEx> motors;
     public WebcamName cameraLeft;
 //    public WebcamName cameraRight;
@@ -125,8 +128,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft"); // 0
         backRight = hardwareMap.get(DcMotorEx.class, "backRight"); // 3
 
-        clwLeft = hardwareMap.get(Servo.class, "clawLeft");
-        clwRight = hardwareMap.get(Servo.class, "clawRight");
+        intakearm = hardwareMap.get(Servo.class, "clawLeft");
+        intakeArm = new ServoToo(intakearm, 0, 290, AngleUnit.DEGREES);
+        // REPLACE CLAWLEFT WITH INTAKEARM
+        // REPLCE CLAWRIGHT WITH CR INTAKEWHEEL
+        intakeWheel = hardwareMap.get(CRServo.class, "clawRight");
+//        clwRight = hardwareMap.get(Servo.class, "clawRight");
         tstServo = hardwareMap.get(Servo.class, "servoTest");
 //        clwLeft = new PosCRServo(clawLeft);
 //        clwRight = new PosCRServo(clawRight);
@@ -134,16 +141,18 @@ public class SampleMecanumDrive extends MecanumDrive {
         testServo = new ServoToo(tstServo, 0, 360, AngleUnit.DEGREES);
         // ^^^^^^^ THIS IS FOR THE GOBILDA 2000-0025-0003
         // OUR USUAL SMART ROBOT SERVOS (THE REV CLAW ONES GO 0-270)
-        clawLeft = new ServoToo(clwLeft, 0, 290, AngleUnit.DEGREES);
-        clawRight = new ServoToo(clwRight, 0, 290, AngleUnit.DEGREES);
-        clawRight.setInverted(true);
+//        clawRight = new ServoToo(clwRight, 0, 290, AngleUnit.DEGREES);
+//        clawRight.setInverted(true);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         slideLeft = hardwareMap.get(DcMotorEx.class, "slideLeft");
         slideRight = hardwareMap.get(DcMotorEx.class, "slideRight");
         PizzaBx = hardwareMap.get(Servo.class, "pizzabox");
 
-        PizzaBox = new ServoToo(PizzaBx, -100, 100, AngleUnit.DEGREES);
+        // On expansion, servo port 5
+        counterRoller = hardwareMap.get(DcMotorEx.class, "counterRoller");
+        counterRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 
+//        PizzaBox = new ServoToo(PizzaBx, 0, 200, AngleUnit.DEGREES);
         cameraLeft = hardwareMap.get(WebcamName.class, "Webcam 1");
 //        cameraRight = hardwareMap.get(WebcamName.class, "Webcam 2");
 

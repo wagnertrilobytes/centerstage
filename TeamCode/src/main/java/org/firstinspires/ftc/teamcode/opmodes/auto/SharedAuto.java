@@ -17,8 +17,8 @@ public class SharedAuto {
         robot.slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.clawLeft.turnToAngle(0);
-        robot.clawRight.turnToAngle(0);
+//        robot.clawLeft.turnToAngle(0);
+//        robot.clawRight.turnToAngle(0);
     }
     public void slideUpAndScore(SampleMecanumDrive robot, LinearOpMode opMode) {
         /*  THIS IS EXPERIMENTAL  */
@@ -28,7 +28,7 @@ public class SharedAuto {
         robot.slideLeft.setPower(0);
         robot.slideRight.setPower(0);
         opMode.sleep(250);
-        robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
-        robot.clawRight.turnToAngle(robot.clawRight.max - 15);
+//        robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
+//        robot.clawRight.turnToAngle(robot.clawRight.max - 15);
     }
 }

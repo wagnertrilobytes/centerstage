@@ -78,7 +78,7 @@ public class Teleop extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //runtime.reset();
-        double turnAngle = robot.clawLeft.min;
+        double turnAngle = robot.intakeArm.min;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive() && !isStopRequested()) {
            // robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -131,38 +131,57 @@ public class Teleop extends LinearOpMode {
 //            robot.intake.setPower(gamepad2.right_stick_x - MAX_SPEED + MAX_SPEED); // THIS IS IMPORTANT: FALLBACK JOYSTICK CODE
 
             double iSM = 1;
+            double crSM = 0.3;
             if (gamepad2.left_trigger > 0.3) {
-//                robot.intake.setPower((-gamepad2.left_trigger) * iSM);
-                robot.PizzaBox.turnToAngle(-100);
+                robot.intake.setPower(-gamepad2.left_trigger);
             }
+            if (gamepad2.left_bumper) robot.PizzaBx.setPosition(1);
+            if (!gamepad2.left_bumper) robot.PizzaBx.setPosition(0);
             if (gamepad2.right_trigger > 0.3) {
                 robot.intake.setPower((gamepad2.right_trigger) * iSM);
+                robot.counterRoller.setPower(((gamepad2.right_trigger) * iSM) * crSM);
             }
-            if (gamepad2.right_trigger < 0.3) robot.intake.setPower(0);
+            if (gamepad2.right_trigger < 0.3 && gamepad2.left_trigger < 0.3) {
+                robot.intake.setPower(0);
+                robot.counterRoller.setPower(0);
+            }
 
-            if (gamepad2.left_trigger < 0.3) robot.PizzaBox.turnToAngle(0);
             if (gamepad2.y){
                 robot.plane.setPosition(-0.7);
             } else {
                 robot.plane.setPosition(0.7);
             }
-
-            if (turnAngle > robot.clawLeft.max) turnAngle = robot.clawLeft.max;
             telemetry.addData("Hooligan", "Activity");
-            if (turnAngle < robot.clawLeft.min) turnAngle = robot.clawLeft.min;
+
             turnAngle += -gamepad2.left_stick_y * 4;
-            if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
-                    Math.abs(gamepad1.left_stick_y) > 0.1 ||
-                    Math.abs(gamepad1.right_stick_x) > 0.1 ||
-                    Math.abs(gamepad1.right_stick_y) > 0.1 &&
-                   !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
-            ) {
-                if(turnAngle <= robot.clawLeft.min - 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawLeft.turnToAngle(9);
-                if(turnAngle <= robot.clawLeft.min - 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawRight.turnToAngle(9);
+            if (turnAngle > robot.intakeArm.max) turnAngle = robot.intakeArm.max;
+            if (turnAngle < robot.intakeArm.min) turnAngle = robot.intakeArm.min;
+
+            if (gamepad2.x) {
+                robot.intakeWheel.setPower(1);
+            } else if(gamepad2.a) {
+                robot.intakeWheel.setPower(-1);
             } else {
-                robot.clawLeft.turnToAngle(turnAngle);
-                robot.clawRight.turnToAngle(turnAngle);
+                robot.intakeWheel.setPower(0);
             }
+
+            robot.intakeArm.turnToAngle(turnAngle);
+
+
+
+
+//            if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
+//                    Math.abs(gamepad1.left_stick_y) > 0.1 ||
+//                    Math.abs(gamepad1.right_stick_x) > 0.1 ||
+//                    Math.abs(gamepad1.right_stick_y) > 0.1 &&
+//                   !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
+//            ) {
+//                if(turnAngle <= robot.clawLeft.min + 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawLeft.turnToAngle(9);
+//                if(turnAngle <= robot.clawLeft.min + 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawRight.turnToAngle(9);
+//            } else {
+//                robot.clawLeft.turnToAngle(turnAngle);
+//                robot.clawRight.turnToAngle(turnAngle);
+//            }
 //            telemetry.addData("dont forgor", "uncomment the slide code!!!");
             robot.slideLeft.setPower(-(numUp / 3) - MAX_SPEED + MAX_SPEED);
             robot.slideRight.setPower((numUp / 3) - MAX_SPEED + MAX_SPEED);
@@ -221,11 +240,14 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Back Right", fmt(robot.backRight));
             telemetry.addData("Slide Left", fmt(robot.slideLeft));
             telemetry.addData("Slide Right", fmt(robot.slideRight));
-            telemetry.addData("Intake", robot.intake.getCurrentPosition());
+            telemetry.addData("Intake", fmt(robot.intake));
             telemetry.addData("Plane", robot.plane.getPosition());
-            telemetry.addData("clwL", robot.clawLeft.getAngle());
-            telemetry.addData("clwR", robot.clawRight.getAngle());
-            telemetry.addData("PIZZA BOX!!", robot.PizzaBox.getAngle());
+//            telemetry.addData("clwL", robot.clawLeft.getAngle());
+//            telemetry.addData("clwR", robot.clawRight.getAngle());
+            telemetry.addData("PIZZA BOX!!", robot.PizzaBx.getPosition());
+            telemetry.addData("Gp2 TL", gamepad2.left_trigger);
+            telemetry.addData("Gp2 -TL", -gamepad2.left_trigger);
+            telemetry.addData("Gp2 TLx-1", gamepad2.left_trigger * -1);
 
             telemetry.update();
         }

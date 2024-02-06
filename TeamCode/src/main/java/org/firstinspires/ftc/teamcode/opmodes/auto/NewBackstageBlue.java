@@ -101,8 +101,8 @@ public class NewBackstageBlue extends LinearOpMode {
         colourMassDetectionProcessor.close();
         visionPortal.close();
 
-        robot.clawLeft.turnToAngle(18);
-        robot.clawRight.turnToAngle(18);
+//        robot.clawLeft.turnToAngle(18);
+//        robot.clawRight.turnToAngle(18);
         if (recordedPropPositionL == ColourMassDetectionProcessor.PropPositions.LEFT) robot.followTrajectorySequence(left_trajOne);
         if (recordedPropPositionL == ColourMassDetectionProcessor.PropPositions.MIDDLE) robot.followTrajectorySequence(middle_trajOne);
         if (recordedPropPositionL == ColourMassDetectionProcessor.PropPositions.RIGHT) robot.followTrajectorySequence(right_trajOne);
@@ -110,8 +110,8 @@ public class NewBackstageBlue extends LinearOpMode {
 //        doIntakeSpin(-0.4);
         if (recordedPropPositionL == ColourMassDetectionProcessor.PropPositions.MIDDLE) robot.followTrajectorySequence(middle_trajTwo);
         if (recordedPropPositionL == ColourMassDetectionProcessor.PropPositions.LEFT) robot.followTrajectorySequence(left_trajTwo);
-        robot.clawLeft.turnToAngle(18);
-        robot.clawRight.turnToAngle(18);
+//        robot.clawLeft.turnToAngle(18);
+//        robot.clawRight.turnToAngle(18);
         robot.followTrajectorySequence(drop_trajOne);
 
         robot.slideLeft.setPower(-0.75);
@@ -120,8 +120,8 @@ public class NewBackstageBlue extends LinearOpMode {
         robot.slideLeft.setPower(0);
         robot.slideRight.setPower(0);
         sleep(250);
-        robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
-        robot.clawRight.turnToAngle(robot.clawRight.max - 15);
+//        robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
+//        robot.clawRight.turnToAngle(robot.clawRight.max - 15);
         sleep(250);
     }
 

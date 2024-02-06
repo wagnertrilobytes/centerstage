@@ -95,8 +95,8 @@ public class BackstageBlueInsanity extends ColorVisionAutoBase {
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-        robot.clawLeft.turnToAngle(7);
-        robot.clawRight.turnToAngle(7);
+//        robot.clawLeft.turnToAngle(7);
+//        robot.clawRight.turnToAngle(7);
         currentStep = Step.ONE;
         if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
             currentState = State.LEFT;
@@ -137,8 +137,8 @@ public class BackstageBlueInsanity extends ColorVisionAutoBase {
                     robot.slideLeft.setPower(0);
                     robot.slideRight.setPower(0);
                     sleep(250);
-                    robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
-                    robot.clawRight.turnToAngle(robot.clawRight.max - 15);
+//                    robot.clawLeft.turnToAngle(robot.clawLeft.max - 15);
+//                    robot.clawRight.turnToAngle(robot.clawRight.max - 15);
                     sleep(250);
 //                    robot.followTrajectorySequenceAsync(drop_trajTwo);
                 }
@@ -146,8 +146,8 @@ public class BackstageBlueInsanity extends ColorVisionAutoBase {
             case TWO:
                 if (!robot.isBusy()) {
                     currentStep = Step.DROP;
-                    robot.clawLeft.turnToAngle(13);
-                    robot.clawRight.turnToAngle(13);
+//                    robot.clawLeft.turnToAngle(13);
+//                    robot.clawRight.turnToAngle(13);
                     robot.followTrajectorySequenceAsync(drop_trajOne);
                 }
                 break;
