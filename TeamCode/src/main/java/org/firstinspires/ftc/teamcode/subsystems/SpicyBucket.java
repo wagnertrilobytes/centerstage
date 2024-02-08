@@ -13,13 +13,19 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 public class SpicyBucket implements Subsystem {
     CRServo wheel;
-    Servo armServo;
-    ServoToo arm;
+    Servo slideArmServo;
+    Servo bucketArmServo;
+    ServoToo slideArm;
+    ServoToo bucketArm;
     @Override
     public void init(HardwareMap map) {
         wheel = map.get(CRServo.class, "clawRight");
-        armServo = map.get(Servo.class, "clawLeft");
-        arm = new ServoToo(armServo, 0, 290, AngleUnit.DEGREES);
+
+        slideArmServo = map.get(Servo.class, "clawLeft");
+        slideArm = new ServoToo(slideArmServo, 0, 290, AngleUnit.DEGREES);
+
+        bucketArmServo = map.get(Servo.class, "armBucket");
+        bucketArm = new ServoToo(bucketArmServo, 0, 290, AngleUnit.DEGREES);
 
         wheel.setPower(0);
     }
@@ -28,12 +34,18 @@ public class SpicyBucket implements Subsystem {
         opMode.sleep(925);
         wheel.setPower(0);
     }
-    public void setArmAngle(double angle) {
-        arm.turnToAngle(angle);
+    public void setSlideArmAngle(double angle) {
+        slideArm.turnToAngle(angle);
+    }
+    public void setBucketArmAngle(double angle) {
+        bucketArm.turnToAngle(angle);
     }
 
-    public double maxArmAngle() {return arm.max;}
-    public double minArmAngle() {return arm.min;}
+    public double maxArmAngle() {return slideArm.max;}
+    public double minArmAngle() {return slideArm.min;}
+
+    public double minBucketArmAngle() {return bucketArm.min;}
+    public double maxBucketArmAngle() {return bucketArm.max;}
 
     public void takeIn() {
         wheel.setPower(1);
@@ -49,7 +61,8 @@ public class SpicyBucket implements Subsystem {
 
     @Override
     public void run(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
-        telemetry.addData("Arm Angle", arm.getAngle());
+        telemetry.addData("Slide Arm Angle", slideArm.getAngle());
+        telemetry.addData("Bucket Arm Angle", bucketArm.getAngle());
         telemetry.addData("Wheel Power", wheel.getPower());
     }
 }

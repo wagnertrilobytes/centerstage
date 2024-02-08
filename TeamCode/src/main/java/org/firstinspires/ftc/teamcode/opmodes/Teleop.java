@@ -35,6 +35,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -42,6 +43,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneLauncher;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
 import org.firstinspires.ftc.teamcode.subsystems.SpicyBucket;
+import org.firstinspires.ftc.teamcode.subsystems.YeOldeBucket;
 
 
 /**
@@ -60,8 +62,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SpicyBucket;
 @TeleOp(name="CenterStage: Teleop", group="Main")
 //@Disabled
 public class Teleop extends LinearOpMode {
-    // Declare OpMode mem bers.
-    SpicyBucket spicyBucket = new SpicyBucket();
+    YeOldeBucket bucket = new YeOldeBucket();
     Intake intake = new Intake();
     PlaneLauncher plane = new PlaneLauncher();
     Slides slides = new Slides();
@@ -71,16 +72,16 @@ public class Teleop extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        spicyBucket.init(hardwareMap);
+        bucket.init(hardwareMap);
         intake.init(hardwareMap);
         plane.init(hardwareMap);
         slides.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        double turnAngle = spicyBucket.minArmAngle();
+        double turnAngle = bucket.minArmAngle();
         while (opModeIsActive() && !isStopRequested()) {
-            spicyBucket.run(gamepad1, gamepad2, telemetry);
+            bucket.run(gamepad1, gamepad2, telemetry);
             intake.run(gamepad1, gamepad2, telemetry);
             plane.run(gamepad1, gamepad2, telemetry);
             slides.run(gamepad1, gamepad2, telemetry);
@@ -100,49 +101,31 @@ public class Teleop extends LinearOpMode {
 
             double numUp = 0.5*Range.clip((Slide), -1, +1);
 
+            slides.setPower((numUp) - MAX_SPEED + MAX_SPEED);
+
             double iSM = 1;
-            if (gamepad2.left_trigger > 0.3) {
-                intake.setPower(-gamepad2.left_trigger, 1);
-                spicyBucket.takeOut();
-            }
-            if (gamepad2.right_trigger > 0.3) {
-                intake.setPower(gamepad2.right_trigger, iSM);
-                spicyBucket.takeIn();
-            }
-            if (gamepad2.right_trigger < 0.3 && gamepad2.left_trigger < 0.3) {
-                intake.stop();
-                spicyBucket.stop();
-            }
-            if (gamepad2.y){
-                plane.sendPlane();
-            } else {
-                plane.takePlaneBack();
-            }
-            if (gamepad2.a) spicyBucket.dropOnePixel(this);
+            if (gamepad2.left_trigger > 0.3)  intake.setPower(-gamepad2.left_trigger, 1);
+            if (gamepad2.right_trigger > 0.3) intake.setPower(gamepad2.right_trigger, iSM);
+            if (gamepad2.right_trigger < 0.3 && gamepad2.left_trigger < 0.3) intake.stop();
+            if (gamepad2.y) plane.sendPlane();
+            else plane.takePlaneBack();
 
             turnAngle += -gamepad2.left_stick_y * 4;
-            if (turnAngle > spicyBucket.maxArmAngle()) turnAngle = spicyBucket.maxArmAngle();
-            if (turnAngle < spicyBucket.minArmAngle()) turnAngle = spicyBucket.minArmAngle();
-            spicyBucket.setArmAngle(turnAngle);
+            if (turnAngle > bucket.maxArmAngle()) turnAngle = bucket.maxArmAngle();
+            if (turnAngle < bucket.minArmAngle()) turnAngle = bucket.minArmAngle();
 
-
-//            if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
-//                    Math.abs(gamepad1.left_stick_y) > 0.1 ||
-//                    Math.abs(gamepad1.right_stick_x) > 0.1 ||
-//                    Math.abs(gamepad1.right_stick_y) > 0.1 &&
-//                   !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
-//            ) {
-//                if(turnAngle <= robot.clawLeft.min + 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawLeft.turnToAngle(9);
-//                if(turnAngle <= robot.clawLeft.min + 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) robot.clawRight.turnToAngle(9);
-//            } else {
-//                robot.clawLeft.turnToAngle(turnAngle);
-//                robot.clawRight.turnToAngle(turnAngle);
-//            }
-//            telemetry.addData("dont forgor", "uncomment the slide code!!!");
-            slides.setPower((numUp / 3) - MAX_SPEED + MAX_SPEED);
+            if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
+                Math.abs(gamepad1.left_stick_y) > 0.1 ||
+                Math.abs(gamepad1.right_stick_x) > 0.1 ||
+                Math.abs(gamepad1.right_stick_y) > 0.1 &&
+                !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
+            ) {
+                if(turnAngle <= bucket.minArmAngle() + 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) bucket.turnTo(9);
+            } else {
+                bucket.turnTo(turnAngle);
+            }
             if (gamepad1.dpad_up) robot.setMotorPowers(1, 1, 1, 1);
             if (gamepad1.dpad_down) robot.setMotorPowers(-1, -1, -1, -1);
-
 
             telemetry.addData("Hooligan", "Activity");
             telemetry.addData("Front Left", fmt(robot.frontLeft));
@@ -155,5 +138,9 @@ public class Teleop extends LinearOpMode {
     }
     public String fmt(DcMotor mot) {
         return mot.getCurrentPosition() + "@" + mot.getPower() + "," + mot.getPortNumber();
+    }
+
+    public String fmt(Servo mot) {
+        return mot.getPosition() + ":" + mot.getDirection() + "," + mot.getPortNumber();
     }
 }
