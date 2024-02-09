@@ -87,8 +87,8 @@ public class TeleopSpicy extends LinearOpMode {
             slides.run(gamepad1, gamepad2, telemetry);
 
             double Speed = -gamepad1.left_stick_y;
-            double Turn = -gamepad1.left_stick_x;
-            double Strafe = gamepad1.right_stick_x;
+            double Turn = gamepad1.left_stick_x;
+            double Strafe = -gamepad1.right_stick_x;
             double Slide = -gamepad2.right_stick_y;
             double MAX_SPEED = 1.0;
 
@@ -141,10 +141,9 @@ public class TeleopSpicy extends LinearOpMode {
             if (gamepad1.dpad_up) robot.setMotorPowers(1, 1, 1, 1);
             if (gamepad1.dpad_down) robot.setMotorPowers(-1, -1, -1, -1);
 
-            if (gamepad2.dpad_up) bucket.setBucketArmPos(bucket.getCurrentBucketArmPos() + 0.25);
-            if (gamepad2.dpad_down)  bucket.setBucketArmPos(bucket.getCurrentBucketArmPos() - 0.25);
+            if (gamepad2.dpad_up) bucket.setBucketArmAngle(150);
+            if (gamepad2.dpad_down) bucket.setBucketArmAngle(0);
 
-            
 
 //            if (gamepad2.dpad_up) bucket.setBucketArmAngle(bucket.getCurrentBucketArmAngle() + 0.75);
 //            if (gamepad2.dpad_down) bucket.setBucketArmAngle(bucket.getCurrentBucketArmAngle() - 0.75);

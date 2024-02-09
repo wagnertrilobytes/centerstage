@@ -38,6 +38,14 @@ public class Slides implements Subsystem {
         slideRight.setPower(power);
     }
 
+    public double getLeftPos() {
+        return slideLeft.getCurrentPosition();
+    }
+
+    public double getRightPos() {
+        return slideRight.getCurrentPosition();
+    }
+
     @Override
     public void run(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         telemetry.addData("Slide Left (Pos@Pow,Port)", "(" + slideLeft.getCurrentPosition() + "@" + slideLeft.getPower() + "," + slideLeft.getPortNumber() +")");
