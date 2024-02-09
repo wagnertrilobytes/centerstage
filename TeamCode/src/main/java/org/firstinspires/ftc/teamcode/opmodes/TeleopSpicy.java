@@ -79,7 +79,7 @@ public class TeleopSpicy extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        double turnAngle = bucket.minArmAngle();
+        double turnAngle = bucket.getCurrentSlideArmAngle() + 2;
         while (opModeIsActive() && !isStopRequested()) {
             bucket.run(gamepad1, gamepad2, telemetry);
             intake.run(gamepad1, gamepad2, telemetry);
@@ -87,8 +87,8 @@ public class TeleopSpicy extends LinearOpMode {
             slides.run(gamepad1, gamepad2, telemetry);
 
             double Speed = -gamepad1.left_stick_y;
-            double Turn = gamepad1.right_stick_x;
-            double Strafe = gamepad1.left_stick_x;
+            double Turn = -gamepad1.left_stick_x;
+            double Strafe = gamepad1.right_stick_x;
             double Slide = -gamepad2.right_stick_y;
             double MAX_SPEED = 1.0;
 
@@ -103,9 +103,9 @@ public class TeleopSpicy extends LinearOpMode {
 
             slides.setPower((numUp) - MAX_SPEED + MAX_SPEED);
 
-            double iSM = 1;
+            double iSM = 0.85;
             if (gamepad2.left_trigger > 0.3) {
-                intake.setPower(-gamepad2.left_trigger, 1);
+                intake.setPower(-gamepad2.left_trigger, iSM);
                 bucket.takeOut();
             }
             if (gamepad2.right_trigger > 0.3) {
@@ -130,7 +130,9 @@ public class TeleopSpicy extends LinearOpMode {
                 Math.abs(gamepad1.right_stick_y) > 0.1 &&
                 !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
             ) {
-                if(turnAngle <= bucket.minArmAngle() + 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) bucket.setSlideArmAngle(9);
+                if(turnAngle <= bucket.minArmAngle() + 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) {
+                    bucket.setSlideArmAngle(9);
+                }
             } else {
                 bucket.setSlideArmAngle(turnAngle);
                 // Mikaeli, you have successfully hit metal 17 times, you will now be awarded with photograph of motor car, but because property is theft, you will now be arrested
@@ -138,6 +140,14 @@ public class TeleopSpicy extends LinearOpMode {
             }
             if (gamepad1.dpad_up) robot.setMotorPowers(1, 1, 1, 1);
             if (gamepad1.dpad_down) robot.setMotorPowers(-1, -1, -1, -1);
+
+            if (gamepad2.dpad_up) bucket.setBucketArmPos(bucket.getCurrentBucketArmPos() + 0.25);
+            if (gamepad2.dpad_down)  bucket.setBucketArmPos(bucket.getCurrentBucketArmPos() - 0.25);
+
+            
+
+//            if (gamepad2.dpad_up) bucket.setBucketArmAngle(bucket.getCurrentBucketArmAngle() + 0.75);
+//            if (gamepad2.dpad_down) bucket.setBucketArmAngle(bucket.getCurrentBucketArmAngle() - 0.75);
 
             telemetry.addData("Hooligan", "Activity");
             telemetry.addData("Front Left", fmt(robot.frontLeft));
