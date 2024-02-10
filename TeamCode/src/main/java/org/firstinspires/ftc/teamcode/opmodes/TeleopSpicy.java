@@ -42,6 +42,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneLauncher;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
 import org.firstinspires.ftc.teamcode.subsystems.SpicyBucket;
+import org.firstinspires.ftc.teamcode.subsystems.SpicyBucketCR;
 import org.firstinspires.ftc.teamcode.subsystems.YeOldeBucket;
 
 
@@ -58,11 +59,11 @@ import org.firstinspires.ftc.teamcode.subsystems.YeOldeBucket;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="CenterStage: Teleop la spicy buket", group="Main")
+@TeleOp(name="SpicyBukette: Teleop", group="Main")
 //@Disabled
 public class TeleopSpicy extends LinearOpMode {
 //    YeOldeBucket bucket = new YeOldeBucket();
-    SpicyBucket bucket = new SpicyBucket();
+    SpicyBucketCR bucket = new SpicyBucketCR();
     Intake intake = new Intake();
     PlaneLauncher plane = new PlaneLauncher();
     Slides slides = new Slides();
@@ -124,25 +125,13 @@ public class TeleopSpicy extends LinearOpMode {
             if (turnAngle > bucket.maxArmAngle()) turnAngle = bucket.maxArmAngle();
             if (turnAngle < bucket.minArmAngle()) turnAngle = bucket.minArmAngle();
 
-            if (Math.abs(gamepad1.left_stick_x) > 0.1 ||
-                Math.abs(gamepad1.left_stick_y) > 0.1 ||
-                Math.abs(gamepad1.right_stick_x) > 0.1 ||
-                Math.abs(gamepad1.right_stick_y) > 0.1 &&
-                !(gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1)
-            ) {
-                if(turnAngle <= bucket.minArmAngle() + 7 && !(gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0)) {
-                    bucket.setSlideArmAngle(9);
-                }
-            } else {
-                bucket.setSlideArmAngle(turnAngle);
-                // Mikaeli, you have successfully hit metal 17 times, you will now be awarded with photograph of motor car, but because property is theft, you will now be arrested
-                // fair enough
-            }
             if (gamepad1.dpad_up) robot.setMotorPowers(1, 1, 1, 1);
             if (gamepad1.dpad_down) robot.setMotorPowers(-1, -1, -1, -1);
 
-            if (gamepad2.dpad_up) bucket.setBucketArmAngle(150);
-            if (gamepad2.dpad_down) bucket.setBucketArmAngle(0);
+
+            if (gamepad2.dpad_up) bucket.setBucketArmPower(1);
+            if (gamepad2.dpad_down) bucket.setBucketArmPower(-1);
+            if (!gamepad2.dpad_up && !gamepad2.dpad_down) bucket.setBucketArmPower(0);
 
 
 //            if (gamepad2.dpad_up) bucket.setBucketArmAngle(bucket.getCurrentBucketArmAngle() + 0.75);

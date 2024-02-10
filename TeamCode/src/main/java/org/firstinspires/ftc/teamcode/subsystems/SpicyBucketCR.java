@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,18 +10,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.helpers.ServoToo;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
-public class SpicyBucket implements Subsystem {
+public class SpicyBucketCR implements Subsystem {
     CRServo wheel;
     Servo slideArmLServo;
     Servo slideArmRServo;
     ServoToo slideArmL;
     ServoToo slideArmR;
-    Servo bucketArmLServo;
-    Servo bucketArmRServo;
-    ServoToo bucketArmL;
-    ServoToo bucketArmR;
+    CRServo bucketArmL;
+    CRServo bucketArmR;
     @Override
     public void init(HardwareMap map) {
         wheel = map.get(CRServo.class, "wheel"); // p5
@@ -31,14 +29,15 @@ public class SpicyBucket implements Subsystem {
         slideArmL = new ServoToo(slideArmLServo, 0, 290, AngleUnit.DEGREES);
         slideArmR = new ServoToo(slideArmRServo, 0, 290, AngleUnit.DEGREES);
 
-        bucketArmLServo = map.get(Servo.class, "armBucketL"); // p2
-        bucketArmRServo = map.get(Servo.class, "armBucketR"); // p4
+        bucketArmL = map.get(CRServo.class, "armBucketL"); // p2
+        bucketArmR = map.get(CRServo.class, "armBucketR"); // p4
 
-        bucketArmL = new ServoToo(bucketArmLServo, 0, 270, AngleUnit.DEGREES);
-        bucketArmR = new ServoToo(bucketArmRServo, 0, 270, AngleUnit.DEGREES);
 
         slideArmR.setInverted(true);
-        bucketArmR.setInverted(true);
+        bucketArmR.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        bucketArmL.setPower(0);
+        bucketArmR.setPower(0);
 
         wheel.setPower(0);
     }
@@ -51,20 +50,13 @@ public class SpicyBucket implements Subsystem {
         slideArmL.turnToAngle(angle);
         slideArmR.turnToAngle(angle);
     }
-    public void setBucketArmAngle(double angle) {
-        bucketArmL.turnToAngle(angle);
-        bucketArmR.turnToAngle(angle);
-    }
-    public void setBucketArmPos(double pos) {
-        bucketArmLServo.setPosition(pos);
-        bucketArmRServo.setPosition(pos);
+    public void setBucketArmPower(double pwr) {
+        bucketArmL.setPower(pwr);
+        bucketArmR.setPower(pwr);
     }
 
-    public double getCurrentBucketArmAngle() {
-        return bucketArmL.getAngle();
-    }
     public double getCurrentBucketArmPos() {
-        return bucketArmL.getPosition();
+        return bucketArmL.getPower();
     }
     public double getCurrentSlideArmAngle() {
         return slideArmL.getAngle();
@@ -75,13 +67,6 @@ public class SpicyBucket implements Subsystem {
     }
     public double minArmAngle() {
         return slideArmL.min;
-    }
-
-    public double minBucketArmAngle() {
-        return bucketArmL.min;
-    }
-    public double maxBucketArmAngle() {
-        return bucketArmL.max;
     }
 
     public void takeIn() {
@@ -100,8 +85,8 @@ public class SpicyBucket implements Subsystem {
     public void run(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         telemetry.addData("SlideLeft Arm Angle", slideArmL.getAngle());
         telemetry.addData("SlideRight Arm Angle", slideArmR.getAngle());
-        telemetry.addData("BucketLeft Arm Angle", bucketArmL.getAngle());
-        telemetry.addData("BucketRight Arm Angle", bucketArmR.getAngle());
+        telemetry.addData("BucketLeft Arm Angle", bucketArmL.getPower());
+        telemetry.addData("BucketRight Arm Angle", bucketArmR.getPower());
         telemetry.addData("Wheel Power", wheel.getPower());
     }
 }
