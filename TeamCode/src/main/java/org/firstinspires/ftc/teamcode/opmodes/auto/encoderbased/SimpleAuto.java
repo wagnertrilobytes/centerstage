@@ -40,6 +40,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SimpleHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.SpicyBucketCR;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -67,7 +68,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="SimpleAuto", group="Fallback")
+@Autonomous(name="SimpleAuto Encoder", group="Fallback", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
 //@Disabled
 public class SimpleAuto extends LinearOpMode {
 
@@ -77,6 +78,7 @@ public class SimpleAuto extends LinearOpMode {
 
     private ElapsedTime     runtime = new ElapsedTime();
     SimpleHardware robot = new SimpleHardware();
+    SpicyBucketCR bucket = new SpicyBucketCR();
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -95,6 +97,7 @@ public class SimpleAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        bucket.init(hardwareMap);
         // Initialize the drive system variables.
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -131,9 +134,9 @@ public class SimpleAuto extends LinearOpMode {
 //                        .build()
 //        );
         sleep(500);
-        robot.intake.setPower(0.6);
+//        robot.intake.setPower(0.6);
         sleep(9000);
-        robot.intake.setPower(0);
+//        robot.intake.setPower(0);
         sleep(1000);
 
         telemetry.addData("Path", "Complete");

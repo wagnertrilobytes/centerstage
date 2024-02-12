@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.tuners;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Slides;
 import org.firstinspires.ftc.teamcode.subsystems.SpicyBucket;
 
 @Autonomous(name = "Pos Tuner")
+@Disabled
 public class PosTuner extends LinearOpMode {
     int mode;
     @Override

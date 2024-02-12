@@ -18,15 +18,6 @@ public class SimpleHardware {
     public DcMotor frontRight = null;
     public DcMotor backLeft = null;
     public DcMotor backRight = null;
-    public Servo clwLeft = null;
-    public Servo clwRight = null;
-    public Servo plane = null;
-
-    public DcMotor slideLeft = null;
-
-    public DcMotor slideRight = null;
-
-    public DcMotor intake = null;
 
     public WebcamName cameraLeft;
     //   public DcMotor armB = null;
@@ -49,18 +40,7 @@ public class SimpleHardware {
         frontRight = hwMap.get(DcMotor.class, "frontRight");
         backLeft = hwMap.get(DcMotor.class, "backLeft");
         backRight = hwMap.get(DcMotor.class, "backRight");
-        slideLeft = hwMap.get(DcMotor.class, "slideLeft");
-        intake = hwMap.get(DcMotor.class, "intake");
-        slideRight = hwMap.get(DcMotorEx.class, "slideRight");
-
-        cameraLeft = hwMap.get(WebcamName.class, "Webcam 1");
 //        cameraRight = hardwareMap.get(WebcamName.class, "Webcam 2");
-
-        plane = hwMap.get(Servo.class, "plane");
-
-        clwLeft = hwMap.get(Servo.class, "clawLeft");
-        clwRight = hwMap.get(Servo.class, "clawRight");
-
         //  armB = hwMap.get(DcMotor.class, "armB");
 /*
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -78,8 +58,6 @@ public class SimpleHardware {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
-        slideLeft.setDirection(DcMotor.Direction.REVERSE);
-        slideRight.setDirection(DcMotor.Direction.REVERSE);
         //armB.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
@@ -87,9 +65,7 @@ public class SimpleHardware {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-        slideLeft.setPower(0);
-        slideRight.setPower(0);
-        //  armB.setPower(0);
+
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.

@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
  */
 @Config
 public class DriveConstants {
+    public static final boolean showTuningOpmodes = false;
     public static final double TICKS_PER_REV = 1425.2;
     public static final double MAX_RPM = 117;
 

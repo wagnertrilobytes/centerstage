@@ -59,7 +59,7 @@ import org.firstinspires.ftc.teamcode.subsystems.YeOldeBucket;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="SpicyBukette: Teleop", group="Main")
+@TeleOp(name="Centerstage: Teleop PizzaBox Lives On", group="Main")
 //@Disabled
 public class TeleopSpicy extends LinearOpMode {
 //    YeOldeBucket bucket = new YeOldeBucket();
@@ -80,7 +80,7 @@ public class TeleopSpicy extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        double turnAngle = bucket.getCurrentSlideArmAngle() + 2;
+        double turnAngle = 0;
         while (opModeIsActive() && !isStopRequested()) {
             bucket.run(gamepad1, gamepad2, telemetry);
             intake.run(gamepad1, gamepad2, telemetry);
@@ -121,17 +121,20 @@ public class TeleopSpicy extends LinearOpMode {
             else plane.takePlaneBack();
             if (gamepad2.a) bucket.dropOnePixel(this);
 
-            turnAngle += -gamepad2.left_stick_y * 4;
-            if (turnAngle > bucket.maxArmAngle()) turnAngle = bucket.maxArmAngle();
-            if (turnAngle < bucket.minArmAngle()) turnAngle = bucket.minArmAngle();
+//            if (gamepad2.left_stick_y > 0.2) bucket.setBucketArmPower(1);
+//            if (gamepad2.left_stick_y > 0.2)bucket.setBucketArmPower(-1);
+//            if (gamepad2.left_stick_y < 0.2) bucket.setBucketArmPower(1);
+            bucket.setBucketArmPower(-gamepad2.left_stick_y);
+
+
 
             if (gamepad1.dpad_up) robot.setMotorPowers(1, 1, 1, 1);
             if (gamepad1.dpad_down) robot.setMotorPowers(-1, -1, -1, -1);
 
 
-            if (gamepad2.dpad_up) bucket.setBucketArmPower(1);
-            if (gamepad2.dpad_down) bucket.setBucketArmPower(-1);
-            if (!gamepad2.dpad_up && !gamepad2.dpad_down) bucket.setBucketArmPower(0);
+            if (gamepad2.dpad_up) bucket.setSlideArmPower(1);
+            if (gamepad2.dpad_down) bucket.setSlideArmPower(-1);
+            if (!gamepad2.dpad_up && !gamepad2.dpad_down) bucket.setSlideArmPower(0);
 
 
 //            if (gamepad2.dpad_up) bucket.setBucketArmAngle(bucket.getCurrentBucketArmAngle() + 0.75);

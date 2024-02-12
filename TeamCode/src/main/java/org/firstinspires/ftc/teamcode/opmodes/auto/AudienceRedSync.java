@@ -15,9 +15,8 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "Backstage Blue Latest Test", group="Backstage", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
-public class BackstageBlueSync extends ColorVisionAutoBase {
-    double INCHES_AWAY = 7;
+@Autonomous(name = "Audience Red", group="Backstage", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
+public class AudienceRedSync extends ColorVisionAutoBase {
     double WANTED_ID = 1;
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
@@ -26,71 +25,61 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
 
     TrajectorySequence middle_trajOne;
     TrajectorySequence middle_trajTwo;
-
-    TrajectorySequence drop_trajOne;
-    TrajectorySequence drop_trajTwo;
-    VisionPortal vp;
-    AprilTagProcessor aprilTags;
     Intake intake = new Intake();
-    Slides slides = new Slides();
-    SpicyBucketCR spicyBucket = new SpicyBucketCR();
+    SpicyBucketCR spicyBucketCR = new SpicyBucketCR();
 
     @Override
     public void setup() {
         intake.init(hardwareMap);
-        slides.init(hardwareMap);
-        spicyBucket.init(hardwareMap);
+        spicyBucketCR.init(hardwareMap);
 
-        this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
-        this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
+        this.lower = new Scalar(0, 100, 100); // the lower hsv threshold for your detection
+        this.upper = new Scalar(255, 255, 255); // the upper hsv threshold for your detection
         this.minArea = () -> 2000; // the minimum area for the detection to consider for your prop
         this.left = () -> 213;
         this.right = () -> 426;
-        this.name = "Blue";
+        this.name = "Red";
         robot.setPoseEstimate(startPos);
 
-        left_trajOne =robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(25, 61))
-                .lineTo(new Vector2d(23, 39))
+        right_trajOne =robot.trajectorySequenceBuilder(startPos)
+                .lineTo(new Vector2d(-46.26, -62.00))
+                .splineTo(new Vector2d(-38.52, -35.52), Math.toRadians(270))
                 .build();
 
-        left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
-                .lineTo(new Vector2d(24, 60))
-                .build();
-
-        middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(14, 33))
-                .back(3)
-                .strafeLeft(5)
-                .turn(Math.toRadians(-15))
-                .forward(2.5)
-                .build();
-
-        middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToConstantHeading(new Vector2d(14, 44.09))
-                .lineTo(midbefDropV)
-                .build();
-
-        right_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(25, 61))
-                .lineTo(new Vector2d(25, 40))
-                .build();
+        Vector2d ENDPOS = new Vector2d(-57.32, 0.11);
 
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineTo(new Vector2d(24, 60))
+                .lineTo(new Vector2d(-56.26, 41.58))
+//                .splineTo(ENDPOS, Math.toRadians(270))
                 .build();
 
-        drop_trajOne = robot.trajectorySequenceBuilder(midbefDrop)
-                .splineTo(new Vector2d(35, 36), Math.toRadians(180))
-                .back(15)
+
+        middle_trajOne  = robot.trajectorySequenceBuilder(startPos)
+                .splineTo(new Vector2d(-37.66, -55.48), Math.toRadians(270))
+                .splineTo(new Vector2d(-38.52, -35.52), Math.toRadians(270))
+                .build();
+
+
+        middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
+                .lineToLinearHeading(new Pose2d(-37.66, 55.48, Math.toRadians(180)))
+                .splineTo(new Vector2d(-53.33, 28.01), Math.toRadians(-90))
+//                .splineTo(ENDPOS, Math.toRadians(270))
+                .build();
+
+
+        left_trajOne = robot.trajectorySequenceBuilder(startPos)
+                .splineTo(new Vector2d(-40.13, 33.36), Math.toRadians(270.00))
+                .splineTo(new Vector2d(-32.20, 36.66), Math.toRadians(1.71))
+                .build();
+        left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
+                .lineTo(new Vector2d(-54.33, 37.49))
+//                .splineTo(ENDPOS, Math.toRadians(270))
                 .build();
 
     }
 
-    Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
-    Pose2d midbefDrop = new Pose2d(14, 44, Math.toRadians(180));
-    Vector2d midbefDropV = new Vector2d(14, 44);
-    double INTAKE_POWER = -0.4;
+    Pose2d startPos = new Pose2d(-37, 66, Math.toRadians(270.00));
+    double INTAKE_POWER = 0.27;
 
     enum State {
         LEFT,
@@ -103,7 +92,6 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
     enum Step {
         ONE,
         TWO,
-        DROP,
         FINISH
     }
 
@@ -129,7 +117,6 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
             currentState = State.DEFAULT;
         }
 
-        // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         telemetry.addData("Step", currentStep);
         telemetry.addData("State", currentState);
         currentStep = Step.TWO;
@@ -137,29 +124,14 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
         if (currentState == State.MIDDLE) robot.followTrajectorySequence(middle_trajTwo);
         if (currentState == State.LEFT) robot.followTrajectorySequence(left_trajTwo);
         if (currentState == State.RIGHT) robot.followTrajectorySequence(right_trajTwo);
-        currentStep = Step.DROP;
-        robot.followTrajectorySequence(drop_trajOne);
         currentStep = Step.FINISH;
-        slides.setPower(0.75);
-        sleep(1250);
-        slides.stop();
-        sleep(250);
-        spicyBucket.setSlideArmAngle(spicyBucket.maxArmAngle() - 15);
-        sleep(500);
-        spicyBucket.dropOnePixel(this);
-        sleep(1500);
-        spicyBucket.setSlideArmAngle(spicyBucket.minArmAngle());
-        sleep(250);
-        slides.setPower(-0.75);
-        sleep(1250);
-        slides.stop();
     }
-
 
     public void doIntakeSpin() {
         intake.setPower(INTAKE_POWER, -1);
-        spicyBucket.takeOut();
+        spicyBucketCR.dropOnePixel(this);
+        sleep(550);
         intake.stop();
-        spicyBucket.stop();
+        spicyBucketCR.stop();
     }
 }

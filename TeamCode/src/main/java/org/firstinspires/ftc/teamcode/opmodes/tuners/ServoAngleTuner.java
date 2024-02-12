@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.tuners;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.SpicyBucket;
 
 @TeleOp(name = "Servo ANGLE Tuner")
+@Disabled
 public class ServoAngleTuner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

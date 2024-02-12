@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -60,7 +61,7 @@ import org.firstinspires.ftc.teamcode.subsystems.YeOldeBucket;
  */
 
 @TeleOp(name="CenterStage: Teleop", group="Main")
-//@Disabled
+@Disabled
 public class Teleop extends LinearOpMode {
     YeOldeBucket bucket = new YeOldeBucket();
     Intake intake = new Intake();
