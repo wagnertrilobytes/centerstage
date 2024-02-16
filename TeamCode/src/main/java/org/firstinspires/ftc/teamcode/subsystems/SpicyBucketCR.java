@@ -41,7 +41,7 @@ public class SpicyBucketCR implements Subsystem {
     }
     public void dropOnePixel(LinearOpMode opMode) {
         wheel.setPower(-1);
-        opMode.sleep(925);
+        opMode.sleep(240);
         wheel.setPower(0);
     }
 

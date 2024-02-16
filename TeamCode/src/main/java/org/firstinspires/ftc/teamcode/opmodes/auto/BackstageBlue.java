@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
 import org.firstinspires.ftc.teamcode.subsystems.SpicyBucketCR;
@@ -17,9 +18,8 @@ import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 import java.lang.annotation.Target;
-import java.util.Timer;
-
-@Autonomous(name = "Backstage Blue Asnc", group="Backstage")
+@Config
+@Autonomous(name = "Backstage Blue", group="Backstage")
 public class BackstageBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
@@ -34,13 +34,13 @@ public class BackstageBlue extends ColorVisionAutoBase {
     Intake intake = new Intake();
     SpicyBucketCR bucketCR = new SpicyBucketCR();
     Slides slides = new Slides();
+    CounterRoller roller = new CounterRoller();
 
+    static double bArmSpeed = 0.75;
+    static double bBucSpeed = 0.75;
+    static double slideSpeed = 0.75;
     @Override
     public void setup() {
-        slides.init(hardwareMap);
-        bucketCR.init(hardwareMap);
-        slides.init(hardwareMap);
-
         this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
         this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
         this.minArea = () -> 8000; // the minimum area for the detection to consider for your prop
@@ -48,6 +48,10 @@ public class BackstageBlue extends ColorVisionAutoBase {
         this.right = () -> 426;
         this.name = "Blue";
         robot.setPoseEstimate(startPos);
+        intake.init(hardwareMap);
+        bucketCR.init(hardwareMap);
+        slides.init(hardwareMap);
+        roller.init(hardwareMap);
 
 //        left_trajOne = robot.trajectorySequenceBuilder(startPos)
 //                .splineTo(new Vector2d(32, 30), Math.toRadians(180))
@@ -88,7 +92,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
     }
 
     Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
-    double INTAKE_POWER = -0.4;
+    static double INTAKE_POWER = 0.4;
 
     enum State {
         LEFT,
@@ -137,14 +141,18 @@ public class BackstageBlue extends ColorVisionAutoBase {
             case DROP:
                 if (!robot.isBusy()) {
                     currentStep = Step.FINISH;
-                    double clawSpeed = 0.75;
-                    ElapsedTime a = new ElapsedTime();
-                    while (a.seconds() < 1) {
-                        slides.setPower(1);
-                        bucketCR.setSlideArmPower(1);
-                    }
-                    slides.setPower(0);
-                    bucketCR.setSlideArmPower(0);
+                    slides.setPower(slideSpeed);
+                    sleep(750);
+                    slides.stop();
+                    sleep(250);
+                    bucketCR.setSlideArmPower(bArmSpeed);
+                    bucketCR.setBucketArmPower(bBucSpeed);
+                    sleep(750);
+                    bucketCR.stop();
+                    sleep(350);
+                    slides.setPower(-slideSpeed);
+                    sleep(750);
+                    slides.stop();
                 }
                 break;
             case TWO:
@@ -176,10 +184,10 @@ public class BackstageBlue extends ColorVisionAutoBase {
     }
 
     public void doIntakeSpin() {
-        ElapsedTime a = new ElapsedTime();
-        while (a.seconds() < 0.65) {
-            intake.setPower(0.65, 1);
-        }
-        intake.setPower(0, 0);
+        intake.setPower(INTAKE_POWER, -1);
+        roller.spinForward();
+        sleep(300);
+        intake.stop();
+        roller.stop();
     }
 }

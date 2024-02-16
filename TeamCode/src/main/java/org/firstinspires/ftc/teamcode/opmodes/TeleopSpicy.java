@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneLauncher;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
@@ -67,6 +68,7 @@ public class TeleopSpicy extends LinearOpMode {
     Intake intake = new Intake();
     PlaneLauncher plane = new PlaneLauncher();
     Slides slides = new Slides();
+    CounterRoller roller = new CounterRoller();
     public void runOpMode() {
         SampleMecanumDrive robot = new SampleMecanumDrive(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -77,6 +79,7 @@ public class TeleopSpicy extends LinearOpMode {
         intake.init(hardwareMap);
         plane.init(hardwareMap);
         slides.init(hardwareMap);
+        roller.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -104,26 +107,25 @@ public class TeleopSpicy extends LinearOpMode {
 
             slides.setPower((numUp) - MAX_SPEED + MAX_SPEED);
 
-            double iSM = 0.85;
+            double iSM = 0.65;
             if (gamepad2.left_trigger > 0.3) {
                 intake.setPower(-gamepad2.left_trigger, iSM);
                 bucket.takeOut();
+                roller.spinForward();
             }
             if (gamepad2.right_trigger > 0.3) {
                 intake.setPower(gamepad2.right_trigger, iSM);
                 bucket.takeIn();
+                roller.spinBackward();
             }
             if (gamepad2.right_trigger < 0.3 && gamepad2.left_trigger < 0.3) {
                 intake.stop();
                 bucket.stop();
+                roller.stop();
             }
             if (gamepad2.y) plane.sendPlane();
             else plane.takePlaneBack();
             if (gamepad2.a) bucket.dropOnePixel(this);
-
-//            if (gamepad2.left_stick_y > 0.2) bucket.setBucketArmPower(1);
-//            if (gamepad2.left_stick_y > 0.2)bucket.setBucketArmPower(-1);
-//            if (gamepad2.left_stick_y < 0.2) bucket.setBucketArmPower(1);
             bucket.setBucketArmPower(-gamepad2.left_stick_y);
 
 
@@ -136,9 +138,6 @@ public class TeleopSpicy extends LinearOpMode {
             if (gamepad2.dpad_down) bucket.setSlideArmPower(-1);
             if (!gamepad2.dpad_up && !gamepad2.dpad_down) bucket.setSlideArmPower(0);
 
-
-//            if (gamepad2.dpad_up) bucket.setBucketArmAngle(bucket.getCurrentBucketArmAngle() + 0.75);
-//            if (gamepad2.dpad_down) bucket.setBucketArmAngle(bucket.getCurrentBucketArmAngle() - 0.75);
 
             telemetry.addData("Hooligan", "Activity");
             telemetry.addData("Front Left", fmt(robot.frontLeft));
