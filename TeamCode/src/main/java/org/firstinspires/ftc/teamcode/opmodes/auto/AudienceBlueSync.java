@@ -119,7 +119,7 @@ public class AudienceBlueSync extends ColorVisionAutoBase {
 
     public void doIntakeSpin() {
         intake.setPower(INTAKE_POWER, -1);
-        spicyBucketCR.dropOnePixel(this);
+        spicyBucketCR.dropOnePixel();
         sleep(550);
         intake.stop();
         spicyBucketCR.stop();

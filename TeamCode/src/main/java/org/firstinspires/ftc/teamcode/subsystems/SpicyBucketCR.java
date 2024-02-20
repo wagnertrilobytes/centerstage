@@ -6,17 +6,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.helpers.ServoToo;
 
 public class SpicyBucketCR implements Subsystem {
-    CRServo wheel;
-    CRServo bucketArmL;
-    CRServo bucketArmR;
-    CRServo slideArmL;
-    CRServo slideArmR;
+    public CRServo wheel;
+    public CRServo bucketArmL;
+    public CRServo bucketArmR;
+    public CRServo slideArmL;
+    public CRServo slideArmR;
     @Override
     public void init(HardwareMap map) {
         wheel = map.get(CRServo.class, "wheel"); // p5
@@ -39,9 +40,11 @@ public class SpicyBucketCR implements Subsystem {
 
         wheel.setPower(0);
     }
-    public void dropOnePixel(LinearOpMode opMode) {
-        wheel.setPower(-1);
-        opMode.sleep(240);
+    public void dropOnePixel() {
+        ElapsedTime timer = new ElapsedTime();
+        while (timer.milliseconds() < 240) {
+            wheel.setPower(-1);
+        }
         wheel.setPower(0);
     }
 

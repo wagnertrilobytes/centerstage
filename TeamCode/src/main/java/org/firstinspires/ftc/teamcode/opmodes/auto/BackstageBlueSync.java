@@ -146,7 +146,7 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
         sleep(250);
         spicyBucket.setSlideArmAngle(spicyBucket.maxArmAngle() - 15);
         sleep(500);
-        spicyBucket.dropOnePixel(this);
+        spicyBucket.dropOnePixel();
         sleep(1500);
         spicyBucket.setSlideArmAngle(spicyBucket.minArmAngle());
         sleep(250);
