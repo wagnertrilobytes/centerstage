@@ -59,11 +59,7 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(14, 33))
-                .back(3)
-                .strafeLeft(5)
-                .turn(Math.toRadians(-15))
-                .forward(2.5)
+                .lineToConstantHeading(new Vector2d(14, 34))
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
@@ -81,10 +77,9 @@ public class BackstageBlueSync extends ColorVisionAutoBase {
                 .build();
 
         drop_trajOne = robot.trajectorySequenceBuilder(midbefDrop)
-                .splineTo(new Vector2d(35, 36), Math.toRadians(180))
+                .splineTo(new Vector2d(37, 36), Math.toRadians(180))
                 .back(15)
                 .build();
-
     }
 
     Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));

@@ -9,24 +9,23 @@ import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
 
 public class MeepMeepVisuals {
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(800);
+        MeepMeep meepMeep = new MeepMeep(500);
 
-        Pose2d startPos = new Pose2d(14, -60, Math.toRadians(90));
+        Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
         Pose2d midbefDrop = new Pose2d(14, 44, Math.toRadians(180));
-        Vector2d midbefDropV = new Vector2d(24, 60);
+        Vector2d midbefDropV = new Vector2d(14, 44);
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints( 60.34900677139974, 19.68109465623948, 3.0706892013549805, 3.0706892013549805, 16.13)
+                .setConstraints( 45.14696128158258, 19.68109465623948, 2.49843921661377, 2.49843921661377, 16.13)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPos)
-                                .lineTo(new Vector2d(25, -61))
-                                .lineTo(new Vector2d(25, -40))
+                                .lineToConstantHeading(new Vector2d(14, 34))
                                 .waitSeconds(1)
-                                .lineTo(new Vector2d(25, -55))
-                                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
+                                .lineToConstantHeading(new Vector2d(14, 45.09))
+                                .lineTo(midbefDropV)
                                 .waitSeconds(1)
-                                .splineTo(new Vector2d(40, -36), Math.toRadians(180))
-                                .splineToConstantHeading(new Vector2d(49.5, -36), Math.toRadians(180))
+                                .splineTo(new Vector2d(37, 36), Math.toRadians(180))
+                                .back(15)
                                 .build()
                 );
 

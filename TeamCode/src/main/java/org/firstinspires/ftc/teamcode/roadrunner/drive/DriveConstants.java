@@ -20,8 +20,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 @Config
 public class DriveConstants {
     public static final boolean showTuningOpmodes = false;
-    public static final double TICKS_PER_REV = 1425.2;
-    public static final double MAX_RPM = 117;
+    public static final double TICKS_PER_REV = 537.6;
+    public static final double MAX_RPM = 312;
 
     /*
      * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
@@ -33,16 +33,16 @@ public class DriveConstants {
      */
     public static final boolean RUN_USING_ENCODER = true;
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(20, 0, 8,
-            13.378632367819122);
+            13.11372868627881);
     public static double WHEEL_RADIUS = 1.8898; // in
-    public static double GEAR_RATIO = 2.76470588; // output (wheel) speed / input (motor) speed
+    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
     public static double TRACK_WIDTH = 16.13; // in
-    public static double kV = 0.01516;
-    public static double kA = 0.002;
-    public static double kStatic = 0.0055;
-    public static double MAX_VEL = 45.14696128158258;
+    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
+    public static double kA = 0;
+    public static double kStatic = 0;
+    public static double MAX_VEL = 45.854110783268396;
     public static double MAX_ACCEL = 19.68109465623948;
-    public static double MAX_ANG_VEL = 2.49843921661377;
+    public static double MAX_ANG_VEL = Math.toRadians(60);
     public static double MAX_ANG_ACCEL = 2.49843921661377;
     public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR = RevHubOrientationOnRobot.LogoFacingDirection.UP;
     public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;

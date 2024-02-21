@@ -19,7 +19,7 @@ import org.opencv.core.Scalar;
 
 import java.lang.annotation.Target;
 @Config
-@Autonomous(name = "Backstage Blue", group="Backstage")
+@Autonomous(name = "Backstage Blurfytgue", group="Backstage")
 public class BackstageBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
@@ -43,7 +43,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
     public void setup() {
         this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
         this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
-        this.minArea = () -> 8000; // the minimum area for the detection to consider for your prop
+        this.minArea = () -> 4000; // the minimum area for the detection to consider for your prop
         this.left = () -> 213;
         this.right = () -> 426;
         this.name = "Blue";
@@ -60,38 +60,40 @@ public class BackstageBlue extends ColorVisionAutoBase {
 
         left_trajOne =robot.trajectorySequenceBuilder(startPos)
                 .lineTo(new Vector2d(25, 61))
-                .lineTo(new Vector2d(25, 40))
+                .lineTo(new Vector2d(23, 39))
                 .build();
 
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
+                .lineTo(new Vector2d(24, 60))
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToLinearHeading(new Pose2d(14, 35, Math.toRadians(270)))
+                .lineToConstantHeading(new Vector2d(14, 34))
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
+                .lineToConstantHeading(new Vector2d(14, 44.09))
+                .lineTo(midbefDropV)
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .lineTo(new Vector2d(25, 61))
                 .lineTo(new Vector2d(25, 40))
-                .lineToLinearHeading(new Pose2d(10, 36, Math.toRadians(180)))
                 .build();
+
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(90)))
+                .lineTo(new Vector2d(24, 60))
                 .build();
 
-        drop_trajOne = robot.trajectorySequenceBuilder(new Pose2d(36, 36, Math.toRadians(90)))
-                .splineTo(new Vector2d(40, 36), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(48, 36), Math.toRadians(180))
+        drop_trajOne = robot.trajectorySequenceBuilder(midbefDrop)
+                .splineTo(new Vector2d(37, 36), Math.toRadians(180))
+                .back(15)
                 .build();
-
     }
 
     Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
+    Pose2d midbefDrop = new Pose2d(14, 44, Math.toRadians(180));
+    Vector2d midbefDropV = new Vector2d(14, 44);
     static double INTAKE_POWER = 0.4;
 
     enum State {
@@ -184,7 +186,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
     }
 
     public void doIntakeSpin() {
-        intake.setPower(INTAKE_POWER, -1);
+        intake.setPower(INTAKE_POWER, 1);
         roller.spinForward();
         sleep(300);
         intake.stop();
