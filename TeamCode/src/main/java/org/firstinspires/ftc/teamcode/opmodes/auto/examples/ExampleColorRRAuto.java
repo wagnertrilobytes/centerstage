@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "Example Color Vision Autonomous")
+@Autonomous(name = "Example Color RR Vision Autonomous")
 @Disabled
 public class ExampleColorRRAuto extends ColorVisionAutoBase {
     SampleMecanumDrive robot;

@@ -58,6 +58,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
         left_trajOne =robot.trajectorySequenceBuilder(startPos)
                 .lineTo(new Vector2d(25, 61))
                 .lineTo(new Vector2d(23, 39))
+                .strafeRight(5)
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -145,13 +146,14 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 break;
             case TWO:
                 if (!robot.isBusy()) {
-                    int leftAmt = 1;
-                    if (currentState == State.LEFT) leftAmt = 22;
-                    if (currentState == State.RIGHT) leftAmt = 7;
+                    if (currentState == State.LEFT) {
+                        robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                                        .forward(2)
+                                        .strafeLeft(2)
+                                .build());
+                    }
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
-                            .strafeLeft(leftAmt)
-                            .back(10)
                             .build();
                     currentStep = Step.DROP;
                     robot.followTrajectorySequenceAsync(drop_trajOne);
@@ -161,9 +163,17 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 if (!robot.isBusy()) {
                     currentStep = Step.TWO;
                     doIntakeSpin();
-                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .back(10)
-                            .build());
+                    if (currentState == State.MIDDLE) {
+                        robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                                .back(10)
+                                .build());
+                    }
+                    if (currentState == State.RIGHT) {
+                        robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                                .back(3)
+                                        .strafeLeft(3)
+                                .build());
+                    }
                 }
                 break;
         }
@@ -174,7 +184,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
     public void doIntakeSpin() {
         intake.setPower(INTAKE_POWER, 1);
         roller.spinForward();
-        sleep(300);
+        sleep(325);
         intake.stop();
         roller.stop();
     }
