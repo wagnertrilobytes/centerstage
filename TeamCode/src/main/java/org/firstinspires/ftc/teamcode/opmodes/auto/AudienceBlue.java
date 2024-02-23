@@ -3,13 +3,10 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
@@ -18,10 +15,9 @@ import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
-import java.lang.annotation.Target;
 @Config
-@Autonomous(name = "Backstage Blurfytgue", group="Backstage")
-public class BackstageBlue extends ColorVisionAutoBase {
+@Autonomous(name = "Audience Blurfytgue", group="Backstage")
+public class AudienceBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
     TrajectorySequence left_trajOne;
@@ -38,7 +34,6 @@ public class BackstageBlue extends ColorVisionAutoBase {
     CounterRoller roller = new CounterRoller();
 
     public static double bArmSpeed = 1;
-    public static double bBucSpeed = 0.75;
     public static double slideSpeed = 1;
     @Override
     public void setup() {
@@ -50,9 +45,6 @@ public class BackstageBlue extends ColorVisionAutoBase {
         this.name = "Blue";
         robot.setPoseEstimate(startPos);
         intake.init(hardwareMap);
-        bucketCR.init(hardwareMap);
-        slides.init(hardwareMap);
-        roller.init(hardwareMap);
         Storage.currentPose = robot.getPoseEstimate();
 
 //        left_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -60,48 +52,38 @@ public class BackstageBlue extends ColorVisionAutoBase {
 //                .splineTo(new Vector2d(14, 32), Math.toRadians(180))
 //                .build();
 
-        left_trajOne =robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(25, 61))
-                .lineTo(new Vector2d(23, 39))
-                .strafeLeft(15)
+        right_trajOne =robot.trajectorySequenceBuilder(startPos)
+                .lineTo(new Vector2d(-46.26, 62.00))
+                .lineTo(new Vector2d(-46.52, 35.52))
                 .build();
 
-        left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
-                .lineTo(new Vector2d(24, 60))
-                .build();
-
-        middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(14, 34))
-                .forward(20)
-                .back(18)
-                .build();
-
-        middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToConstantHeading(new Vector2d(20, 60.09))
-                .build();
-
-        right_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(20, 40))
-                .splineTo(new Vector2d(10, 35), Math.toRadians(200))
-                .back(5)
-                .strafeLeft(8)
-                .forward(10)
-                .back(11)
-                .build();
 
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineTo(new Vector2d(24, 60))
+                .lineTo(new Vector2d(-46.26, 45))
+                .lineTo(new Vector2d(-56.26, 41.58))
+//                .lineToConstantHeading(ENDPOS)
+                .build();
+        middle_trajOne  = robot.trajectorySequenceBuilder(startPos)
+                .lineToConstantHeading(new Vector2d(-35.95, 34.18))
                 .build();
 
-        drop_trajOne = robot.trajectorySequenceBuilder(midbefDrop)
-                .splineTo(new Vector2d(37, 36), Math.toRadians(180))
-                .back(5)
+
+        middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
+                .lineToConstantHeading(new Vector2d(-35.95, 40.18))
+//                .splineTo(ENDPOS, Math.toRadians(0))
+                .build();
+
+        left_trajOne = robot.trajectorySequenceBuilder(startPos)
+                .splineTo(new Vector2d(-40.13, 45.36), Math.toRadians(270.00))
+                .splineTo(new Vector2d(-34.18, 34.02), Math.toRadians(-8.77))
+                .build();
+        left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
+                .lineTo(new Vector2d(-54.33, 37.49))
+//                .lineToLinearHeading(ENDPOSE)
                 .build();
     }
 
-    Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
-    Pose2d midbefDrop = new Pose2d(14, 44, Math.toRadians(180));
-    Vector2d midbefDropV = new Vector2d(20, 60);
+    Pose2d startPos = new Pose2d(-37, 66, Math.toRadians(270.00));
     static double INTAKE_POWER = 0.4;
 
     enum State {
@@ -152,27 +134,22 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 if (!robot.isBusy()) {
                     currentStep = Step.FINISH;
                     slides.setPower(slideSpeed);
-                    sleep(2275);
+                    sleep(2250);
                     slides.stop();
                     bucketCR.setSlideArmPower(-bArmSpeed);
                     sleep(150);
                     bucketCR.setSlideArmPower(0);
                     bucketCR.setWheelPower(-1);
                     bucketCR.setBucketArmPower(-0.3);
-                    sleep(150);
-                    bucketCR.setBucketArmPower(0);
                     sleep(1500);
                     bucketCR.stop();
                 }
                 break;
             case TWO:
                 if (!robot.isBusy()) {
-                    int leftAmt = 12;
-                    if (currentState == State.LEFT) leftAmt = 14;
-                    if (currentState == State.RIGHT) leftAmt = 22;
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
-                            .strafeLeft(leftAmt)
+                            .strafeLeft(10)
                             .back(20)
                             .build();
                     currentStep = Step.DROP;
@@ -181,14 +158,20 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 break;
             case ONE:
                 if (!robot.isBusy()) {
+                    right_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .lineTo(new Vector2d(-46.26, 45))
+                            .lineTo(new Vector2d(-56.26, 41.58))
+//                .lineToConstantHeading(ENDPOS)
+                            .build();
+
+
                     middle_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .back(10)
+                            .lineToConstantHeading(new Vector2d(-35.95, 40.18))
+//                .splineTo(ENDPOS, Math.toRadians(0))
                             .build();
                     left_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineTo(new Vector2d(24, 60))
-                            .build();
-                    right_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineTo(new Vector2d(24, 60))
+                            .lineTo(new Vector2d(-54.33, 37.49))
+//                .lineToLinearHeading(ENDPOSE)
                             .build();
                     currentStep = Step.TWO;
                     if (currentState == State.RIGHT) {
@@ -212,9 +195,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
 
     public void doIntakeSpin() {
         intake.setPower(INTAKE_POWER, 1);
-        roller.spinForward();
         sleep(300);
         intake.stop();
-        roller.stop();
     }
 }

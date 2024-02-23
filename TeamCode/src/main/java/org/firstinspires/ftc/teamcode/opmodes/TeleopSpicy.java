@@ -109,7 +109,7 @@ public class TeleopSpicy extends OpMode {
 
         slides.setPower((numUp) - MAX_SPEED + MAX_SPEED);
 
-        double iSM = 0.65;
+        double iSM = 0.4;
         if (gamepad2.left_trigger > 0.3) {
             intake.setPower(-gamepad2.left_trigger, iSM);
             bucket.takeOut();

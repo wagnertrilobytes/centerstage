@@ -40,6 +40,9 @@ public class SpicyBucketCR implements Subsystem {
 
         wheel.setPower(0);
     }
+    public void setWheelPower(double pwr) {
+        wheel.setPower(pwr);
+    }
     public void dropOnePixel() {
         ElapsedTime timer = new ElapsedTime();
         while (timer.milliseconds() < 240) {

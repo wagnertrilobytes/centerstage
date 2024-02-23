@@ -3,13 +3,10 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
@@ -18,10 +15,9 @@ import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
-import java.lang.annotation.Target;
 @Config
-@Autonomous(name = "Backstage Blurfytgue", group="Backstage")
-public class BackstageBlue extends ColorVisionAutoBase {
+@Autonomous(name = "Backstage Redrfytgue", group="Backstage")
+public class BackstageRed extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence right_trajTwo;
     TrajectorySequence left_trajOne;
@@ -42,12 +38,12 @@ public class BackstageBlue extends ColorVisionAutoBase {
     public static double slideSpeed = 1;
     @Override
     public void setup() {
-        this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
-        this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
+        this.lower = new Scalar(0, 100, 100); // the lower hsv threshold for your detection
+        this.upper = new Scalar(6, 255, 255); // the upper hsv threshold for your detection
         this.minArea = () -> 4000; // the minimum area for the detection to consider for your prop
         this.left = () -> 213;
         this.right = () -> 426;
-        this.name = "Blue";
+        this.name = "Red";
         robot.setPoseEstimate(startPos);
         intake.init(hardwareMap);
         bucketCR.init(hardwareMap);
@@ -60,48 +56,42 @@ public class BackstageBlue extends ColorVisionAutoBase {
 //                .splineTo(new Vector2d(14, 32), Math.toRadians(180))
 //                .build();
 
-        left_trajOne =robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(25, 61))
-                .lineTo(new Vector2d(23, 39))
-                .strafeLeft(15)
+        left_trajOne = robot.trajectorySequenceBuilder(startPos)
+                .splineTo(new Vector2d(32, -30), Math.toRadians(180))
+                .splineTo(new Vector2d(10, -32), Math.toRadians(180))
                 .build();
 
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
-                .lineTo(new Vector2d(24, 60))
+                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(14, 34))
+                .lineToLinearHeading(new Pose2d(14, -31.75, Math.toRadians(90)))
                 .forward(20)
-                .back(18)
+                .back(14)
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToConstantHeading(new Vector2d(20, 60.09))
+                .lineToLinearHeading(new Pose2d(14, -45, Math.toRadians(90)))
                 .build();
-
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(20, 40))
-                .splineTo(new Vector2d(10, 35), Math.toRadians(200))
-                .back(5)
-                .strafeLeft(8)
-                .forward(10)
-                .back(11)
+                .lineTo(new Vector2d(25, -61))
+                .lineTo(new Vector2d(25, -40))
+                .strafeRight(12)
                 .build();
-
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineTo(new Vector2d(24, 60))
+                .lineTo(new Vector2d(25, -55))
+                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
                 .build();
 
-        drop_trajOne = robot.trajectorySequenceBuilder(midbefDrop)
-                .splineTo(new Vector2d(37, 36), Math.toRadians(180))
-                .back(5)
+        drop_trajOne = robot.trajectorySequenceBuilder(new Pose2d(36, -36, Math.toRadians(270)))
+                .splineTo(new Vector2d(40, -36), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(49.5, -36), Math.toRadians(180))
                 .build();
+
     }
 
-    Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
-    Pose2d midbefDrop = new Pose2d(14, 44, Math.toRadians(180));
-    Vector2d midbefDropV = new Vector2d(20, 60);
+    Pose2d startPos = new Pose2d(14, -60, Math.toRadians(90));
     static double INTAKE_POWER = 0.4;
 
     enum State {
@@ -167,13 +157,16 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 break;
             case TWO:
                 if (!robot.isBusy()) {
-                    int leftAmt = 12;
-                    if (currentState == State.LEFT) leftAmt = 14;
-                    if (currentState == State.RIGHT) leftAmt = 22;
+                    int leftAmt = 1;
+                    int rightAmt = 1;
+                    if (currentState == State.LEFT) rightAmt = 20;
+                    if (currentState == State.RIGHT) leftAmt = 25;
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
+                            .splineTo(new Vector2d(40, -36), Math.toRadians(180))
+                            .strafeRight(rightAmt)
                             .strafeLeft(leftAmt)
-                            .back(20)
+                            .turn(Math.toRadians(5))
+                            .back(10)
                             .build();
                     currentStep = Step.DROP;
                     robot.followTrajectorySequenceAsync(drop_trajOne);
@@ -181,14 +174,16 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 break;
             case ONE:
                 if (!robot.isBusy()) {
-                    middle_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .back(10)
-                            .build();
                     left_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineTo(new Vector2d(24, 60))
+                            .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
+                            .build();
+
+                    middle_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(14, -45, Math.toRadians(90)))
                             .build();
                     right_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineTo(new Vector2d(24, 60))
+                            .lineTo(new Vector2d(25, -55))
+                            .lineToLinearHeading(new Pose2d(30, -36, Math.toRadians(270)))
                             .build();
                     currentStep = Step.TWO;
                     if (currentState == State.RIGHT) {

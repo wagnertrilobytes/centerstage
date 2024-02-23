@@ -42,7 +42,7 @@ public class DriveConstants {
     public static double kStatic = 0;
     public static double MAX_VEL = 45.854110783268396;
     public static double MAX_ACCEL = 19.68109465623948;
-    public static double MAX_ANG_VEL = Math.toRadians(60);
+    public static double MAX_ANG_VEL = Math.toRadians(141.10002589690706);
     public static double MAX_ANG_ACCEL = 2.49843921661377;
     public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR = RevHubOrientationOnRobot.LogoFacingDirection.UP;
     public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
