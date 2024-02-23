@@ -36,7 +36,7 @@ public class DriveConstants {
             13.11372868627881);
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 16.13; // in
+    public static double TRACK_WIDTH = 15.8; // in
     public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
     public static double kA = 0;
     public static double kStatic = 0;

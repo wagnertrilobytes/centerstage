@@ -57,8 +57,9 @@ public class BackstageRed extends ColorVisionAutoBase {
 //                .build();
 
         left_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .splineTo(new Vector2d(32, -30), Math.toRadians(180))
+                .splineTo(new Vector2d(20, -30), Math.toRadians(180))
                 .splineTo(new Vector2d(10, -32), Math.toRadians(180))
+                .back(2)
                 .build();
 
         left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
@@ -68,7 +69,7 @@ public class BackstageRed extends ColorVisionAutoBase {
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .lineToLinearHeading(new Pose2d(14, -31.75, Math.toRadians(90)))
                 .forward(20)
-                .back(14)
+                .back(22)
                 .build();
 
         middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
@@ -77,11 +78,11 @@ public class BackstageRed extends ColorVisionAutoBase {
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .lineTo(new Vector2d(25, -61))
                 .lineTo(new Vector2d(25, -40))
-                .strafeRight(12)
+                .back(2)
                 .build();
         right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineTo(new Vector2d(25, -55))
-                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
+                .lineTo(new Vector2d(25, -60))
+                .lineToLinearHeading(new Pose2d(35, -36, Math.toRadians(180)))
                 .build();
 
         drop_trajOne = robot.trajectorySequenceBuilder(new Pose2d(36, -36, Math.toRadians(270)))
@@ -159,13 +160,12 @@ public class BackstageRed extends ColorVisionAutoBase {
                 if (!robot.isBusy()) {
                     int leftAmt = 1;
                     int rightAmt = 1;
-                    if (currentState == State.LEFT) rightAmt = 20;
-                    if (currentState == State.RIGHT) leftAmt = 25;
+                    if (currentState == State.LEFT) rightAmt = 8;
+                    if (currentState == State.RIGHT) leftAmt = 8;
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .splineTo(new Vector2d(40, -36), Math.toRadians(180))
+                            .lineTo(new Vector2d(40, -36))
                             .strafeRight(rightAmt)
                             .strafeLeft(leftAmt)
-                            .turn(Math.toRadians(5))
                             .back(10)
                             .build();
                     currentStep = Step.DROP;
@@ -179,25 +179,17 @@ public class BackstageRed extends ColorVisionAutoBase {
                             .build();
 
                     middle_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(14, -45, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(14, -45, Math.toRadians(180)))
                             .build();
                     right_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineTo(new Vector2d(25, -55))
-                            .lineToLinearHeading(new Pose2d(30, -36, Math.toRadians(270)))
+                            .lineTo(new Vector2d(25, -60))
+                            .lineToLinearHeading(new Pose2d(35, -36, Math.toRadians(180)))
                             .build();
                     currentStep = Step.TWO;
-                    if (currentState == State.RIGHT) {
                         doIntakeSpin();
-                        robot.followTrajectorySequenceAsync(right_trajTwo);
-                    }
-                    if (currentState == State.MIDDLE) {
-                        doIntakeSpin();
-                        robot.followTrajectorySequenceAsync(middle_trajTwo);
-                    }
-                    if (currentState == State.LEFT) {
-                        doIntakeSpin();
-                        robot.followTrajectorySequenceAsync(left_trajTwo);
-                    }
+                    if (currentState == State.RIGHT) robot.followTrajectorySequenceAsync(right_trajTwo);
+                    if (currentState == State.MIDDLE) robot.followTrajectorySequenceAsync(middle_trajTwo);
+//                    if (currentState == State.LEFT) {}
                 }
                 break;
         }

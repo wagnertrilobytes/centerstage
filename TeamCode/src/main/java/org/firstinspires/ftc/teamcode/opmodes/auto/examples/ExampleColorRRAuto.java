@@ -1,79 +1,59 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.examples;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
-import java.lang.annotation.Target;
-import java.util.Timer;
-
-@Autonomous(name = "Example Color RR Auto (FSM)")
+@Autonomous(name = "Example Color Vision Autonomous")
 @Disabled
 public class ExampleColorRRAuto extends ColorVisionAutoBase {
-    TrajectorySequence trajectory;
-    Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
+    SampleMecanumDrive robot;
+    Intake intake = new Intake();
     @Override
     public void setup() {
-        this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
+        this.lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
         this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
-        this.minArea = () -> 8000; // the minimum area for the detection to consider for your prop
+        this.minArea = () -> 100; // the minimum area for the detection to consider for your prop
         this.left = () -> 213;
         this.right = () -> 426;
-        this.name = "Blue";
-        robot.setPoseEstimate(startPos);
-
-        trajectory = robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(25, 61))
-                .lineTo(new Vector2d(25, 40))
-                .build();
-    }
-
-    enum State {
-        DEFAULT,
-        IDLE
-    }
-
-    enum Step {
-        FINISH,
-        ONE
-    }
-
-    State currentState = State.IDLE;
-    Step currentStep = Step.ONE;
-
-    @Override
-    public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-        currentStep = Step.ONE;
-        currentState = State.DEFAULT;
+        robot = new SampleMecanumDrive(hardwareMap);
+        intake.init(hardwareMap);
     }
 
     @Override
-    public void onStartedColor(ColourMassDetectionProcessor.Prop detectedProp) {;
-        // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
-        switch (currentStep) {
-            case FINISH:
-                if (!robot.isBusy()) {
-                    stop();
-                }
+    public void onStarted(ColourMassDetectionProcessor.Prop prop) {
+        robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                .forward(20)
+                .build());
+        telemetry.addData("Test", robot.lastPropPos.toString());
+        telemetry.update();
+        if(prop.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
+            // if left
+        }
+        intake.setPower(1, -1);
+    }
+
+    @Override
+    public void onStartedColor(ColourMassDetectionProcessor.Prop propPosL) {
+        /// this is the opmode loop while active
+        switch(propPosL.getPosition()) {
+            case LEFT:
+                telemetry.addData("Seen", "Left");
                 break;
-            case ONE:
-                if (!robot.isBusy()) {
-                    currentStep = Step.FINISH;
-                    robot.followTrajectorySequenceAsync(trajectory);
-                }
+            case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
+            case MIDDLE:
+                // code to do if we saw the prop on the middle
+                telemetry.addData("Seen", "Middle");
+                break;
+            case RIGHT:
+                // code to do if we saw the prop on the right
+                telemetry.addData("Seen", "Right");
                 break;
         }
-        telemetry.addData("Step", currentStep);
-        telemetry.addData("State", currentState);
     }
 }
