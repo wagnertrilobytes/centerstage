@@ -51,19 +51,11 @@ public class BackstageRed extends ColorVisionAutoBase {
         roller.init(hardwareMap);
         Storage.currentPose = robot.getPoseEstimate();
 
-//        left_trajOne = robot.trajectorySequenceBuilder(startPos)
-//                .splineTo(new Vector2d(32, 30), Math.toRadians(180))
-//                .splineTo(new Vector2d(14, 32), Math.toRadians(180))
-//                .build();
 
         left_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .splineTo(new Vector2d(20, -30), Math.toRadians(180))
                 .splineTo(new Vector2d(10, -32), Math.toRadians(180))
                 .back(2)
-                .build();
-
-        left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
-                .lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(270)))
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -72,22 +64,10 @@ public class BackstageRed extends ColorVisionAutoBase {
                 .back(22)
                 .build();
 
-        middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToLinearHeading(new Pose2d(14, -45, Math.toRadians(90)))
-                .build();
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .lineTo(new Vector2d(25, -61))
                 .lineTo(new Vector2d(25, -40))
                 .back(2)
-                .build();
-        right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineTo(new Vector2d(25, -60))
-                .lineToLinearHeading(new Pose2d(35, -36, Math.toRadians(180)))
-                .build();
-
-        drop_trajOne = robot.trajectorySequenceBuilder(new Pose2d(36, -36, Math.toRadians(270)))
-                .splineTo(new Vector2d(40, -36), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(49.5, -36), Math.toRadians(180))
                 .build();
 
     }
@@ -161,12 +141,13 @@ public class BackstageRed extends ColorVisionAutoBase {
                     int leftAmt = 1;
                     int rightAmt = 1;
                     if (currentState == State.LEFT) rightAmt = 8;
+                    if (currentState == State.MIDDLE) rightAmt = 4;
                     if (currentState == State.RIGHT) leftAmt = 8;
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineTo(new Vector2d(40, -36))
+                            .lineToLinearHeading(new Pose2d(40,-36, Math.toRadians(180)))
                             .strafeRight(rightAmt)
                             .strafeLeft(leftAmt)
-                            .back(10)
+                            .back(23)
                             .build();
                     currentStep = Step.DROP;
                     robot.followTrajectorySequenceAsync(drop_trajOne);
@@ -179,11 +160,11 @@ public class BackstageRed extends ColorVisionAutoBase {
                             .build();
 
                     middle_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(14, -45, Math.toRadians(180)))
+                            .back(5)
                             .build();
                     right_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineTo(new Vector2d(25, -60))
-                            .lineToLinearHeading(new Pose2d(35, -36, Math.toRadians(180)))
+                            .back(10)
+                            .strafeLeft(3)
                             .build();
                     currentStep = Step.TWO;
                         doIntakeSpin();

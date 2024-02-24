@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -75,14 +76,17 @@ public class TeleopSpicy extends OpMode {
     public void init() {
         robot = new SampleMecanumDrive(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
         bucket.init(hardwareMap);
         intake.init(hardwareMap);
         plane.init(hardwareMap);
         slides.init(hardwareMap);
         roller.init(hardwareMap);
+
+        if (Storage.currentPose != null) robot.setPoseEstimate(Storage.currentPose);
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
     }
     int power = 0;
     @Override

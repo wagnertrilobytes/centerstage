@@ -68,8 +68,8 @@ public class ColorVisionAutoBase extends LinearOpMode {
             onStartedColor(new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name));
 
             robot.update();
-            Pose2d poseEstimate = this.robot.getPoseEstimate();
-            Storage.currentPose = poseEstimate;
+            Pose2d poseEstimate = robot.getPoseEstimate();
+            Storage.currentPose = robot.getPoseEstimate();
 
 
             telemetry.addData("x", poseEstimate.getX());

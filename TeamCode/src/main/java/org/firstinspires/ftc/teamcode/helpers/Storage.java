@@ -13,7 +13,7 @@ public class Storage {
     public static int PLANE_ARM = 0;
     public static int MINIMUM_SLIDE_PLACE_L = -4440;
     public static int MINIMUM_SLIDE_PLACE_R = 4440;
-    public static Pose2d currentPose;
+    public static Pose2d currentPose = new Pose2d();
     public static SampleMecanumDrive robot;
     public interface TRAJECTORIES {
         interface BACKSTAGE {

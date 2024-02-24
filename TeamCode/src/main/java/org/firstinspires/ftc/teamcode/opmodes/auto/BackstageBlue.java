@@ -23,15 +23,11 @@ import java.lang.annotation.Target;
 @Autonomous(name = "Backstage Blurfytgue", group="Backstage")
 public class BackstageBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
-    TrajectorySequence right_trajTwo;
     TrajectorySequence left_trajOne;
-    TrajectorySequence left_trajTwo;
 
     TrajectorySequence middle_trajOne;
-    TrajectorySequence middle_trajTwo;
 
     TrajectorySequence drop_trajOne;
-    TrajectorySequence drop_trajTwo;
     Intake intake = new Intake();
     SpicyBucketCR bucketCR = new SpicyBucketCR();
     Slides slides = new Slides();
@@ -64,7 +60,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .lineToConstantHeading(new Vector2d(14, 34))
                 .forward(20)
-                .back(18)
+                .back(15)
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -75,8 +71,6 @@ public class BackstageBlue extends ColorVisionAutoBase {
     }
 
     Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
-    Pose2d midbefDrop = new Pose2d(14, 44, Math.toRadians(180));
-    Vector2d midbefDropV = new Vector2d(20, 60);
     static double INTAKE_POWER = 0.4;
 
     enum State {
@@ -129,19 +123,20 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 break;
             case DROP:
                 if (!robot.isBusy()) {
-                    currentStep = Step.FINISH;
                     slides.setPower(slideSpeed);
-                    sleep(2275);
+                    sleep(2300);
                     slides.stop();
                     bucketCR.setSlideArmPower(-bArmSpeed);
-                    sleep(150);
+                    sleep(450);
                     bucketCR.setSlideArmPower(0);
-                    bucketCR.setWheelPower(-1);
                     bucketCR.setBucketArmPower(-0.3);
                     sleep(150);
+                    bucketCR.setWheelPower(-1);
                     bucketCR.setBucketArmPower(0);
                     sleep(1500);
                     bucketCR.stop();
+                    Storage.currentPose = robot.getPoseEstimate();
+                    currentStep = Step.FINISH;
                 }
                 break;
             case TWO:
@@ -150,10 +145,12 @@ public class BackstageBlue extends ColorVisionAutoBase {
                         robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                                         .forward(2)
                                         .strafeLeft(2)
+                                        .back(4)
                                 .build());
                     }
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
+                            .back(15)
                             .build();
                     currentStep = Step.DROP;
                     robot.followTrajectorySequenceAsync(drop_trajOne);
@@ -161,19 +158,19 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 break;
             case ONE:
                 if (!robot.isBusy()) {
-                    currentStep = Step.TWO;
                     doIntakeSpin();
                     if (currentState == State.MIDDLE) {
-                        robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                        robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                                 .back(10)
                                 .build());
                     }
                     if (currentState == State.RIGHT) {
-                        robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                        robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                                 .back(3)
-                                        .strafeLeft(3)
+                                .strafeLeft(3)
                                 .build());
                     }
+                    currentStep = Step.TWO;
                 }
                 break;
         }
@@ -184,7 +181,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
     public void doIntakeSpin() {
         intake.setPower(INTAKE_POWER, 1);
         roller.spinForward();
-        sleep(325);
+        sleep(350);
         intake.stop();
         roller.stop();
     }

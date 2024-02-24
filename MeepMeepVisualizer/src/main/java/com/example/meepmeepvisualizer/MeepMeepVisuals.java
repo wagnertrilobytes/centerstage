@@ -19,16 +19,13 @@ public class MeepMeepVisuals {
                 .setConstraints( 45.14696128158258, 19.68109465623948, 2.49843921661377, 2.49843921661377, 16.13)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPos)
-                                .lineTo(new Vector2d(20, 40))
-                                .splineTo(new Vector2d(10, 35), Math.toRadians(200))
-                                .forward(2)
-
+                                .forward(40)
+                                . back(15)
                                 .waitSeconds(1)
                                 .back(10)
                                 .waitSeconds(1)
                                 .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
-                                .strafeLeft(1)
-                                .back(10)
+                                .back(15)
                                 .build()
                 );
 
