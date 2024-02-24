@@ -9,29 +9,19 @@ import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Slides;
-import org.firstinspires.ftc.teamcode.subsystems.SpicyBucketCR;
 import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 @Config
-@Autonomous(name = "Backstage Red", group="Backstage", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
-public class BackstageRed extends ColorVisionAutoBase {
+@Autonomous(name = "Audience Red", group="Audience", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
+public class AudienceRed extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence left_trajOne;
-
     TrajectorySequence middle_trajOne;
 
-    TrajectorySequence drop_trajOne;
     Intake intake = new Intake();
-    SpicyBucketCR bucketCR = new SpicyBucketCR();
-    Slides slides = new Slides();
     CounterRoller roller = new CounterRoller();
-
-    public static double bArmSpeed = 1;
-    public static double bBucSpeed = 0.75;
-    public static double slideSpeed = 1;
     @Override
     public void setup() {
         this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
@@ -42,33 +32,31 @@ public class BackstageRed extends ColorVisionAutoBase {
         this.name = "Blue";
         robot.setPoseEstimate(startPos);
         intake.init(hardwareMap);
-        bucketCR.init(hardwareMap);
-        slides.init(hardwareMap);
-        roller.init(hardwareMap);
+
         Storage.currentPose = robot.getPoseEstimate();
 
         left_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(14, -40))
-                .splineTo(new Vector2d(10, -35), Math.toRadians(180))
-                .forward(5)
-                .back(6)
+                .lineTo(new Vector2d(-47, -61))
+                .lineTo(new Vector2d(-46, -34.02))
+                .forward(10)
+                .back(14)
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToLinearHeading(new Pose2d(14, -31.75, Math.toRadians(90)))
-                .forward(20)
-                .back(23)
+                .lineToConstantHeading(new Vector2d(-37, -34.18))
+                .forward(10)
+                .back(11)
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(25, -60))
-                .lineTo(new Vector2d(25, -40))
+                .splineTo(new Vector2d(-40.13, -45.36), Math.toRadians(90))
+                .splineTo(new Vector2d(-34.18, -34.02), Math.toRadians(0))
                 .forward(10)
                 .back(11)
                 .build();
     }
 
-    Pose2d startPos = new Pose2d(14, -60, Math.toRadians(90));
+    Pose2d startPos = new Pose2d(-37, 61, Math.toRadians(90));
     static double INTAKE_POWER = 0.4;
 
     enum State {
@@ -82,11 +70,6 @@ public class BackstageRed extends ColorVisionAutoBase {
     enum Step {
         GOTO_SPIKE_MARK,
         BACK_AWAY_FROM_SPIKE_MARK,
-        GOTO_DROP,
-        ALIGN_WITH_BACKDROP,
-        ALIGN_BACKDROP_LEFT,
-        ALIGN_BACKDROP_RIGHT,
-        DROP,
         FINISH
     }
 
@@ -123,66 +106,13 @@ public class BackstageRed extends ColorVisionAutoBase {
             case FINISH:
                 if (!robot.isBusy()) stop();
                 break;
-            case ALIGN_BACKDROP_LEFT:
-                if (!robot.isBusy()) {
-                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .strafeRight(4)
-                            .build());
-                    currentStep = Step.DROP;
-                }
-                break;
-            case ALIGN_BACKDROP_RIGHT:
-                if (!robot.isBusy()) {
-                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .strafeLeft(5)
-                            .build());
-                    currentStep = Step.DROP;
-                }
-                break;
-            case ALIGN_WITH_BACKDROP:
-                if (!robot.isBusy()) {
-                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(49,-36, Math.toRadians(180)))
-                            .build());
-                    currentStep =
-                            (currentState == State.LEFT ? Step.ALIGN_BACKDROP_LEFT :
-                            (currentState == State.RIGHT ? Step.ALIGN_BACKDROP_RIGHT : Step.DROP));
-                }
-                break;
-            case DROP:
-                if (!robot.isBusy()) {
-                    slides.setPower(slideSpeed);
-                    sleep(2300);
-                    slides.stop();
-                    bucketCR.setSlideArmPower(-bArmSpeed);
-                    sleep(450);
-                    bucketCR.setSlideArmPower(0);
-                    bucketCR.setBucketArmPower(-0.3);
-                    sleep(150);
-                    bucketCR.setWheelPower(-1);
-                    bucketCR.setBucketArmPower(0);
-                    sleep(1500);
-                    bucketCR.stop();
-                    Storage.currentPose = robot.getPoseEstimate();
-                    currentStep = Step.FINISH;
-                }
-                break;
-            case GOTO_DROP:
-                if (!robot.isBusy()) {
-                    drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(37, -36, Math.toRadians(180)))
-                            .build();
-                    currentStep = Step.ALIGN_WITH_BACKDROP;
-                    robot.followTrajectorySequenceAsync(drop_trajOne);
-                }
-                break;
             case BACK_AWAY_FROM_SPIKE_MARK:
                 if (!robot.isBusy()) {
                     doIntakeSpin();
                     robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .back(10)
                             .build());
-                    currentStep = Step.GOTO_DROP;
+                    currentStep = Step.FINISH;
                 }
                 break;
         }

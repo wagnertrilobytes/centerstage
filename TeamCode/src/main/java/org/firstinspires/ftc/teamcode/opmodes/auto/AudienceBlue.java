@@ -16,25 +16,14 @@ import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 @Config
-@Autonomous(name = "Audience Blurfytgue", group="Backstage")
+@Autonomous(name = "Audience Blue", group="Backstage", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
 public class AudienceBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
-    TrajectorySequence right_trajTwo;
     TrajectorySequence left_trajOne;
-    TrajectorySequence left_trajTwo;
-
     TrajectorySequence middle_trajOne;
-    TrajectorySequence middle_trajTwo;
 
-    TrajectorySequence drop_trajOne;
-    TrajectorySequence drop_trajTwo;
     Intake intake = new Intake();
-    SpicyBucketCR bucketCR = new SpicyBucketCR();
-    Slides slides = new Slides();
     CounterRoller roller = new CounterRoller();
-
-    public static double bArmSpeed = 1;
-    public static double slideSpeed = 1;
     @Override
     public void setup() {
         this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
@@ -45,45 +34,31 @@ public class AudienceBlue extends ColorVisionAutoBase {
         this.name = "Blue";
         robot.setPoseEstimate(startPos);
         intake.init(hardwareMap);
+
         Storage.currentPose = robot.getPoseEstimate();
-
-//        left_trajOne = robot.trajectorySequenceBuilder(startPos)
-//                .splineTo(new Vector2d(32, 30), Math.toRadians(180))
-//                .splineTo(new Vector2d(14, 32), Math.toRadians(180))
-//                .build();
-
-        right_trajOne =robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(-46.26, 62.00))
-                .lineTo(new Vector2d(-46.52, 35.52))
-                .build();
-
-
-        right_trajTwo = robot.trajectorySequenceBuilder(right_trajOne.end())
-                .lineTo(new Vector2d(-46.26, 45))
-                .lineTo(new Vector2d(-56.26, 41.58))
-//                .lineToConstantHeading(ENDPOS)
-                .build();
-        middle_trajOne  = robot.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(-35.95, 34.18))
-                .build();
-
-
-        middle_trajTwo = robot.trajectorySequenceBuilder(middle_trajOne.end())
-                .lineToConstantHeading(new Vector2d(-35.95, 40.18))
-//                .splineTo(ENDPOS, Math.toRadians(0))
-                .build();
 
         left_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .splineTo(new Vector2d(-40.13, 45.36), Math.toRadians(270.00))
-                .splineTo(new Vector2d(-34.18, 34.02), Math.toRadians(-8.77))
+                .splineTo(new Vector2d(-34.18, 34.02), Math.toRadians(0))
+                .forward(10)
+                .back(11)
                 .build();
-        left_trajTwo = robot.trajectorySequenceBuilder(left_trajOne.end())
-                .lineTo(new Vector2d(-54.33, 37.49))
-//                .lineToLinearHeading(ENDPOSE)
+
+        middle_trajOne = robot.trajectorySequenceBuilder(startPos)
+                .lineToConstantHeading(new Vector2d(-37, 34.18))
+                .forward(10)
+                .back(11)
+                .build();
+
+        right_trajOne = robot.trajectorySequenceBuilder(startPos)
+                .lineTo(new Vector2d(-46.26, 61))
+                .lineTo(new Vector2d(-46.52, 35.52))
+                .forward(12)
+                .back(14)
                 .build();
     }
 
-    Pose2d startPos = new Pose2d(-37, 66, Math.toRadians(270.00));
+    Pose2d startPos = new Pose2d(-37, 61, Math.toRadians(270.00));
     static double INTAKE_POWER = 0.4;
 
     enum State {
@@ -95,29 +70,34 @@ public class AudienceBlue extends ColorVisionAutoBase {
     }
 
     enum Step {
-        ONE,
-        TWO,
-        DROP,
+        GOTO_SPIKE_MARK,
+        BACK_AWAY_FROM_SPIKE_MARK,
         FINISH
     }
 
     State currentState = State.IDLE;
-    Step currentStep = Step.ONE;
+    Step currentStep = Step.GOTO_SPIKE_MARK;
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-        currentStep = Step.ONE;
-        if (detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.LEFT) {
-            currentState = State.LEFT;
-            robot.followTrajectorySequenceAsync(left_trajOne);
-        } else if(detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.RIGHT) {
-            currentState = State.RIGHT;
-            robot.followTrajectorySequenceAsync(right_trajOne);
-        } else if(detectedProp.getPosition() == ColourMassDetectionProcessor.PropPositions.MIDDLE) {
-            currentState = State.MIDDLE;
-            robot.followTrajectorySequenceAsync(middle_trajOne);
-        } else {
-            currentState = State.DEFAULT;
+        currentStep = Step.BACK_AWAY_FROM_SPIKE_MARK;
+        switch (detectedProp.getPosition()) {
+            case LEFT:
+                currentState = State.LEFT;
+                robot.followTrajectorySequenceAsync(left_trajOne);
+                break;
+            case RIGHT:
+                currentState = State.RIGHT;
+                robot.followTrajectorySequenceAsync(right_trajOne);
+                break;
+            case UNFOUND:
+            case MIDDLE:
+                currentState = State.MIDDLE;
+                robot.followTrajectorySequenceAsync(middle_trajOne);
+                break;
+            default:
+                currentState = State.DEFAULT;
+                break;
         }
     }
 
@@ -126,66 +106,15 @@ public class AudienceBlue extends ColorVisionAutoBase {
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         switch (currentStep) {
             case FINISH:
-                if (!robot.isBusy()) {
-                    stop();
-                }
+                if (!robot.isBusy()) stop();
                 break;
-            case DROP:
+            case BACK_AWAY_FROM_SPIKE_MARK:
                 if (!robot.isBusy()) {
+                    doIntakeSpin();
+                    robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .back(10)
+                            .build());
                     currentStep = Step.FINISH;
-                    slides.setPower(slideSpeed);
-                    sleep(2250);
-                    slides.stop();
-                    bucketCR.setSlideArmPower(-bArmSpeed);
-                    sleep(150);
-                    bucketCR.setSlideArmPower(0);
-                    bucketCR.setWheelPower(-1);
-                    bucketCR.setBucketArmPower(-0.3);
-                    sleep(1500);
-                    bucketCR.stop();
-                }
-                break;
-            case TWO:
-                if (!robot.isBusy()) {
-                    drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
-                            .strafeLeft(10)
-                            .back(20)
-                            .build();
-                    currentStep = Step.DROP;
-                    robot.followTrajectorySequenceAsync(drop_trajOne);
-                }
-                break;
-            case ONE:
-                if (!robot.isBusy()) {
-                    right_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineTo(new Vector2d(-46.26, 45))
-                            .lineTo(new Vector2d(-56.26, 41.58))
-//                .lineToConstantHeading(ENDPOS)
-                            .build();
-
-
-                    middle_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineToConstantHeading(new Vector2d(-35.95, 40.18))
-//                .splineTo(ENDPOS, Math.toRadians(0))
-                            .build();
-                    left_trajTwo = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineTo(new Vector2d(-54.33, 37.49))
-//                .lineToLinearHeading(ENDPOSE)
-                            .build();
-                    currentStep = Step.TWO;
-                    if (currentState == State.RIGHT) {
-                        doIntakeSpin();
-                        robot.followTrajectorySequenceAsync(right_trajTwo);
-                    }
-                    if (currentState == State.MIDDLE) {
-                        doIntakeSpin();
-                        robot.followTrajectorySequenceAsync(middle_trajTwo);
-                    }
-                    if (currentState == State.LEFT) {
-                        doIntakeSpin();
-                        robot.followTrajectorySequenceAsync(left_trajTwo);
-                    }
                 }
                 break;
         }
@@ -195,7 +124,9 @@ public class AudienceBlue extends ColorVisionAutoBase {
 
     public void doIntakeSpin() {
         intake.setPower(INTAKE_POWER, 1);
-        sleep(300);
+        roller.spinForward();
+        sleep(350);
         intake.stop();
+        roller.stop();
     }
 }

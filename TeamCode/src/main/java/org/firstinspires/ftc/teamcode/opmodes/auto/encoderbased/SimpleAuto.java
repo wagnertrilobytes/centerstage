@@ -69,7 +69,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SpicyBucketCR;
  */
 
 @Autonomous(name="SimpleAuto Encoder", group="Fallback", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
-//@Disabled
+@Disabled
 public class SimpleAuto extends LinearOpMode {
 
     /* Declare OpMode members. */

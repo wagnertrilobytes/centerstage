@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.encoderbased;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 @Autonomous(name = "Red Camera Simple Auto", group="Fallback")
+@Disabled
 public class CameraSimpleRefd extends ColorVisionAutoBase {
     private ElapsedTime runtime = new ElapsedTime();
     static final double     COUNTS_PER_MOTOR_REV    = 384.5 ;    // eg: TETRIX Motor Encoder

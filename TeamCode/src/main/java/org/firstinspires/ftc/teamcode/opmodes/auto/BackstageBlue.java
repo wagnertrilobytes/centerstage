@@ -20,7 +20,7 @@ import org.opencv.core.Scalar;
 
 import java.lang.annotation.Target;
 @Config
-@Autonomous(name = "Backstage Blurfytgue", group="Backstage")
+@Autonomous(name = "Backstage Blue", group="Backstage", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
 public class BackstageBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence left_trajOne;
@@ -52,9 +52,10 @@ public class BackstageBlue extends ColorVisionAutoBase {
         Storage.currentPose = robot.getPoseEstimate();
 
         left_trajOne =robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(25, 61))
+                .lineTo(new Vector2d(23, 60))
                 .lineTo(new Vector2d(23, 39))
-                .strafeRight(5)
+                .forward(10)
+                .back(11)
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -64,9 +65,10 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(20, 40))
-                .splineTo(new Vector2d(10, 35), Math.toRadians(200))
-                .forward(2)
+                .lineTo(new Vector2d(14, 40))
+                .splineTo(new Vector2d(10, 35), Math.toRadians(180))
+                .forward(5)
+                .back(6)
                 .build();
     }
 
@@ -82,18 +84,22 @@ public class BackstageBlue extends ColorVisionAutoBase {
     }
 
     enum Step {
-        ONE,
-        TWO,
+        GOTO_SPIKE_MARK,
+        BACK_AWAY_FROM_SPIKE_MARK,
+        GOTO_DROP,
+        ALIGN_WITH_BACKDROP,
+        ALIGN_BACKDROP_LEFT,
+        ALIGN_BACKDROP_RIGHT,
         DROP,
         FINISH
     }
 
     State currentState = State.IDLE;
-    Step currentStep = Step.ONE;
+    Step currentStep = Step.GOTO_SPIKE_MARK;
 
     @Override
     public void onStarted(ColourMassDetectionProcessor.Prop detectedProp) {
-        currentStep = Step.ONE;
+        currentStep = Step.BACK_AWAY_FROM_SPIKE_MARK;
         switch (detectedProp.getPosition()) {
             case LEFT:
                 currentState = State.LEFT;
@@ -121,6 +127,32 @@ public class BackstageBlue extends ColorVisionAutoBase {
             case FINISH:
                 if (!robot.isBusy()) stop();
                 break;
+            case ALIGN_BACKDROP_LEFT:
+                if (!robot.isBusy()) {
+                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .strafeRight(4)
+                            .build());
+                    currentStep = Step.DROP;
+                }
+                break;
+            case ALIGN_BACKDROP_RIGHT:
+                if (!robot.isBusy()) {
+                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .strafeLeft(5)
+                            .build());
+                    currentStep = Step.DROP;
+                }
+                break;
+            case ALIGN_WITH_BACKDROP:
+                if (!robot.isBusy()) {
+                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                                    .lineToLinearHeading(new Pose2d(49,36, Math.toRadians(180)))
+                            .build());
+                    currentStep =
+                            (currentState == State.LEFT ? Step.ALIGN_BACKDROP_LEFT :
+                            (currentState == State.RIGHT ? Step.ALIGN_BACKDROP_RIGHT : Step.DROP));
+                }
+                break;
             case DROP:
                 if (!robot.isBusy()) {
                     slides.setPower(slideSpeed);
@@ -139,38 +171,22 @@ public class BackstageBlue extends ColorVisionAutoBase {
                     currentStep = Step.FINISH;
                 }
                 break;
-            case TWO:
+            case GOTO_DROP:
                 if (!robot.isBusy()) {
-                    if (currentState == State.LEFT) {
-                        robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                                        .forward(2)
-                                        .strafeLeft(2)
-                                        .back(4)
-                                .build());
-                    }
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
-                            .back(15)
                             .build();
-                    currentStep = Step.DROP;
+                    currentStep = Step.ALIGN_WITH_BACKDROP;
                     robot.followTrajectorySequenceAsync(drop_trajOne);
                 }
                 break;
-            case ONE:
+            case BACK_AWAY_FROM_SPIKE_MARK:
                 if (!robot.isBusy()) {
                     doIntakeSpin();
-                    if (currentState == State.MIDDLE) {
-                        robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                                .back(10)
-                                .build());
-                    }
-                    if (currentState == State.RIGHT) {
-                        robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                                .back(3)
-                                .strafeLeft(3)
-                                .build());
-                    }
-                    currentStep = Step.TWO;
+                    robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .back(10)
+                            .build());
+                    currentStep = Step.GOTO_DROP;
                 }
                 break;
         }

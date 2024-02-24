@@ -147,6 +147,7 @@ public class TeleopSpicy extends OpMode {
 
         bucket.setBucketArmPower(power);
 
+        robot.update();
 
         telemetry.addData("Hooligan", "Activity");
         telemetry.addData("Front Left", fmt(robot.frontLeft));

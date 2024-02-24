@@ -11,6 +11,7 @@ import org.opencv.core.Scalar;
 
 @Config
 @Autonomous(name = "Color Tuning", group = "Tuners")
+@Disabled
 public class ColorTuneTest extends ColorVisionAutoBase {
     public static double lower0 = 40;
     public static double lower1 = 100;
