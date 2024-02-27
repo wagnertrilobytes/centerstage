@@ -81,6 +81,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
+    public boolean busy = false;
+    public boolean getBusy() {
+        return this.isBusy() || busy;
+    }
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
@@ -102,10 +106,10 @@ public class SampleMecanumDrive extends MecanumDrive {
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft"); // 1
-        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight"); // 2
-        backLeft = hardwareMap.get(DcMotorEx.class, "backLeft"); // 0
-        backRight = hardwareMap.get(DcMotorEx.class, "backRight"); // 3
+        frontLeft = hardwareMap.get(DcMotorEx.class, "leftFront"); // 1
+        frontRight = hardwareMap.get(DcMotorEx.class, "rightFront"); // 2
+        backLeft = hardwareMap.get(DcMotorEx.class, "leftBack"); // 0
+        backRight = hardwareMap.get(DcMotorEx.class, "rightBack"); // 3
 
         cameraLeft = hardwareMap.get(WebcamName.class, "Webcam 1");
 
@@ -131,9 +135,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();

@@ -34,7 +34,7 @@ public class BackstageRed extends ColorVisionAutoBase {
     public static double slideSpeed = 1;
     @Override
     public void setup() {
-        this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
+        this.lower = new Scalar(0, 100, 100); // the lower hsv threshold for your detection
         this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
         this.minArea = () -> 4000; // the minimum area for the detection to consider for your prop
         this.left = () -> 213;
@@ -57,7 +57,7 @@ public class BackstageRed extends ColorVisionAutoBase {
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .lineToLinearHeading(new Pose2d(14, -31.75, Math.toRadians(90)))
                 .forward(20)
-                .back(23)
+                .back(22)
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -87,6 +87,7 @@ public class BackstageRed extends ColorVisionAutoBase {
         ALIGN_BACKDROP_LEFT,
         ALIGN_BACKDROP_RIGHT,
         DROP,
+        BACK_INTO_CORNER,
         FINISH
     }
 
@@ -121,12 +122,25 @@ public class BackstageRed extends ColorVisionAutoBase {
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         switch (currentStep) {
             case FINISH:
-                if (!robot.isBusy()) stop();
+                if (!robot.isBusy()) {
+//                    slides.setPower(-slideSpeed);
+//                    sleep(2700);
+//                    slides.stop();
+//                    bucketCR.setSlideArmPower(bArmSpeed);
+//                    sleep(450);
+//                    bucketCR.setSlideArmPower(0);
+//                    bucketCR.setBucketArmPower(0.3);
+//                    sleep(150);
+//                    bucketCR.setBucketArmPower(0);
+//                    sleep(20);
+                    stop();
+                }
                 break;
             case ALIGN_BACKDROP_LEFT:
                 if (!robot.isBusy()) {
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .strafeRight(4)
+                            .strafeRight(65)
+                                    .back(5)
                             .build());
                     currentStep = Step.DROP;
                 }
@@ -142,15 +156,30 @@ public class BackstageRed extends ColorVisionAutoBase {
             case ALIGN_WITH_BACKDROP:
                 if (!robot.isBusy()) {
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(49,-36, Math.toRadians(180)))
+                            .back(10)
                             .build());
                     currentStep =
                             (currentState == State.LEFT ? Step.ALIGN_BACKDROP_LEFT :
                             (currentState == State.RIGHT ? Step.ALIGN_BACKDROP_RIGHT : Step.DROP));
                 }
                 break;
+            case BACK_INTO_CORNER:
+                if (!robot.getBusy()) {
+//                    slides.setPower(slideSpeed);
+//                    sleep(500);
+//                    slides.stop();
+//                    Storage.currentPose = robot.getPoseEstimate();
+//                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+//                            .forward(8)
+//                            .strafeLeft(20)
+//                            .back(4)
+//                            .build());
+                    currentStep = Step.FINISH;
+                }
+                break;
             case DROP:
                 if (!robot.isBusy()) {
+                    robot.busy = true;
                     slides.setPower(slideSpeed);
                     sleep(2300);
                     slides.stop();
@@ -164,13 +193,15 @@ public class BackstageRed extends ColorVisionAutoBase {
                     sleep(1500);
                     bucketCR.stop();
                     Storage.currentPose = robot.getPoseEstimate();
-                    currentStep = Step.FINISH;
+                    robot.busy = false;
+                    currentStep = Step.BACK_INTO_CORNER;
                 }
                 break;
             case GOTO_DROP:
                 if (!robot.isBusy()) {
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(37, -36, Math.toRadians(180)))
+                            .turn(Math.toRadians(1))
                             .build();
                     currentStep = Step.ALIGN_WITH_BACKDROP;
                     robot.followTrajectorySequenceAsync(drop_trajOne);

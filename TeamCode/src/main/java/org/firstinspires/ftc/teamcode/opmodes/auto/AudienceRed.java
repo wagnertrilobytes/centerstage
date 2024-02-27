@@ -24,7 +24,7 @@ public class AudienceRed extends ColorVisionAutoBase {
     CounterRoller roller = new CounterRoller();
     @Override
     public void setup() {
-        this.lower = new Scalar(40, 100, 100); // the lower hsv threshold for your detection
+        this.lower = new Scalar(0, 100, 100); // the lower hsv threshold for your detection
         this.upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
         this.minArea = () -> 4000; // the minimum area for the detection to consider for your prop
         this.left = () -> 213;
@@ -49,14 +49,15 @@ public class AudienceRed extends ColorVisionAutoBase {
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .splineTo(new Vector2d(-40.13, -45.36), Math.toRadians(90))
-                .splineTo(new Vector2d(-34.18, -34.02), Math.toRadians(0))
+                .lineTo(new Vector2d(-40.13, -45.36))
+                .lineTo(new Vector2d(-34.18, -34.02))
+                .turn(Math.toRadians(-90))
                 .forward(10)
                 .back(11)
                 .build();
     }
 
-    Pose2d startPos = new Pose2d(-37, 61, Math.toRadians(90));
+    Pose2d startPos = new Pose2d(-37, -61, Math.toRadians(90));
     static double INTAKE_POWER = 0.4;
 
     enum State {

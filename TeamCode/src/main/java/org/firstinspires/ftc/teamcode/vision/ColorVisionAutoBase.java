@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import android.graphics.Color;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -21,6 +23,7 @@ import java.util.function.DoubleSupplier;
 public class ColorVisionAutoBase extends LinearOpMode {
     private VisionPortal visionPortal;
     public ColourMassDetectionProcessor colourMassDetectionProcessor;
+    public ColorBrightness brightness;
     public Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
     public Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
     public DoubleSupplier minArea = () -> 100; // the minimum area for the detection to consider for your prop
@@ -32,6 +35,7 @@ public class ColorVisionAutoBase extends LinearOpMode {
     public void runOpMode() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         this.robot = new SampleMecanumDrive(hardwareMap);
+        brightness = new ColorBrightness(hardwareMap, telemetry);
         setup();
         colourMassDetectionProcessor = new ColourMassDetectionProcessor(this.lower, this.upper, this.minArea, this.left, this.right);
         visionPortal = new VisionPortal.Builder()
@@ -40,6 +44,10 @@ public class ColorVisionAutoBase extends LinearOpMode {
                 .build();
         while(opModeInInit()) {
             setupLoop();
+//            brightness.runPipeline();
+//            telemetry.addData("Currently Recorded Position", brightness.getPosition());
+//            telemetry.addData("Currently Recorded Position", mk(brightness.getPosition()));
+//            telemetry.addData("It is", brightness.getColor());
             telemetry.addData("Currently Recorded Position", colourMassDetectionProcessor.getRecordedPropPosition());
             telemetry.addData("Camera State", visionPortal.getCameraState());
             telemetry.addData("Currently Detected Mass Center", "x: " + colourMassDetectionProcessor.getLargestContourX() + ", y: " + colourMassDetectionProcessor.getLargestContourY());
@@ -60,6 +68,8 @@ public class ColorVisionAutoBase extends LinearOpMode {
         // if it is UNFOUND, you can manually set it to any of the other positions to guess
         if (recordedPropPositionL == ColourMassDetectionProcessor.PropPositions.UNFOUND) recordedPropPositionL = ColourMassDetectionProcessor.PropPositions.MIDDLE;
 
+//        ColourMassDetectionProcessor.PropPositions recordedPropPositionL = mk(brightness.getPosition());
+
         onStarted(new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name));
 
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
@@ -79,6 +89,15 @@ public class ColorVisionAutoBase extends LinearOpMode {
         }
         colourMassDetectionProcessor.close();
         visionPortal.close();
+    }
+    public ColourMassDetectionProcessor.PropPositions mk(int a) {
+        switch(a) {
+            case 0: return ColourMassDetectionProcessor.PropPositions.UNFOUND;
+            case 1: return ColourMassDetectionProcessor.PropPositions.LEFT;
+            case 2: return ColourMassDetectionProcessor.PropPositions.MIDDLE;
+            case 3: return ColourMassDetectionProcessor.PropPositions.RIGHT;
+        }
+        return ColourMassDetectionProcessor.PropPositions.UNFOUND;
     }
     public void setup() {}
     public void setupLoop() {}

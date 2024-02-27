@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.checkerframework.checker.units.qual.C;
+import org.firstinspires.ftc.teamcode.helpers.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
@@ -61,7 +62,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .lineToConstantHeading(new Vector2d(14, 34))
                 .forward(20)
-                .back(15)
+                .back(18)
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
@@ -73,7 +74,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
     }
 
     Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
-    static double INTAKE_POWER = 0.4;
+    static double INTAKE_POWER = 0.45;
 
     enum State {
         LEFT,
@@ -89,8 +90,11 @@ public class BackstageBlue extends ColorVisionAutoBase {
         GOTO_DROP,
         ALIGN_WITH_BACKDROP,
         ALIGN_BACKDROP_LEFT,
+        ALIGN_BACKDROP_MIDDLE,
         ALIGN_BACKDROP_RIGHT,
         DROP,
+        BACK_INTO_CORNER,
+        SCANNING,
         FINISH
     }
 
@@ -125,7 +129,27 @@ public class BackstageBlue extends ColorVisionAutoBase {
         // now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
         switch (currentStep) {
             case FINISH:
-                if (!robot.isBusy()) stop();
+                if (!robot.isBusy()) {
+                    slides.setPower(-slideSpeed);
+                    sleep(2700);
+                    slides.stop();
+                    bucketCR.setSlideArmPower(bArmSpeed);
+                    sleep(450);
+                    bucketCR.setSlideArmPower(0);
+                    bucketCR.setBucketArmPower(0.3);
+                    sleep(150);
+                    bucketCR.setBucketArmPower(0);
+                    sleep(20);
+                    stop();
+                }
+                break;
+            case ALIGN_BACKDROP_MIDDLE:
+                if (!robot.isBusy()) {
+                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .strafeRight(2)
+                            .build());
+                    currentStep = Step.DROP;
+                }
                 break;
             case ALIGN_BACKDROP_LEFT:
                 if (!robot.isBusy()) {
@@ -139,6 +163,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 if (!robot.isBusy()) {
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .strafeLeft(5)
+                                    .back(3)
                             .build());
                     currentStep = Step.DROP;
                 }
@@ -146,15 +171,33 @@ public class BackstageBlue extends ColorVisionAutoBase {
             case ALIGN_WITH_BACKDROP:
                 if (!robot.isBusy()) {
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(49,36, Math.toRadians(180)))
+                                    .back(10)
                             .build());
                     currentStep =
                             (currentState == State.LEFT ? Step.ALIGN_BACKDROP_LEFT :
-                            (currentState == State.RIGHT ? Step.ALIGN_BACKDROP_RIGHT : Step.DROP));
+                            (currentState == State.RIGHT ? Step.ALIGN_BACKDROP_RIGHT :
+                            (currentState == State.MIDDLE ? Step.ALIGN_BACKDROP_MIDDLE : Step.DROP)));
+//                    currentStep = Step.SCANNING;
+                }
+                break;
+            case BACK_INTO_CORNER:
+                if (!robot.getBusy()) {
+                    slides.setPower(slideSpeed);
+                    sleep(500);
+                    slides.stop();
+                    Storage.currentPose = robot.getPoseEstimate();
+                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .forward(8)
+                            .strafeRight(20)
+//                             .strafeLeft(20)
+                            .back(4)
+                            .build());
+                    currentStep = Step.FINISH;
                 }
                 break;
             case DROP:
                 if (!robot.isBusy()) {
+                    robot.busy = true;
                     slides.setPower(slideSpeed);
                     sleep(2300);
                     slides.stop();
@@ -168,13 +211,15 @@ public class BackstageBlue extends ColorVisionAutoBase {
                     sleep(1500);
                     bucketCR.stop();
                     Storage.currentPose = robot.getPoseEstimate();
-                    currentStep = Step.FINISH;
+                    robot.busy = false;
+                    currentStep = Step.BACK_INTO_CORNER;
                 }
                 break;
             case GOTO_DROP:
                 if (!robot.isBusy()) {
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
+                            .turn(Math.toRadians(1))
                             .build();
                     currentStep = Step.ALIGN_WITH_BACKDROP;
                     robot.followTrajectorySequenceAsync(drop_trajOne);
@@ -187,6 +232,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
                             .back(10)
                             .build());
                     currentStep = Step.GOTO_DROP;
+//                    stop();
                 }
                 break;
         }

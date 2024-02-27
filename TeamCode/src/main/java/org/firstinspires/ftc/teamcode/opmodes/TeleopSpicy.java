@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
@@ -47,6 +48,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Slides;
 import org.firstinspires.ftc.teamcode.subsystems.SpicyBucket;
 import org.firstinspires.ftc.teamcode.subsystems.SpicyBucketCR;
 import org.firstinspires.ftc.teamcode.subsystems.YeOldeBucket;
+import org.firstinspires.ftc.teamcode.vision.ColorBrightness;
 
 
 /**
@@ -72,6 +74,7 @@ public class TeleopSpicy extends OpMode {
     Slides slides = new Slides();
     CounterRoller roller = new CounterRoller();
     SampleMecanumDrive robot;
+    ColorBrightness cb;
     @Override
     public void init() {
         robot = new SampleMecanumDrive(hardwareMap);
@@ -86,6 +89,7 @@ public class TeleopSpicy extends OpMode {
         if (Storage.currentPose != null) robot.setPoseEstimate(Storage.currentPose);
 
         telemetry.addData("Status", "Initialized");
+
         telemetry.update();
     }
     int power = 0;

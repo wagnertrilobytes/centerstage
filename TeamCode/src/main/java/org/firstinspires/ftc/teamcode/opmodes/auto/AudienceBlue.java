@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
 @Config
-@Autonomous(name = "Audience Blue", group="Backstage", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
+@Autonomous(name = "Audience Blue", group="Audience", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
 public class AudienceBlue extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence left_trajOne;
@@ -124,9 +124,7 @@ public class AudienceBlue extends ColorVisionAutoBase {
 
     public void doIntakeSpin() {
         intake.setPower(INTAKE_POWER, 1);
-        roller.spinForward();
         sleep(350);
         intake.stop();
-        roller.stop();
     }
 }

@@ -19,25 +19,33 @@ public class MeepMeepVisuals {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPos)
                                 // \/ TRAJ ONE
-                                .splineTo(new Vector2d(-40.13, -45.36), Math.toRadians(90))
-                                .splineTo(new Vector2d(-34.18, -34.02), Math.toRadians(0))
+                                .lineTo(new Vector2d(-40.13, -45.36))
+                                .lineTo(new Vector2d(-34.18, -34.02))
+                                .turn(Math.toRadians(-90))
                                 .forward(10)
                                 .back(11)
-
-                                .waitSeconds(1) // \/ BACK AWAY
-                                .back(10)
 //                                .waitSeconds(1) // \/ GOTO_DROP
-//                                .lineToLinearHeading(new Pose2d(37, -36, Math.toRadians(180)))
+//                                .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
 //                                .waitSeconds(1) // \/ ALIGNMENT/DROP
-//                                .lineToLinearHeading(new Pose2d(49,-36, Math.toRadians(180)))
+////                                .lineToLinearHeading(new Pose2d(47,36, Math.toRadians(180)))
+//                                .back(10)
+
 
                                 // OPTIONAL: ONLY IF LEFT OR RIGHT
+
+                                // MIDDLE ALIGNMENT
+//                                .strafeLeft(2)
 
                                 // LEFT ALIGNMENT
 //                                .strafeRight(4)
 
                                 // RIGHT ALIGNMENT
 //                                .strafeLeft(5)
+
+//                                .waitSeconds(1) // \/ BACK_INTO_CORNER
+//                                .forward(10)
+//                                .strafeRight(24)
+//                                .back(10)
 
                                 .build()
                 );
