@@ -31,12 +31,14 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.helpers.Storage;
@@ -66,7 +68,7 @@ import org.firstinspires.ftc.teamcode.vision.ColorBrightness;
 
 @TeleOp(name="Centerstage: Teleop PizzaBox Lives On", group="Main")
 //@Disabled
-public class TeleopSpicy extends OpMode {
+public class TeleopSpicy extends LinearOpMode {
 //    YeOldeBucket bucket = new YeOldeBucket();
     SpicyBucketCR bucket = new SpicyBucketCR();
     Intake intake = new Intake();
@@ -75,8 +77,9 @@ public class TeleopSpicy extends OpMode {
     CounterRoller roller = new CounterRoller();
     SampleMecanumDrive robot;
     ColorBrightness cb;
+    int bucketArmPower = 0;
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
         robot = new SampleMecanumDrive(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -91,81 +94,55 @@ public class TeleopSpicy extends OpMode {
         telemetry.addData("Status", "Initialized");
 
         telemetry.update();
-    }
-    int power = 0;
-    @Override
-    public void loop() {
-        bucket.run(gamepad1, gamepad2, telemetry);
-        intake.run(gamepad1, gamepad2, telemetry);
-        plane.run(gamepad1, gamepad2, telemetry);
-        slides.run(gamepad1, gamepad2, telemetry);
+        waitForStart();
+        while (!isStopRequested()) {
+            robot.setWeightedDrivePower(
+                    new Pose2d(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x
+                    )
+            );
 
-        double Speed = -gamepad1.left_stick_y;
-        double Turn = gamepad1.left_stick_x;
-        double Strafe = -gamepad1.right_stick_x;
-        double Slide = -gamepad2.right_stick_y;
-        double MAX_SPEED = 1.0;
+            robot.update();
 
-        double numFl = (0.75*Range.clip((+Speed + Turn - Strafe), -1, +1)) - MAX_SPEED + MAX_SPEED;
-        double numFr = (0.75*Range.clip((+Speed + Turn + Strafe), -1, +1)) - MAX_SPEED + MAX_SPEED;
-        double numBl = (0.75*Range.clip((+Speed - Turn - Strafe), -1, +1)) - MAX_SPEED + MAX_SPEED;
-        double numBr = (0.75*Range.clip((+Speed - Turn + Strafe), -1, +1)) - MAX_SPEED + MAX_SPEED;
+            double slidePowerMultiplier = 0.65;
+            double intakePowerMultiplier = 0.4;
 
-        robot.setMotorPowers(numFl, numBl, numFr, numBr);
+            slides.setPower(slidePowerMultiplier * Range.clip(gamepad2.right_stick_y, -1, +1));
 
-        double numUp = 0.65*Range.clip((Slide), -1, +1);
+            if (gamepad2.left_trigger > 0.3) {
+                intake.setPower(-gamepad2.left_trigger, intakePowerMultiplier);
+                bucket.takeOut();
+                roller.spinForward();
+            }
+            if (gamepad2.right_trigger > 0.3) {
+                intake.setPower(gamepad2.right_trigger, intakePowerMultiplier);
+                bucket.takeIn();
+                roller.spinBackward();
+            }
+            if (gamepad2.right_trigger < 0.3 && gamepad2.left_trigger < 0.3) {
+                intake.stop();
+                bucket.stop();
+                roller.stop();
+            }
+            if (gamepad2.y) plane.sendPlane();
+            else plane.takePlaneBack();
+            if (gamepad2.a) bucket.dropOnePixel();
 
-        slides.setPower((numUp) - MAX_SPEED + MAX_SPEED);
+            if (gamepad1.dpad_up) robot.setMotorPowers(1, 1, 1, 1);
+            if (gamepad1.dpad_down) robot.setMotorPowers(-1, -1, -1, -1);
 
-        double iSM = 0.4;
-        if (gamepad2.left_trigger > 0.3) {
-            intake.setPower(-gamepad2.left_trigger, iSM);
-            bucket.takeOut();
-            roller.spinForward();
+
+            if (gamepad2.dpad_up) bucket.setSlideArmPower(1);
+            if (gamepad2.dpad_down) bucket.setSlideArmPower(-1);
+            if (!gamepad2.dpad_up && !gamepad2.dpad_down) bucket.setSlideArmPower(0);
+
+            if (gamepad2.dpad_left) bucketArmPower = -1;
+            if (gamepad2.dpad_right) bucketArmPower = 1;
+            if (!gamepad2.dpad_left && !gamepad2.dpad_right) bucketArmPower = 0;
+
+            bucket.setBucketArmPower(bucketArmPower);
         }
-        if (gamepad2.right_trigger > 0.3) {
-            intake.setPower(gamepad2.right_trigger, iSM);
-            bucket.takeIn();
-            roller.spinBackward();
-        }
-        if (gamepad2.right_trigger < 0.3 && gamepad2.left_trigger < 0.3) {
-            intake.stop();
-            bucket.stop();
-            roller.stop();
-        }
-        if (gamepad2.y) plane.sendPlane();
-        else plane.takePlaneBack();
-        if (gamepad2.a) bucket.dropOnePixel();
-
-        if (gamepad1.dpad_up) robot.setMotorPowers(1, 1, 1, 1);
-        if (gamepad1.dpad_down) robot.setMotorPowers(-1, -1, -1, -1);
-
-
-        if (gamepad2.dpad_up) bucket.setSlideArmPower(1);
-        if (gamepad2.dpad_down) bucket.setSlideArmPower(-1);
-        if (!gamepad2.dpad_up && !gamepad2.dpad_down) bucket.setSlideArmPower(0);
-
-        if (gamepad2.dpad_left) power = -1;
-        if (gamepad2.dpad_right) power = 1;
-        if (!gamepad2.dpad_left && !gamepad2.dpad_right) power = 0;
-
-        bucket.setBucketArmPower(power);
-
-        robot.update();
-
-        telemetry.addData("Hooligan", "Activity");
-        telemetry.addData("Front Left", fmt(robot.frontLeft));
-        telemetry.addData("Front Right", fmt(robot.frontRight));
-        telemetry.addData("Back Left", fmt(robot.backLeft));
-        telemetry.addData("Back Right", fmt(robot.backRight));
-
-        telemetry.update();
-    }
-    public String fmt(DcMotor mot) {
-        return mot.getCurrentPosition() + "@" + mot.getPower() + "," + mot.getPortNumber();
-    }
-
-    public String fmt(Servo mot) {
-        return mot.getPosition() + ":" + mot.getDirection() + "," + mot.getPortNumber();
     }
 }

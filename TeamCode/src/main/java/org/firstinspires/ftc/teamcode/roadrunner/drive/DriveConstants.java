@@ -32,17 +32,17 @@ public class DriveConstants {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(20, 0, 8,
-            13.11372868627881);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(7.1, 0, 1.2,
+            13.014578981576873);
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 15.8; // in
+    public static double TRACK_WIDTH = 17.32; // in
     public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
     public static double kA = 0;
     public static double kStatic = 0;
-    public static double MAX_VEL = 45.854110783268396;
+    public static double MAX_VEL = 43.9976306248175;
     public static double MAX_ACCEL = 19.68109465623948;
-    public static double MAX_ANG_VEL = Math.toRadians(141.10002589690706);
+    public static double MAX_ANG_VEL = Math.toRadians(143.80002699656978);
     public static double MAX_ANG_ACCEL = 2.49843921661377;
     public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR = RevHubOrientationOnRobot.LogoFacingDirection.UP;
     public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
