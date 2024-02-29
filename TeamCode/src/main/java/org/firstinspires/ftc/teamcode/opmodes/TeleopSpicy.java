@@ -33,50 +33,25 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.RobotLog;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneLauncher;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
-import org.firstinspires.ftc.teamcode.subsystems.SpicyBucket;
 import org.firstinspires.ftc.teamcode.subsystems.SpicyBucketCR;
-import org.firstinspires.ftc.teamcode.subsystems.YeOldeBucket;
-import org.firstinspires.ftc.teamcode.vision.ColorBrightness;
-
-
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When a selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
 @TeleOp(name="Centerstage: Teleop PizzaBox Lives On", group="Main")
-//@Disabled
 public class TeleopSpicy extends LinearOpMode {
-//    YeOldeBucket bucket = new YeOldeBucket();
     SpicyBucketCR bucket = new SpicyBucketCR();
     Intake intake = new Intake();
     PlaneLauncher plane = new PlaneLauncher();
     Slides slides = new Slides();
     CounterRoller roller = new CounterRoller();
     SampleMecanumDrive robot;
-    ColorBrightness cb;
     int bucketArmPower = 0;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -94,6 +69,7 @@ public class TeleopSpicy extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
 
         telemetry.update();
+
         waitForStart();
         while (!isStopRequested()) {
             robot.setWeightedDrivePower(
@@ -132,7 +108,6 @@ public class TeleopSpicy extends LinearOpMode {
 
             if (gamepad1.dpad_up) robot.setMotorPowers(1, 1, 1, 1);
             if (gamepad1.dpad_down) robot.setMotorPowers(-1, -1, -1, -1);
-
 
             if (gamepad2.dpad_up) bucket.setSlideArmPower(1);
             if (gamepad2.dpad_down) bucket.setSlideArmPower(-1);
