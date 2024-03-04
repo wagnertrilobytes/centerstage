@@ -81,6 +81,7 @@ public class TeleopSpicy extends LinearOpMode {
             );
 
             robot.update();
+            Storage.currentPose = robot.getPoseEstimate();
 
             double slidePowerMultiplier = 0.65;
             double intakePowerMultiplier = 0.4;

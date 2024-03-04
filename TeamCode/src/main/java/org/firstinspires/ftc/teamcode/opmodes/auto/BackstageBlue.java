@@ -50,7 +50,6 @@ public class BackstageBlue extends ColorVisionAutoBase {
         bucketCR.init(hardwareMap);
         slides.init(hardwareMap);
         roller.init(hardwareMap);
-        Storage.currentPose = robot.getPoseEstimate();
 
         left_trajOne =robot.trajectorySequenceBuilder(startPos)
                 .lineTo(new Vector2d(23, 60))
@@ -130,16 +129,6 @@ public class BackstageBlue extends ColorVisionAutoBase {
         switch (currentStep) {
             case FINISH:
                 if (!robot.isBusy()) {
-                    slides.setPower(-slideSpeed);
-                    sleep(2700);
-                    slides.stop();
-                    bucketCR.setSlideArmPower(bArmSpeed);
-                    sleep(450);
-                    bucketCR.setSlideArmPower(0);
-                    bucketCR.setBucketArmPower(0.3);
-                    sleep(150);
-                    bucketCR.setBucketArmPower(0);
-                    sleep(20);
                     stop();
                 }
                 break;
@@ -163,7 +152,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 if (!robot.isBusy()) {
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .strafeLeft(5)
-                                    .back(3)
+                            .back(3)
                             .build());
                     currentStep = Step.DROP;
                 }
@@ -182,10 +171,6 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 break;
             case BACK_INTO_CORNER:
                 if (!robot.getBusy()) {
-                    slides.setPower(slideSpeed);
-                    sleep(500);
-                    slides.stop();
-                    Storage.currentPose = robot.getPoseEstimate();
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .forward(8)
                             .strafeRight(20)
@@ -210,7 +195,6 @@ public class BackstageBlue extends ColorVisionAutoBase {
                     bucketCR.setBucketArmPower(0);
                     sleep(1500);
                     bucketCR.stop();
-                    Storage.currentPose = robot.getPoseEstimate();
                     robot.busy = false;
                     currentStep = Step.BACK_INTO_CORNER;
                 }
@@ -219,7 +203,6 @@ public class BackstageBlue extends ColorVisionAutoBase {
                 if (!robot.isBusy()) {
                     drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
-                            .turn(Math.toRadians(1))
                             .build();
                     currentStep = Step.ALIGN_WITH_BACKDROP;
                     robot.followTrajectorySequenceAsync(drop_trajOne);
@@ -228,7 +211,7 @@ public class BackstageBlue extends ColorVisionAutoBase {
             case BACK_AWAY_FROM_SPIKE_MARK:
                 if (!robot.isBusy()) {
                     doIntakeSpin();
-                    robot.followTrajectorySequence(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                    robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .back(10)
                             .build());
                     currentStep = Step.GOTO_DROP;
