@@ -3,15 +3,10 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.checkerframework.checker.units.qual.C;
-import org.firstinspires.ftc.teamcode.helpers.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
@@ -20,11 +15,9 @@ import org.firstinspires.ftc.teamcode.vision.ColorVisionAutoBase;
 import org.firstinspires.ftc.teamcode.vision.ColourMassDetectionProcessor;
 import org.opencv.core.Scalar;
 
-import java.lang.annotation.Target;
 @Config
-@Autonomous(name = "Backstage Blue la coordinates", group="Backstage", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
-@Disabled
-public class BackstageBlue extends ColorVisionAutoBase {
+@Autonomous(name = "Backstage Blue: Downgraded Edition", group="Backstage", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
+public class BackstageBlueDE extends ColorVisionAutoBase {
     TrajectorySequence right_trajOne;
     TrajectorySequence left_trajOne;
 
@@ -54,23 +47,22 @@ public class BackstageBlue extends ColorVisionAutoBase {
         roller.init(hardwareMap);
 
         left_trajOne =robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(23, 60))
-                .lineTo(new Vector2d(23, 39))
-                .forward(10)
-                .back(11)
+                .strafeLeft(10)
+                .forward(40)
+                .back(24)
                 .build();
 
         middle_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(14, 34))
-                .forward(20)
-                .back(18)
+                .forward(48)
+                .back(21)
                 .build();
 
         right_trajOne = robot.trajectorySequenceBuilder(startPos)
-                .lineTo(new Vector2d(14, 40))
-                .splineTo(new Vector2d(10, 35), Math.toRadians(180))
-                .forward(5)
-                .back(6)
+                .forward(27)
+                .turn(Math.toRadians(-90))
+                .forward(12)
+                .back(9)
+                .strafeLeft(2)
                 .build();
     }
 
@@ -137,7 +129,9 @@ public class BackstageBlue extends ColorVisionAutoBase {
             case ALIGN_BACKDROP_MIDDLE:
                 if (!robot.isBusy()) {
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .strafeRight(2)
+                            .turn(Math.toRadians(-90))
+                            .back(34)
+                            .strafeLeft(16)
                             .build());
                     currentStep = Step.DROP;
                 }
@@ -145,7 +139,9 @@ public class BackstageBlue extends ColorVisionAutoBase {
             case ALIGN_BACKDROP_LEFT:
                 if (!robot.isBusy()) {
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .strafeRight(4)
+                                    .turn(Math.toRadians(-90))
+                                    .back(24)
+                                    .strafeLeft(24)
                             .build());
                     currentStep = Step.DROP;
                 }
@@ -153,8 +149,8 @@ public class BackstageBlue extends ColorVisionAutoBase {
             case ALIGN_BACKDROP_RIGHT:
                 if (!robot.isBusy()) {
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .strafeLeft(5)
-                            .back(3)
+                            .back(26)
+                            .strafeLeft(12)
                             .build());
                     currentStep = Step.DROP;
                 }
@@ -201,22 +197,13 @@ public class BackstageBlue extends ColorVisionAutoBase {
                     currentStep = Step.BACK_INTO_CORNER;
                 }
                 break;
-            case GOTO_DROP:
-                if (!robot.isBusy()) {
-                    drop_trajOne = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(180)))
-                            .build();
-                    currentStep = Step.ALIGN_WITH_BACKDROP;
-                    robot.followTrajectorySequenceAsync(drop_trajOne);
-                }
-                break;
             case BACK_AWAY_FROM_SPIKE_MARK:
                 if (!robot.isBusy()) {
                     doIntakeSpin();
                     robot.followTrajectorySequenceAsync(robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                             .back(10)
                             .build());
-                    currentStep = Step.GOTO_DROP;
+                    currentStep = Step.ALIGN_WITH_BACKDROP;
 //                    stop();
                 }
                 break;

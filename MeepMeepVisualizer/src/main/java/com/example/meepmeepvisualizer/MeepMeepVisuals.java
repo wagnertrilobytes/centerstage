@@ -19,8 +19,19 @@ public class MeepMeepVisuals {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPos)
                                 // \/ TRAJ ONE
-                                .splineTo(new Vector2d(0, 35), Math.toRadians(180))
-                                .lineTo(new Vector2d(13, 35))
+                                .strafeLeft(10)
+                                .forward(40)
+                                .back(24)
+                                .waitSeconds(0.5)
+
+                                .back(10)
+
+                                .waitSeconds(0.5)
+                                .turn(Math.toRadians(-90))
+                                .back(24)
+                                .strafeLeft(14)
+
+
                                 .build()
                 );
 
