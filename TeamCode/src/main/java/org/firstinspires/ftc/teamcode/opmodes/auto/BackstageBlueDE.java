@@ -6,7 +6,9 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.helpers.Storage;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.subsystems.CounterRoller;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
@@ -46,7 +48,10 @@ public class BackstageBlueDE extends ColorVisionAutoBase {
         slides.init(hardwareMap);
         roller.init(hardwareMap);
 
-        left_trajOne =robot.trajectorySequenceBuilder(startPos)
+        TrajectorySequenceBuilder builder = robot.trajectorySequenceBuilder(startPos);
+//        left_trajOne = AutoPath.build(builder, Storage.TRAJECTORIES.BACKSTAGE.BLUE.LEFT.path);
+
+        left_trajOne = robot.trajectorySequenceBuilder(startPos)
                 .strafeLeft(10)
                 .forward(40)
                 .back(24)
@@ -210,6 +215,7 @@ public class BackstageBlueDE extends ColorVisionAutoBase {
         }
         telemetry.addData("Step", currentStep);
         telemetry.addData("State", currentState);
+        telemetry.update();
     }
 
     public void doIntakeSpin() {

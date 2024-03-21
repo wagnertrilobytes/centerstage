@@ -15,7 +15,7 @@ public class Slides implements Subsystem {
         slideLeft = map.get(DcMotorEx.class, "slideLeft");
         slideRight = map.get(DcMotorEx.class, "slideRight");
 
-        slideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         slideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

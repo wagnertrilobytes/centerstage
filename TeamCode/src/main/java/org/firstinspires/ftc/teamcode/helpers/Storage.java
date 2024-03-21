@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
+import org.firstinspires.ftc.teamcode.opmodes.auto.AutoPath;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
@@ -18,11 +19,19 @@ public class Storage {
     public interface TRAJECTORIES {
         interface BACKSTAGE {
             interface BLUE {
+                Pose2d startPos = new Pose2d(14, 60, Math.toRadians(270));
                 interface LEFT {
-
+                    AutoPath[] path = {
+                            new AutoPath(AutoPath.AutoDirection.LEFT, 10),
+                            new AutoPath(AutoPath.AutoDirection.FORWARD, 40),
+                            new AutoPath(AutoPath.AutoDirection.BACK, 24)
+                    };
                 }
                 interface MIDDLE {
-
+                    AutoPath[] path = {
+                            new AutoPath(AutoPath.AutoDirection.FORWARD, 48),
+                            new AutoPath(AutoPath.AutoDirection.BACK, 21)
+                    };
                 }
                 interface RIGHT {
 
@@ -42,12 +51,9 @@ public class Storage {
         }
         interface AUDIENCE {
             interface BLUE {
-                Pose2d startPose = new Pose2d(-36, 60, Math.toRadians(270));
+                Pose2d startPos = new Pose2d(-36, 60, Math.toRadians(270));
                 interface LEFT {
-                    TrajectorySequence trajOne = robot.trajectorySequenceBuilder(startPose)
-                            .lineTo(new Vector2d(25, 61))
-                            .lineTo(new Vector2d(25, 40))
-                            .build();
+
                 }
                 interface MIDDLE {
 

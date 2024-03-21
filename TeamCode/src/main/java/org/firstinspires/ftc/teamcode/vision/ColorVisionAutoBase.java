@@ -42,6 +42,7 @@ public class ColorVisionAutoBase extends LinearOpMode {
                 .setCamera(robot.cameraLeft) // the camera on your robot is named "Webcam 1" by default
                 .addProcessor(colourMassDetectionProcessor)
                 .build();
+        FtcDashboard.getInstance().startCameraStream(visionPortal, 30);
         while(opModeInInit()) {
             setupLoop();
 //            brightness.runPipeline();
@@ -78,14 +79,7 @@ public class ColorVisionAutoBase extends LinearOpMode {
             onStartedColor(new ColourMassDetectionProcessor.Prop(recordedPropPositionL, this.name));
 
             robot.update();
-            Pose2d poseEstimate = robot.getPoseEstimate();
             Storage.currentPose = robot.getPoseEstimate();
-
-
-            telemetry.addData("x", poseEstimate.getX());
-            telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
-            telemetry.update();
         }
         colourMassDetectionProcessor.close();
         visionPortal.close();

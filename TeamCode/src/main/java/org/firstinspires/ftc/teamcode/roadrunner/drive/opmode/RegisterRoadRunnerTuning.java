@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 import java.util.ArrayList;
 
 public final class RegisterRoadRunnerTuning {
-    public static final boolean DISABLED = false;
+    public static final boolean DISABLED = true;
     public static final String GROUP = "roadrunner";
     private RegisterRoadRunnerTuning() {}
 

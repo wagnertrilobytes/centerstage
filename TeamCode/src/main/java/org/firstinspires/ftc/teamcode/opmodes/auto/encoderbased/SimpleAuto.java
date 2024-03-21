@@ -68,7 +68,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SpicyBucketCR;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="SimpleAuto Encoder", group="Fallback", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
+@Autonomous(name="SimpleAuto E", group="Fallback", preselectTeleOp = "Centerstage: Teleop PizzaBox Lives On")
 @Disabled
 public class SimpleAuto extends LinearOpMode {
 
